@@ -1,0 +1,30 @@
+.thumbnail-wrapper {
+    border: black 1px solid;
+    padding: 20px 0;
+    display:flex;
+}
+
+.discussion-info-text {
+    width:calc(100% - 120px);
+    padding-right: 15px;
+    float:left;
+
+}
+
+.friend-profile-picture {
+    width: 120px;
+    text-align: center;
+    float: left;
+}
+
+.friend-profile-picture > img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%
+}
+
+.friends-name {
+    padding-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+}

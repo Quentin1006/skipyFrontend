@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+
+import { connect } from "react-redux";
 import './Main.css';
 
 
@@ -6,9 +8,11 @@ import DiscussionList from "../components/DiscussionList";
 import DiscussionLayout from "../components/DiscussionLayout";
 import WelcomeLayout from "../components/WelcomeLayout";
 
+import { getUserDiscussions } from "../actions/discussions";
 
 
-const discussions= [
+
+const testDiscussions= [
     {
         friendsProfilepic: "entete-carre-magenta.png",
         friendsName:"Liam Neeson",
@@ -28,12 +32,18 @@ class Main extends Component {
         super(props);
     }
 
+    componentDidMount(){
+        const { dispatch } = this.props;
+        dispatch(getUserDiscussions(0));
+    }
+
     render(){
-        const isDiscussionOpened = true;
+        const { isDiscussionOpened, discsOverview } = this.props;
+
         return (
             <div className="main__wrapper">
                 <div className="discussions-list__wrapper">
-                    <DiscussionList discussions={discussions}/>  
+                    <DiscussionList discussions={discsOverview}/>  
                 </div>
                 <div className="discussion-content__wrapper">
                     {isDiscussionOpened 
@@ -46,5 +56,24 @@ class Main extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    const { discussions } = state;
 
-export default Main;
+    const discsOverview = discussions.map( disc => {
+        const friends = disc.with
+        return {
+            friendsName: `${friends.firstname} ${friends.lastname}`,
+            friendsProfilePicute:friends.profilepicture,
+            lastMessage:disc.lastMessage.content
+
+        }
+    })
+    
+    return {
+        discsOverview,
+        isDiscussionOpened: true
+
+    }
+}
+
+export default connect(mapStateToProps)(Main);

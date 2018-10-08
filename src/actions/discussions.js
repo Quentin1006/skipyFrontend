@@ -20,7 +20,12 @@ const receive_user_discs = (discs) => {
 
 export const getUserDiscussions = (userId) => {
     const url = `${server.url}/users/${userId}/activeDiscussions`
-    return asyncRequest(url, request_user_discs(userId), receive_user_discs)
+    return asyncRequest({
+        url, 
+        startAction: request_user_discs, 
+        startActionParams: userId,
+        endAction: receive_user_discs
+    });
 }
 
 
@@ -45,6 +50,11 @@ const receive_disc = (disc) => {
 
 export const getDiscussion = (discId) => {
     const url = `${server.url}/discussions/${discId}`
-    return asyncRequest(url, request_disc(discId), receive_disc)
+    return asyncRequest({
+        url, 
+        startAction: request_disc,
+        startActionParams: discId, 
+        endAction: receive_disc
+    })
 }
 

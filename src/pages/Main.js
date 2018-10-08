@@ -3,10 +3,9 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import './Main.css';
 
+import Login from "../components/Login";
+import MainBoard from "../components/MainBoard";
 
-import DiscussionList from "../components/DiscussionList";
-import DiscussionLayout from "../components/DiscussionLayout";
-import WelcomeLayout from "../components/WelcomeLayout";
 
 import { getUserDiscussions } from "../actions/discussions";
 
@@ -33,24 +32,32 @@ class Main extends Component {
     }
 
     componentDidMount(){
-        const { dispatch } = this.props;
-        dispatch(getUserDiscussions(0));
+        const { dispatch, isLoggedIn, profile } = this.props;
+        if(isLoggedIn && profile){
+            dispatch(getUserDiscussions(profile.id));
+        }
+       
+    }
+
+    componentDidUpdate(prevProps){
+        const { isLoggedIn, dispatch, profile } = this.props;
+        if(isLoggedIn && prevProps.isLoggedIn !== isLoggedIn && profile){
+            dispatch(getUserDiscussions(profile.id));
+        }
     }
 
     render(){
-        const { isDiscussionOpened, discsOverview } = this.props;
+        const {discussions, isLoggedIn, isDiscussionOpened } = this.props;
 
         return (
             <div className="main__wrapper">
-                <div className="discussions-list__wrapper">
-                    <DiscussionList discussions={discsOverview}/>  
-                </div>
-                <div className="discussion-content__wrapper">
-                    {isDiscussionOpened 
-                        ? <DiscussionLayout messages={[]} friendProfile={""} userProfile={""}/> 
-                        : <WelcomeLayout userProfile={""}/>}
-                </div>
-               
+                {
+                    isLoggedIn 
+                    ? <MainBoard 
+                        discussions={discussions} 
+                        isDiscussionOpened={isDiscussionOpened}/>
+                    : <Login />
+                }
             </div>
         );
     }
@@ -58,21 +65,16 @@ class Main extends Component {
 
 const mapStateToProps = (state) => {
     const { discussions } = state;
+    const isDiscussionOpened = !!state.isDiscussionOpened;
+    const isLoggedIn = state.userprofile.isLoggedIn;
+    const profile = state.userprofile.profile || null;
+  
 
-    const discsOverview = discussions.map( disc => {
-        const friends = disc.with
-        return {
-            friendsName: `${friends.firstname} ${friends.lastname}`,
-            friendsProfilePicute:friends.profilepicture,
-            lastMessage:disc.lastMessage.content
-
-        }
-    })
-    
     return {
-        discsOverview,
-        isDiscussionOpened: true
-
+        discussions,
+        isDiscussionOpened,
+        isLoggedIn,
+        profile
     }
 }
 

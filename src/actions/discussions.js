@@ -2,13 +2,13 @@ import { asyncRequest } from "./helper";
 import server from "../config/server";
 
 
-export const OPEN_DISCUSSION = "OPEN_DISCUSSION";
-export const open_discussion = (id) => {
-    return {
-        type: OPEN_DISCUSSION,
-        id
-    }
-}
+// export const OPEN_DISCUSSION = "OPEN_DISCUSSION";
+// export const open_discussion = (id) => {
+//     return {
+//         type: OPEN_DISCUSSION,
+//         id
+//     }
+// }
 
 
 export const REQUEST_USER_DISCUSSIONS = "REQUEST_USER_DISCUSSIONS";

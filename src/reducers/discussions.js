@@ -2,17 +2,14 @@ import {
     REQUEST_DISCUSSION,
     RECEIVE_DISCUSSION,
     REQUEST_USER_DISCUSSIONS,
-    RECEIVE_USER_DISCUSSIONS,
-    OPEN_DISCUSSION
-
-
+    RECEIVE_USER_DISCUSSIONS
 } from "../actions/discussions";
 
 
 export const openDiscId = (state=-1, action) => {
     switch(action.type){
-        case OPEN_DISCUSSION:
-            return action.id;
+        case RECEIVE_DISCUSSION:
+            return action.disc.id || -1;
 
         default:
             return state
@@ -44,7 +41,7 @@ export const discussions = (state=[], action) => {
             console.log("user discs has been received");
             const discussions = action.discs;
             return discussions;
-            
+
 
         default:
             return state;

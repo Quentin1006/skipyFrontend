@@ -60,16 +60,12 @@ class Main extends Component {
             dispatch(get_user_discussions(profile.id));
             dispatch(getUserFriends(profile.id));
         }
-
-        if(prevProps.openDiscId !== openDiscId && openDiscId > 0 ){
-           dispatch(get_discussion(openDiscId));
-        }
-
     }
 
     openDiscussion(id){
-        const { dispatch } = this.props;
-        dispatch(open_discussion(id));
+        const { dispatch, openDiscId } = this.props;
+        if(openDiscId !== id)
+            dispatch(get_discussion(id));
     }
 
     render(){
@@ -129,9 +125,6 @@ const mapStateToProps = (state) => {
     const profile = state.userprofile.profile || {};
 
     const discOpened = refactorDiscussion(state.discOpened, profile);
-
-    
-  
 
     return {
         discussions,

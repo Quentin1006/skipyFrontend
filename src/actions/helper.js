@@ -10,7 +10,7 @@ export const asyncRequest = ({
     startAction, 
     startActionParams =[], 
     endAction, 
-    err, 
+    errAction = err_async_request, 
     includeCookies=true
 }) => {
     let fetchOpts = {method, headers};
@@ -21,36 +21,32 @@ export const asyncRequest = ({
         startActionParams = [startActionParams];
 
     return (dispatch) => {
-        if(!err) 
-            err = (error) => err_async_request(error);
-
         dispatch(startAction(...startActionParams));
 
-        if(method === 'post'){
+        if(method.toLowerCase() === 'post'){
             fetchOpts.body = serializeParams(body);
-            fetchOpts.headers = {
-                'Accept': 'application/json, text/plain, application/x-www-form-urlencoded',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            fetchOpts.headers['Accept'] = 'application/json, text/plain, application/x-www-form-urlencoded';
+            fetchOpts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
         }
-        return fetch(url, fetchOpts)
+        
+        fetch(url, fetchOpts)
             .then(
                 resp => { 
                     const { status } = resp;
                     switch(status){
                         case 401:
-                            throw(resp.statusText);
+                            return(`${resp.statusText}, Unauthorized`);
                         default:
                             return resp.json();
-                    }
-                },
-                error => dispatch(err(error))
+                    } 
+                }      
             )
-            .then(
-                resp => dispatch(endAction(resp)),
-                error => dispatch(err(error))
-            )
-
+            .catch(error => error.message)
+            // This way if the server returns an error, 
+            // but expected (no disfunction) we redirect toward the error action
+            // Maybe it shouldnt be part of the this function and should be established individually
+            // for each response to ba able to manage the error specifically
+            .then(resp => dispatch(resp.error ? errAction(resp) : endAction(resp)))
     }
 }
 

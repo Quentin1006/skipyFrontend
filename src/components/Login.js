@@ -26,11 +26,12 @@ class Login extends Component {
     }
 
     render() {
+        console.log(this.props.cookies);
         return (
             <div className="login__wrapper">
                 <FacebookLogin
                     appId={facebookAppId}
-                    autoLoad={true}
+                    autoLoad={false}
                     fields="name,email,picture"
                     onClick={this.componentClicked}
                     callback={this.responseFacebook}

@@ -2,6 +2,15 @@ import { asyncRequest } from "./helper";
 import server from "../config/server";
 
 
+export const OPEN_DISCUSSION = "OPEN_DISCUSSION";
+export const open_discussion = (id) => {
+    return {
+        type: OPEN_DISCUSSION,
+        id
+    }
+}
+
+
 export const REQUEST_USER_DISCUSSIONS = "REQUEST_USER_DISCUSSIONS";
 const request_user_discs = (userId) => {
     return {
@@ -18,7 +27,7 @@ const receive_user_discs = (discs) => {
 }
 
 
-export const getUserDiscussions = (userId) => {
+export const get_user_discussions = (userId) => {
     const url = `${server.url}/users/${userId}/activeDiscussions`
     return asyncRequest({
         url, 
@@ -27,8 +36,6 @@ export const getUserDiscussions = (userId) => {
         endAction: receive_user_discs
     });
 }
-
-
 
 
 export const REQUEST_DISCUSSION = "REQUEST_DISCUSSION";
@@ -48,7 +55,7 @@ const receive_disc = (disc) => {
 }
 
 
-export const getDiscussion = (discId) => {
+export const get_discussion = (discId) => {
     const url = `${server.url}/discussions/${discId}`
     return asyncRequest({
         url, 

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 
+
 import { connect } from "react-redux";
 import { withCookies } from 'react-cookie';
+
+import logger from "../lib/Logger";
 
 import './Main.css';
 
@@ -9,14 +12,18 @@ import Login from "../components/Login";
 import MainBoard from "../components/MainBoard";
 
 
-import { get_user_discussions } from "../actions/discussions";
-import { open_discussion } from "../actions/discussions";
-import { get_discussion } from "../actions/discussions";
+import { 
+    get_user_discussions,
+    get_discussion,
+    get_discussion_from_cache
+} from "../actions/discussions";
 
 
+import { 
+    getUserFriends,
+    checkIfUserIsConnected 
+} from "../actions/userprofile";
 
-import { getUserFriends } from "../actions/userprofile";
-import { checkIfUserIsConnected } from "../actions/userprofile";
 
 
 
@@ -55,7 +62,7 @@ class Main extends Component {
     }
 
     componentDidUpdate(prevProps){
-        const { isLoggedIn, dispatch, profile, openDiscId } = this.props;
+        const { isLoggedIn, dispatch, profile } = this.props;
         if(isLoggedIn && prevProps.isLoggedIn !== isLoggedIn && profile){
             dispatch(get_user_discussions(profile.id));
             dispatch(getUserFriends(profile.id));
@@ -63,9 +70,22 @@ class Main extends Component {
     }
 
     openDiscussion(id){
-        const { dispatch, openDiscId } = this.props;
-        if(openDiscId !== id)
-            dispatch(get_discussion(id));
+        const { dispatch, openDiscId, recentlyOpenedDiscussions } = this.props;
+
+        if(openDiscId === id){
+            logger.info("Discussion already open");
+            return;
+        }
+
+        const discInCache = recentlyOpenedDiscussions.find(id);
+        if(discInCache){
+            logger.info("discussion is in cache");
+            dispatch(get_discussion_from_cache(discInCache));
+            return;
+        }
+
+        dispatch(get_discussion(id));
+            
     }
 
     render(){
@@ -120,7 +140,8 @@ const mapStateToProps = (state) => {
     const { discussions } = state;
 
     const openDiscId = state.openDiscId;
-    const isDiscOpened = parseInt(openDiscId) > 0;
+    const { recentlyOpenedDiscussions } = state;
+    const isDiscOpened = parseInt(openDiscId, 10) > 0;
     const isLoggedIn = state.userprofile.isLoggedIn;
     const profile = state.userprofile.profile || {};
 
@@ -131,6 +152,7 @@ const mapStateToProps = (state) => {
         isDiscOpened,
         openDiscId,
         isLoggedIn,
+        recentlyOpenedDiscussions,
         profile,
         discOpened
     }

@@ -2,14 +2,13 @@ import { asyncRequest } from "./helper";
 import server from "../config/server";
 
 
-// export const OPEN_DISCUSSION = "OPEN_DISCUSSION";
-// export const open_discussion = (id) => {
-//     return {
-//         type: OPEN_DISCUSSION,
-//         id
-//     }
-// }
-
+export const GET_DISCUSSION_FROM_CACHE = "GET_DISCUSSION_FROM_CACHE";
+export const get_discussion_from_cache = (disc) => {
+    return {
+        type: GET_DISCUSSION_FROM_CACHE,
+        disc
+    }
+}
 
 export const REQUEST_USER_DISCUSSIONS = "REQUEST_USER_DISCUSSIONS";
 const request_user_discs = (userId) => {

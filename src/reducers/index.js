@@ -6,7 +6,8 @@ import app from "./application";
 import {
     discussions,
     discOpened,
-    openDiscId
+    openDiscId,
+    recentlyOpenedDiscussions
 } from "./discussions";
 
 
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     discussions,
     openDiscId,
     discOpened,
+    recentlyOpenedDiscussions,
     error,
     app
 })

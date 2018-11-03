@@ -9,7 +9,7 @@ class DiscussionList extends Component {
 
     listItemClick = (e) => {
         e.preventDefault();
-        const id = parseInt(e.currentTarget.getAttribute("data-id"));
+        const id = parseInt(e.currentTarget.getAttribute("data-id"), 10);
         console.log("thumbnail id =", id);
         this.props.listItemClick(id);
     }

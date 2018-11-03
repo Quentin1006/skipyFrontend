@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "cross-fetch": "^2.2.2",
+    "debug": "^4.1.0",
     "react": "^16.4.2",
     "react-cookie": "^3.0.4",
     "react-dom": "^16.4.2",

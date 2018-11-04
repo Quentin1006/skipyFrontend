@@ -1,0 +1,51 @@
+
+.discussion-layout__container {
+    height:100%;
+}
+
+
+.discussion-layout__container > *{
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+
+
+.discussion-header__container {
+
+    position: relative;
+    width:100%;
+    height:80px;
+    background-color: #eee;
+    /* border-bottom: 2px solid rgb(131, 120, 120); */
+}
+
+
+
+.discussion-screen__container {
+    position: relative;
+    width:100%;
+    height:calc( 100% - 80px);
+    background-color: rgb(206, 178, 178);
+}
+
+
+
+
+.discussion-action__container {
+    position: absolute;
+    bottom:0;
+    width:100%;
+    height:80px;
+    background-color: #eee;
+}
+
+
+
+
+
+
+
+
+
+

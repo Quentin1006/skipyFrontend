@@ -1,5 +1,6 @@
 .thumbnail-wrapper {
-    border: black 1px solid;
+    box-sizing: border-box;
+    border-bottom: #eee 1px solid;
     padding: 20px 0;
     display:flex;
 }

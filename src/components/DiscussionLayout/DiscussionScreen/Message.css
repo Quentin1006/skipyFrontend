@@ -1,5 +1,6 @@
 .message__wrapper {
-    background: red;
+    background: rgb(131, 120, 120);
     border-radius: 5px;
     padding: 10px 5px;
+    color: #fff;
 } 

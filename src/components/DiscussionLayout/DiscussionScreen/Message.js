@@ -7,7 +7,7 @@ import "./Message.css";
 class Message extends Component {
     
     render() {
-        const { content, date } = this.props;
+        const { content } = this.props;
 
         return (
             <div className={"message__wrapper"}>

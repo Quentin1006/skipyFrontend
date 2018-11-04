@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 
 
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
-import { format, formatDistance} from 'date-fns';
+import { format} from 'date-fns';
 import { fr } from 'date-fns/locale';
-import Message from "./MessagesScreen/Message";
+import Message from "./DiscussionScreen/Message";
 
 
-import "./MessagesScreen.css"
+import "./DiscussionScreen.css"
 
-class MessagesScreen extends Component {
+class DiscussionScreen extends Component {
     render() {
-        const { messages, user, friend } = this.props;
+        const { messages, user } = this.props;
 
         
         const listOfMessages = messages.map(mess => {
@@ -21,7 +21,7 @@ class MessagesScreen extends Component {
             const side = user.id === mess.from ? "right" : "left";
             const tooltipPlacement = side === "right" ? "left" : "right";
             const localeDate = format(timestamp, 'dd/MM/YYY HH:MM', {locale:fr});
-            const distTime = formatDistance(timestamp, Date.now());
+            //const distTime = formatDistance(timestamp, Date.now());
             return (
                 <li className={`message__row message--align-${side}`} key={mess.id}>
                     <div className="message__time-distance">
@@ -60,4 +60,4 @@ class MessagesScreen extends Component {
     }
 }
 
-export default MessagesScreen;
+export default DiscussionScreen;

@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "cross-fetch": "^2.2.2",
+    "date-fns": "^2.0.0-alpha.25",
     "debug": "^4.1.0",
     "react": "^16.4.2",
+    "react-bootstrap": "^0.32.4",
     "react-cookie": "^3.0.4",
     "react-dom": "^16.4.2",
     "react-facebook-login": "^4.1.1",

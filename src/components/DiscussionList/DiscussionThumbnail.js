@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './DiscussionThumbnail.css';
 
-import carre from "../images/entete-carre-magenta.png";
+import carre from "../../images/entete-carre-magenta.png";
 
 const maxMsgLength = 60;
 

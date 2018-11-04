@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import DiscussionThumbnail from "./DiscussionThumbnail";
+import DiscussionThumbnail from "./DiscussionList/DiscussionThumbnail";
 
 
 import "./DiscussionList.css"

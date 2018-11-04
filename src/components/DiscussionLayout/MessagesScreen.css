@@ -1,0 +1,24 @@
+ul {
+    padding-left: 0;
+}
+
+li.message__row {
+    list-style: none;
+    margin-bottom: 10px; 
+    padding-left: 0;
+}
+
+.message__container {
+    display: inline-block;
+}
+
+
+.message--align-right {
+    margin-right: 15px;
+    text-align: right;
+}
+
+.message--align-left {
+    margin-left: 15px;
+    text-align: left;
+}

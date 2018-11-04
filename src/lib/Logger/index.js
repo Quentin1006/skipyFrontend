@@ -1,18 +1,23 @@
 
 import debug from 'debug';
 
+const BASE = 'app';
 
 const COLOURS = {
   trace: 'lightblue',
   info: 'blue',
   warn: 'orange',
   error: 'red'
-}; // choose better colours :)
+};
 
 class Logger {
+  constructor(context="*"){
+    this.context = context;
+  }
+
   generateMessage(level, message, source) {
     // Set the prefix which will cause debug to enable the message
-    const namespace = `${level}`;
+    const namespace = `${BASE}:${this.context}`;
     const createDebug = debug(namespace);
     
     // Set the colour of the message based on the level
@@ -39,4 +44,4 @@ class Logger {
   }
 }
 
-export default new Logger();
+export default Logger;

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { withCookies } from 'react-cookie';
 
-import logger from "../lib/Logger";
+import Logger from "../lib/Logger";
 
 import './Main.css';
 
@@ -25,6 +25,7 @@ import {
 } from "../actions/userprofile";
 
 
+const logger = new Logger("Main");
 
 
 // const testDiscussions= [

@@ -7,9 +7,26 @@ import { fr } from 'date-fns/locale';
 import Message from "./DiscussionScreen/Message";
 
 
-import "./DiscussionScreen.css"
+import "./DiscussionScreen.css";
+
+
 
 class DiscussionScreen extends Component {
+
+    componentDidMount() {
+        this.scrollToBottom();
+      }
+      
+      componentDidUpdate() {
+        this.scrollToBottom();
+      }
+
+
+    scrollToBottom = (behavior="auto") => {
+        this.messagesEnd.scrollIntoView({ behavior});
+    }
+
+    
     render() {
         const { messages, user, discId } = this.props;
 
@@ -43,6 +60,7 @@ class DiscussionScreen extends Component {
                             </OverlayTrigger>
                         </a>
                     </div>
+                    
                 </li>
             )
         });
@@ -52,6 +70,9 @@ class DiscussionScreen extends Component {
                 <ul className="messagescreen__list">
                     {listOfMessages}
                 </ul>
+                <div style={{ float:"left", clear: "both" }}
+                    ref={(el) => { this.messagesEnd = el; }}>
+                </div>
 
 
                 

@@ -37,6 +37,10 @@ class DiscussionLayout extends Component {
             responseSendMessage(msg, discId);
         });
 
+        this.sock.on("conn", (id) => {
+            logger.info("id of socket", id);
+        })
+
         this.onSendMessage = this.onSendMessage.bind(this);
     }
 

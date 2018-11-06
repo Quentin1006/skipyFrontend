@@ -1,4 +1,4 @@
-export const deepCopy = (obj) => (JSON.parse(JSON.stringify(obj)));
+export const deepCopy = (ofObj) => (JSON.parse(JSON.stringify(ofObj)));
 
 
 /**
@@ -7,7 +7,7 @@ export const deepCopy = (obj) => (JSON.parse(JSON.stringify(obj)));
  * @param {id} withEltId 
  */
 export const setElementUpFront = (fromArr, withEltId) => {
-    let idxToSplice = null;
+    let idxToSplice = -1;
     let objToMoveUpFront = null;
 
     fromArr.some((obj, idx) => {
@@ -19,7 +19,10 @@ export const setElementUpFront = (fromArr, withEltId) => {
         return false;  
     });
     
-    fromArr.splice(idxToSplice, 1);
-    fromArr.unshift(objToMoveUpFront);
+    if(idxToSplice > 0 ){
+        fromArr.splice(idxToSplice, 1);
+        fromArr.unshift(objToMoveUpFront);
+    }
+    
 
 }

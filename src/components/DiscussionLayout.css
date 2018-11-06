@@ -1,6 +1,7 @@
 
 .discussion-layout__container {
     height:100%;
+    
 }
 
 
@@ -21,12 +22,18 @@
 }
 
 
+/**
+ * La height est calculée comme toute la hauteur 
+ * - la taille des deux autres containers 
+ */
 
 .discussion-screen__container {
     position: relative;
     width:100%;
-    height:calc( 100% - 80px);
+    height:calc( 100% - 160px);
     background-color: rgb(206, 178, 178);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 

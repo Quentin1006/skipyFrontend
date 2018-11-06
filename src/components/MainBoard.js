@@ -67,7 +67,7 @@ const getOverview = (discussions) => {
             id: disc.id,
             friendsName: `${friends.firstname} ${friends.lastname}`,
             friendsProfilePicture:friends.profilepicture,
-            lastMessage:disc.lastMessage.content
+            lastMessage:disc.lastMessage.content || ""
         }
     });
 }

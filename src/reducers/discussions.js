@@ -4,8 +4,8 @@ import {
     REQUEST_USER_DISCUSSIONS,
     RECEIVE_USER_DISCUSSIONS,
     GET_DISCUSSION_FROM_CACHE,
-    START_SEND_MESSAGE,
-    CONFIRMATION_SEND_MESSAGE
+    SEND_MESSAGE,
+    RECEIVE_MESSAGE_FROM_SERVER
 
 
 } from "../actions/discussions";
@@ -40,6 +40,9 @@ export const openDiscId = (state=-1, action) => {
     } 
 }
 
+
+
+
 export const discOpened = (state={}, action) => {
     switch(action.type){
         case REQUEST_DISCUSSION:
@@ -50,12 +53,13 @@ export const discOpened = (state={}, action) => {
             return action.disc; 
 
 
-        case START_SEND_MESSAGE:
+        case SEND_MESSAGE:
             return state
 
-        case CONFIRMATION_SEND_MESSAGE:
+        case RECEIVE_MESSAGE_FROM_SERVER:
+            const isDiscussionOpened = () => (state.id && state.id === action.discId); 
             // add the message to the content
-            if(action.msg){
+            if(action.msg && isDiscussionOpened()){
                 const newState = {
                     ...state,
                     content: [
@@ -86,7 +90,7 @@ export const discussions = (state=[], action) => {
             return discussions;
 
         
-        case CONFIRMATION_SEND_MESSAGE:
+        case RECEIVE_MESSAGE_FROM_SERVER:
             const newState = deepCopy(state);
             setElementUpFront(newState, action.discId);
             newState[0].lastMessage = action.msg;

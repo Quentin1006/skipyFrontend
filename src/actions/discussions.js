@@ -94,31 +94,23 @@ export const get_discussion = (discId) => {
  */
 
 
-export const START_SEND_MESSAGE = "START_SEND_MESSAGE";
-export const start_send_message = () => {
+export const SEND_MESSAGE = "SEND_MESSAGE";
+export const send_message = () => {
     return {
-        type: START_SEND_MESSAGE,
+        type: SEND_MESSAGE,
     }
 }
 
-export const CONFIRMATION_SEND_MESSAGE = "CONFIRMATION_SEND_MESSAGE";
-export const confirmation_send_message = (msg, discId) => {
+
+/**
+ * 
+ * Whether u were the sender or the receiver u'll go thru that event
+ */
+export const RECEIVE_MESSAGE_FROM_SERVER = "RECEIVE_MESSAGE_FROM_SERVER";
+export const receive_message_from_server = (msg, discId) => {
     return {
-        type: CONFIRMATION_SEND_MESSAGE,
+        type: RECEIVE_MESSAGE_FROM_SERVER,
         msg,
         discId
     }
 }
-
-
-// export const send_message = (msg, to, discId) => {
-//     const url = `${server.url}/discussions/${discId}`
-//     return asyncRequest({
-//         url, 
-//         startAction: start_send_message,
-//         startActionParams: [msg, to], 
-//         endAction: confirmation_send_message,
-//         body: {msg, to},
-//         method:"post"
-//     })
-// }

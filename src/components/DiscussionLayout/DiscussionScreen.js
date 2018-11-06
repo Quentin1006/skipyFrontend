@@ -11,7 +11,7 @@ import "./DiscussionScreen.css"
 
 class DiscussionScreen extends Component {
     render() {
-        const { messages, user } = this.props;
+        const { messages, user, discId } = this.props;
 
         
         const listOfMessages = messages.map(mess => {
@@ -23,7 +23,7 @@ class DiscussionScreen extends Component {
             const localeDate = format(timestamp, 'dd/MM/YYY HH:MM', {locale:fr});
             //const distTime = formatDistance(timestamp, Date.now());
             return (
-                <li className={`message__row message--align-${side}`} key={mess.id}>
+                <li className={`message__row message--align-${side}`} key={`${discId}:${mess.id}`}>
                     <div className="message__time-distance">
                         
                     </div>

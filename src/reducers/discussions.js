@@ -3,8 +3,14 @@ import {
     RECEIVE_DISCUSSION,
     REQUEST_USER_DISCUSSIONS,
     RECEIVE_USER_DISCUSSIONS,
-    GET_DISCUSSION_FROM_CACHE
+    GET_DISCUSSION_FROM_CACHE,
+    START_SEND_MESSAGE,
+    CONFIRMATION_SEND_MESSAGE
+
+
 } from "../actions/discussions";
+
+import { deepCopy, setElementUpFront } from "../utils";
 
 import ImmutableCache from "../lib/ImmutableCache";
 
@@ -43,12 +49,30 @@ export const discOpened = (state={}, action) => {
         case GET_DISCUSSION_FROM_CACHE:
             return action.disc; 
 
+
+        case START_SEND_MESSAGE:
+            return state
+
+        case CONFIRMATION_SEND_MESSAGE:
+            // add the message to the content
+            if(action.msg){
+                const newState = {
+                    ...state,
+                    content: [
+                        ...state.content,
+                        action.msg
+                    ]
+                }
+                return newState;
+            }
+            return state;
+
         default:
             return state
     } 
 }
 
-
+// discussionsOverview would be more exact
 export const discussions = (state=[], action) => {
 
     switch(action.type){
@@ -61,8 +85,16 @@ export const discussions = (state=[], action) => {
             const discussions = action.discs;
             return discussions;
 
+        
+        case CONFIRMATION_SEND_MESSAGE:
+            const newState = deepCopy(state);
+            setElementUpFront(newState, action.discId);
+            newState[0].lastMessage = action.msg;
+
+            return newState;
 
         default:
             return state;
     }
 }
+

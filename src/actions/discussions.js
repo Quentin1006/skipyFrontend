@@ -10,6 +10,16 @@ export const get_discussion_from_cache = (disc) => {
     }
 }
 
+
+
+/**
+ * 
+ * 
+ * REQUEST ALL ACTIVE DISCUSSIONS OF USER
+ * 
+ * 
+ */
+
 export const REQUEST_USER_DISCUSSIONS = "REQUEST_USER_DISCUSSIONS";
 const request_user_discs = (userId) => {
     return {
@@ -35,6 +45,15 @@ export const get_user_discussions = (userId) => {
         endAction: receive_user_discs
     });
 }
+
+
+/**
+ * 
+ * 
+ * REQUEST A DISCUSSION
+ * 
+ * 
+ */
 
 
 export const REQUEST_DISCUSSION = "REQUEST_DISCUSSION";
@@ -64,3 +83,42 @@ export const get_discussion = (discId) => {
     })
 }
 
+
+
+/**
+ * 
+ * 
+ * SEND A MESSAGE TO A CONTACT
+ * 
+ * 
+ */
+
+
+export const START_SEND_MESSAGE = "START_SEND_MESSAGE";
+export const start_send_message = () => {
+    return {
+        type: START_SEND_MESSAGE,
+    }
+}
+
+export const CONFIRMATION_SEND_MESSAGE = "CONFIRMATION_SEND_MESSAGE";
+export const confirmation_send_message = (msg, discId) => {
+    return {
+        type: CONFIRMATION_SEND_MESSAGE,
+        msg,
+        discId
+    }
+}
+
+
+// export const send_message = (msg, to, discId) => {
+//     const url = `${server.url}/discussions/${discId}`
+//     return asyncRequest({
+//         url, 
+//         startAction: start_send_message,
+//         startActionParams: [msg, to], 
+//         endAction: confirmation_send_message,
+//         body: {msg, to},
+//         method:"post"
+//     })
+// }

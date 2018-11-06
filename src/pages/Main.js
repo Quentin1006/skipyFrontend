@@ -78,12 +78,12 @@ class Main extends Component {
             return;
         }
 
-        const discInCache = recentlyOpenedDiscussions.find(id);
-        if(discInCache){
-            logger.info("discussion is in cache");
-            dispatch(get_discussion_from_cache(discInCache));
-            return;
-        }
+        // const discInCache = recentlyOpenedDiscussions.find(id);
+        // if(discInCache){
+        //     logger.info("discussion is in cache");
+        //     dispatch(get_discussion_from_cache(discInCache));
+        //     return;
+        // }
 
         dispatch(get_discussion(id));
             

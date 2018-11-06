@@ -9,7 +9,7 @@ class DiscussionHeader extends Component {
         return (
             <div className="discussion-header__wrapper">
                 <div></div>
-                <div class="discussion-header__exchange">
+                <div className="discussion-header__exchange">
                     <Glyphicon glyph="refresh" />
                 </div>
                 <div></div>

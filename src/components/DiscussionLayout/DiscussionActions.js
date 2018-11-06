@@ -15,6 +15,7 @@ class DiscussionActions extends Component {
         if(e.keyCode === ENTER){
             const msg = e.currentTarget.value;
             this.props.onSendMessage(msg);
+            e.currentTarget.value = "";
         }
     }
 

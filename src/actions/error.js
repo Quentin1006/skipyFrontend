@@ -13,3 +13,22 @@ export const unauthorized_async_request = (error) => {
         error
     }
 }
+
+/**
+ * FORMAT D'UNE ERROR
+ * code
+ * type
+ * message
+ */
+
+export const ERROR = "ERROR";
+export const error = ({type, code, message}) => {
+    return (dispatch) => {
+        dispatch({
+            type,
+            code,
+            message
+        })
+    }
+
+}

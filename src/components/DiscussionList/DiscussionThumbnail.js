@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
 import './DiscussionThumbnail.css';
 
-import carre from "../../images/entete-carre-magenta.png";
+import defaultpic from "../../images/weldon-Koelpig.png";
 
 const maxMsgLength = 60;
 
 class DiscussionThumbnail extends Component {
 
     render(){
-        const { friendsProfilePicture, friendsName, lastMessage} = this.props;
+        const { friendsProfilePicture, friendsName, lastMessage, unreadMessagesCount} = this.props;
         const extractOfLastMessage = getExtract(lastMessage, maxMsgLength)
         return (
             
-            <div className="thumbnail-wrapper">
+            <div className="thumbnail__wrapper">
 
-                <div className="friend-profile-picture">
-                    <img src={friendsProfilePicture || carre} alt="friend profilepicture"/>
+                <div className="thumbnail__profilepicture">
+                    <img src={friendsProfilePicture || defaultpic} alt="friend profilepicture"/>
                 </div>
-                <div className="discussion-info-text">
-                    <div className="friends-name">{friendsName}</div>
-                    <div className="last-message">{extractOfLastMessage}</div>
+                <div className="thumbnail__text">
+                    <div className="thumbnail__text-friends-name">{friendsName}</div>
+                    <div className="thumbnail__text-last-message">{extractOfLastMessage}</div>
+                </div>
+                <div className=".thumbnail__unread-messages">
+                    <div>{unreadMessagesCount > 0 ? `(${unreadMessagesCount})` : ""}</div>
                 </div>
             
             </div>

@@ -21,9 +21,10 @@ class DiscussionList extends Component {
             <li key={disc.id}>
                 <a href=" #" data-id={disc.id} onClick={ this.listItemClick }>
                     <DiscussionThumbnail
-                        friendsProfilepic={disc.friendsProfilepic}
+                        friendsProfilePicture={disc.friendsProfilePicture}
                         friendsName={disc.friendsName}
                         lastMessage={disc.lastMessage}
+                        unreadMessagesCount = { disc.unreadMessagesCount }
                     />
                 </a>
             </li>

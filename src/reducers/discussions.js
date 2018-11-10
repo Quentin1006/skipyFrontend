@@ -5,7 +5,8 @@ import {
     RECEIVE_USER_DISCUSSIONS,
     GET_DISCUSSION_FROM_CACHE,
     SEND_MESSAGE,
-    RECEIVE_MESSAGE_FROM_SERVER
+    RECEIVE_MESSAGE_FROM_SERVER,
+    MARK_AS_READ
 
 
 } from "../actions/discussions";
@@ -41,8 +42,6 @@ export const openDiscId = (state=-1, action) => {
 }
 
 
-
-
 export const discOpened = (state={}, action) => {
     switch(action.type){
         case REQUEST_DISCUSSION:
@@ -56,6 +55,21 @@ export const discOpened = (state={}, action) => {
         case SEND_MESSAGE:
             return state
 
+        
+        case MARK_AS_READ:
+            const content = state.content.map(mess => {
+                return {
+                    ...mess,
+                    state:2
+                }
+            })
+            
+            return {
+                ...state,
+                content
+            }
+        
+        
         case RECEIVE_MESSAGE_FROM_SERVER:
             const isDiscussionOpened = () => (state.id && state.id === action.discId); 
             // add the message to the content
@@ -78,6 +92,7 @@ export const discOpened = (state={}, action) => {
 
 // discussionsOverview would be more exact
 export const discussions = (state=[], action) => {
+    const newState = deepCopy(state);
 
     switch(action.type){
         case REQUEST_USER_DISCUSSIONS:
@@ -91,11 +106,30 @@ export const discussions = (state=[], action) => {
 
         
         case RECEIVE_MESSAGE_FROM_SERVER:
-            const newState = deepCopy(state);
+            
             setElementUpFront(newState, action.discId);
             newState[0].lastMessage = action.msg;
 
+            // If the message is not from you
+            if(action.msg.from === newState[0].with.id){
+                newState[0].unreadMessagesCount++;
+            }
+            
+
             return newState;
+
+
+        case MARK_AS_READ:
+            const discId = action.openedDisc;
+
+            for(let disc of newState){
+                if(disc.id === discId){
+                    disc.unreadMessagesCount = 0;
+                    break;
+                }
+            }
+
+            return newState
 
         default:
             return state;

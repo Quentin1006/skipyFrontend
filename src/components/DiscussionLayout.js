@@ -12,7 +12,7 @@ import "./DiscussionLayout.css";
 class DiscussionLayout extends Component {
 
     render() {
-        const { disc, openDiscId } = this.props;
+        const { disc, openDiscId, onSendMessage, markMessagesAsRead } = this.props;
         const { messages, user, friend } = disc;
 
         // const users = {
@@ -38,7 +38,9 @@ class DiscussionLayout extends Component {
                 
                 <div className="discussion-action__container">
                     <DiscussionActions
-                        onSendMessage={this.props.onSendMessage}
+                        onSendMessage={onSendMessage}
+                        onFocusSendInput={markMessagesAsRead}
+                        discId = {openDiscId}
                     />
                 </div>
                 

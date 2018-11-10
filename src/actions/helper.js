@@ -1,5 +1,5 @@
 import fetch from "cross-fetch";
-import { err_async_request } from "./error";
+import { error } from "./error";
 
 
 export const asyncRequest = ({
@@ -10,9 +10,11 @@ export const asyncRequest = ({
     startAction, 
     startActionParams =[], 
     endAction, 
-    errAction = err_async_request, 
+    errAction = error, 
     includeCookies=true
+    
 }) => {
+
     let fetchOpts = {method, headers};
     if(includeCookies)
         fetchOpts.credentials = 'include';
@@ -49,28 +51,6 @@ export const asyncRequest = ({
             .then(resp => dispatch(resp.error ? errAction(resp) : endAction(resp)))
     }
 }
-
-
-// L'action de départ doit etre envoyé sous forme d'objet
-export const asyncRequestOld = (url, startAction, endAction, err) => {
-    if(!err) 
-        err = (error) => console.log(error);
-
-    return (dispatch) => {
-        dispatch(startAction)
-        return fetch(url)
-            .then(
-                resp => resp.json(),
-                error => console.log(error)
-            )
-            .then((resp) => {
-                    dispatch(endAction(resp))
-                }
-            )
-
-    }
-}
-
 
 
 const serializeParams = (params) => { 

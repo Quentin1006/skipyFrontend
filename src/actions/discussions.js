@@ -11,6 +11,21 @@ export const get_discussion_from_cache = (disc) => {
 }
 
 
+/**
+ * UNREAD MESSAGES ACTIONS
+ * 
+ * 
+ */
+
+
+export const MARK_AS_READ = "MARK_AS_READ";
+export const mark_as_read = (openedDisc) => {
+    return {
+        type: MARK_AS_READ,
+        openedDisc
+    }
+}
+
 
 /**
  * 

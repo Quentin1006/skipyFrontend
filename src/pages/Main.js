@@ -14,8 +14,7 @@ import MainBoard from "../components/MainBoard";
 
 import { 
     get_user_discussions,
-    get_discussion,
-    get_discussion_from_cache
+    // get_discussion_from_cache
 } from "../actions/discussions";
 
 
@@ -26,6 +25,7 @@ import {
 
 
 const logger = new Logger("Main");
+logger.info("bip")
 
 
 // const testDiscussions= [
@@ -49,7 +49,7 @@ class Main extends Component {
         const { dispatch } = this.props;
         dispatch(checkIfUserIsConnected());
 
-        this.openDiscussion = this.openDiscussion.bind(this);
+        
     }
 
     componentDidMount(){
@@ -70,24 +70,7 @@ class Main extends Component {
         }
     }
 
-    openDiscussion(id){
-        const { dispatch, openDiscId, recentlyOpenedDiscussions } = this.props;
-
-        if(openDiscId === id){
-            logger.info("Discussion already open");
-            return;
-        }
-
-        // const discInCache = recentlyOpenedDiscussions.find(id);
-        // if(discInCache){
-        //     logger.info("discussion is in cache");
-        //     dispatch(get_discussion_from_cache(discInCache));
-        //     return;
-        // }
-
-        dispatch(get_discussion(id));
-            
-    }
+    
 
     render(){
         const {
@@ -107,7 +90,6 @@ class Main extends Component {
                         isDiscOpened={isDiscOpened}
                         discOpened={discOpened}
                         profile={profile}
-                        listItemClick={this.openDiscussion}
                       />
                     : <Login cookies={this.props.cookies}/>
                 }

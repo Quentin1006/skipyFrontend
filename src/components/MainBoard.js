@@ -10,7 +10,9 @@ import WelcomeLayout from "../components/WelcomeLayout";
 
 import { 
     send_message,
-    receive_message_from_server
+    receive_message_from_server,
+    get_discussion,
+    mark_as_read
 
 } from "../actions/discussions";
 
@@ -30,7 +32,7 @@ class MainBoard extends Component {
 
     constructor(props){
         super(props);
-        const { discussions, messageFromServer } = this.props;
+        const { discussions, messageFromServer, markDiscMessageAsRead } = this.props;
 
 
         this.discsOverview = getOverview(discussions);
@@ -43,13 +45,37 @@ class MainBoard extends Component {
         this.sock.on("sendMessage response", (msg, discId) => {
             logger.info(msg);
             messageFromServer(msg, discId);
+
+
         });
 
         this.sock.on("conn", (id) => {
             logger.info("id of socket", id);
         })
 
+
+        this.sock.on("markAsSeen response", (discId, done) => {
+            if(done){
+                markDiscMessageAsRead(discId)
+            }
+        })
+
         this.onSendMessage = this.onSendMessage.bind(this);
+        this.openDiscussion = this.openDiscussion.bind(this);
+        this.markMessagesAsRead = this.markMessagesAsRead.bind(this);
+    }
+
+
+    shouldComponentUpdate(nextProps){
+        if(nextProps.discussions && nextProps.discussions !== this.props.discussions){
+            this.discsOverview = getOverview(nextProps.discussions)
+            return true;
+        }
+
+        if(nextProps.discOpened !== this.discOpened){
+            return true;
+        }
+        return false;
     }
 
 
@@ -65,21 +91,41 @@ class MainBoard extends Component {
         initSendMessage();
     }
 
-    shouldComponentUpdate(nextProps){
-        if(nextProps.discussions && nextProps.discussions !== this.props.discussions){
-            this.discsOverview = getOverview(nextProps.discussions)
-            return true;
-        }
 
-        if(nextProps.discOpened !== this.discOpened){
-            return true;
-        }
-        return false;
+    markMessagesAsRead(){
+        const { discOpened } = this.props
+        this.sock.emit("markAsSeen", discOpened.id);
     }
 
 
+
+    openDiscussion(id){
+        const { 
+            openDiscId, 
+            getDiscussion,
+            /*recentlyOpenedDiscussions*/ 
+        } = this.props;
+
+        if(openDiscId === id){
+            logger.info("Discussion already open");
+            return;
+        }
+
+        // const discInCache = recentlyOpenedDiscussions.find(id);
+        // if(discInCache){
+        //     logger.info("discussion is in cache");
+        //     dispatch(get_discussion_from_cache(discInCache));
+        //     return;
+        // }
+
+        getDiscussion(id);            
+    }
+
+    
+
+
     render() {
-        const { isDiscOpened, profile, discOpened} = this.props;
+        const { isDiscOpened, openDiscId, profile, discOpened} = this.props;
         
         
         return (
@@ -87,13 +133,15 @@ class MainBoard extends Component {
                 <div className="discussions-list__wrapper">
                     <DiscussionList 
                         discussions={this.discsOverview} 
-                        listItemClick = {this.props.listItemClick} />  
+                        listItemClick = {this.openDiscussion} />  
                 </div>
                 <div className="discussion-content__wrapper">
                     {isDiscOpened 
                         ?   <DiscussionLayout 
                                 disc={discOpened}
+                                openDiscId= {openDiscId}
                                 onSendMessage={this.onSendMessage}
+                                markMessagesAsRead= {this.markMessagesAsRead}
                             /> 
                         :   <WelcomeLayout userProfile={profile} />}
                 </div>
@@ -110,15 +158,17 @@ const getOverview = (discussions) => {
         return {
             id: disc.id,
             friendsName: `${friends.firstname} ${friends.lastname}`,
-            friendsProfilePicture:friends.profilepicture,
-            lastMessage:disc.lastMessage.content || ""
+            friendsProfilePicture: friends.profilepicture,
+            lastMessage:disc.lastMessage.content || "",
+            unreadMessagesCount: disc.unreadMessagesCount
         }
     });
 }
 
 
 const mapStateToProps = (state) => {
-    const { openDiscId } = state
+    const { openDiscId } = state;
+
     return {
         openDiscId,
     }
@@ -128,7 +178,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         initSendMessage : () => dispatch(send_message()),
-        messageFromServer: (msg, discId) => dispatch(receive_message_from_server(msg, discId))
+        messageFromServer: (msg, discId) => dispatch(receive_message_from_server(msg, discId)),
+        getDiscussion: (discId) => dispatch(get_discussion(discId)),
+        markDiscMessageAsRead: (discId) => dispatch(mark_as_read(discId))
 
     }
 }

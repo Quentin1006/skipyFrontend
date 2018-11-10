@@ -9,6 +9,15 @@ class DiscussionActions extends Component {
         super(props);
 
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.onFocus = this.onFocus.bind(this);
+    }
+
+    componentDidMount(){
+        this.sendInput.focus()
+    }
+
+    componentDidUpdate(){
+        this.sendInput.focus()
     }
 
     onKeyDown(e){
@@ -17,18 +26,29 @@ class DiscussionActions extends Component {
             this.props.onSendMessage(msg);
             e.currentTarget.value = "";
         }
+
+        
+    }
+
+    onFocus(e){
+        this.props.onFocusSendInput()
     }
 
 
     render() {
+        const { discId } = this.props;
+
         return (
             <div className="actions__wrapper">
                 <div className="action__send-message">
                     <input 
                         type="text" 
                         id="sendMessage"
+                        data-discid= {discId}
                         placeholder="Send your message..."
                         onKeyDown={this.onKeyDown} 
+                        onFocus={this.onFocus}
+                        ref={(input) => { this.sendInput = input; }} 
                     />
                 </div>
                 <div className="secondary-actions__wrapper">

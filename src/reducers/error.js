@@ -3,16 +3,17 @@ import {
     UNAUTHORIZED_ASYNC_REQUEST
 } from "../actions/error";
 
+
+
 export default (state={}, action) => {
-    const {type, error} = action;
+    const {type, code, message} = action;
     switch(type){
         case ERR_ASYNC_REQUEST:
-            console.log(error);
-            return state;
-
         case UNAUTHORIZED_ASYNC_REQUEST:
-            console.log(error);
-            return state;
+            return {
+                code,
+                message
+            };
 
         default:
             return state;

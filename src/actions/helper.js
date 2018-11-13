@@ -1,5 +1,11 @@
 import fetch from "cross-fetch";
-import { error } from "./error";
+import { 
+    error,
+    ERR_ASYNC_REQUEST,
+    UNAUTHORIZED_ASYNC_REQUEST
+} from "./error";
+
+
 
 
 export const asyncRequest = ({
@@ -37,13 +43,41 @@ export const asyncRequest = ({
                     const { status } = resp;
                     switch(status){
                         case 401:
-                            return(`${resp.statusText}, Unauthorized`);
+                            return {
+                                type: UNAUTHORIZED_ASYNC_REQUEST,
+                                code: status,
+                                message: "Unauthorized",
+                                error: true
+                            }
+                        
+                        case 404: 
+                            return {
+                                type: UNAUTHORIZED_ASYNC_REQUEST,
+                                code: status,
+                                message: "Not Found",
+                                error: true
+                            }   
+                        
+                        case 500:
+                            return {
+                                type: UNAUTHORIZED_ASYNC_REQUEST,
+                                code: status,
+                                message: "Internal Server Error",
+                                error: true
+                            }
+
                         default:
                             return resp.json();
                     } 
                 }      
             )
-            .catch(error => error.message)
+            .catch(error => ({
+                type: ERR_ASYNC_REQUEST,
+                code: 400,
+                message: error.message,
+                error: true
+
+            }))
             // This way if the server returns an error, 
             // but expected (no disfunction) we redirect toward the error action
             // Maybe it shouldnt be part of the this function and should be established individually

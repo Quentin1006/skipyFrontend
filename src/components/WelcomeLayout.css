@@ -1,3 +1,20 @@
 .welcome-layout__wrapper {
+    position: relative;
+    height:100%;
+    text-align: center;
+}
 
+.welcome-layout__content {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.welcome-layout__profilepicture img{
+   
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    
 }

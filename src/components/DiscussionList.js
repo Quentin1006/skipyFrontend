@@ -15,11 +15,12 @@ class DiscussionList extends Component {
     }
     
     render() {
+        const { openDiscId, children } = this.props
         const listOfDiscussions = this.props.discussions || [];
 
         const listOfDiscussionsThumbnails = listOfDiscussions.map((disc) => (
             <li key={disc.id}>
-                <a href=" #" data-id={disc.id} onClick={ this.listItemClick }>
+                <a href=" #" data-id={disc.id} onClick={ this.listItemClick } className={openDiscId === disc.id ? "highlighted" : ""}>
                     <DiscussionThumbnail
                         friendsProfilePicture={disc.friendsProfilePicture}
                         friendsName={disc.friendsName}
@@ -32,6 +33,10 @@ class DiscussionList extends Component {
 
         return (
             <ul className="discussion-list__top">
+                <div className="discussion-list__btns">
+                    {children}
+                </div>
+                
                 {listOfDiscussionsThumbnails}
             </ul>
         );

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 
 import { connect } from "react-redux";
-import io from "socket.io-client"
+import io from "socket.io-client";
+
+import IconButton from "@material-ui/core/IconButton";
+import MessageIcon from "@material-ui/icons/Message";
+
+
 
 import DiscussionList from "../components/DiscussionList";
 import DiscussionLayout from "../components/DiscussionLayout";
@@ -125,15 +130,26 @@ class MainBoard extends Component {
 
 
     render() {
-        const { isDiscOpened, openDiscId, profile, discOpened} = this.props;
+        const { isDiscOpened, openDiscId, profile, discOpened, friendlist} = this.props;
         
         
         return (
             <div className="mainboard__wrapper">
                 <div className="discussions-list__wrapper">
                     <DiscussionList 
+                        openDiscId= {openDiscId}
                         discussions={this.discsOverview} 
-                        listItemClick = {this.openDiscussion} />  
+                        listItemClick = {this.openDiscussion} 
+                    >
+                              <IconButton
+                                    color="action"
+                                    aria-label="Add an alarm"
+                                >
+                                    <MessageIcon />
+                              </IconButton>
+        
+
+                    </DiscussionList> 
                 </div>
                 <div className="discussion-content__wrapper">
                     {isDiscOpened 
@@ -143,7 +159,11 @@ class MainBoard extends Component {
                                 onSendMessage={this.onSendMessage}
                                 markMessagesAsRead= {this.markMessagesAsRead}
                             /> 
-                        :   <WelcomeLayout userProfile={profile} />}
+                        :   <WelcomeLayout 
+                                profile={profile} 
+                                friendlist= {friendlist}    
+                            />
+                    }
                 </div>
             
             </div>
@@ -170,7 +190,7 @@ const mapStateToProps = (state) => {
     const { openDiscId } = state;
 
     return {
-        openDiscId,
+        openDiscId
     }
 };
 

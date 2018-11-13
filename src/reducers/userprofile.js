@@ -2,8 +2,11 @@ import {
     SEND_ACCESS_TOKEN,
     RECEIVE_USER_PROFILE,
     SEND_CONNECTION_REQUEST,
-    RECEIVE_CONNECTION_RESPONSE
+    RECEIVE_CONNECTION_RESPONSE,
+    RECEIVE_USERFRIENDS_RESPONSE
 } from "../actions/userprofile";
+
+
 
 export default (state={}, action) => {
     let isLoggedIn = false;
@@ -47,6 +50,13 @@ export default (state={}, action) => {
                 ...state,
                 isLoggedIn,
                 profile
+            }
+        
+
+        case RECEIVE_USERFRIENDS_RESPONSE:
+            return {
+                ...state,
+                friendlist: action.friends
             }
 
         default:

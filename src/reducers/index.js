@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 
 import userprofile from "./userprofile";
-import error from "./error";
+import lastError from "./error";
 import app from "./application";
 import {
     discussions,
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
     openDiscId,
     discOpened,
     recentlyOpenedDiscussions,
-    error,
+    lastError,
     app
 })
 

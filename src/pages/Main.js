@@ -78,7 +78,8 @@ class Main extends Component {
             isLoggedIn, 
             isDiscOpened, 
             profile, 
-            discOpened
+            discOpened,
+            friendlist
         } = this.props;
         
         return (
@@ -90,6 +91,7 @@ class Main extends Component {
                         isDiscOpened={isDiscOpened}
                         discOpened={discOpened}
                         profile={profile}
+                        friendlist= {friendlist}
                       />
                     : <Login cookies={this.props.cookies}/>
                 }
@@ -127,6 +129,7 @@ const mapStateToProps = (state) => {
     const isDiscOpened = parseInt(openDiscId, 10) > 0;
     const isLoggedIn = state.userprofile.isLoggedIn;
     const profile = state.userprofile.profile || {};
+    const friendlist = state.userprofile.friendlist || [];
 
     const discOpened = refactorDiscussion(state.discOpened, profile);
 
@@ -137,7 +140,8 @@ const mapStateToProps = (state) => {
         isLoggedIn,
         recentlyOpenedDiscussions,
         profile,
-        discOpened
+        discOpened,
+        friendlist
     }
 }
 

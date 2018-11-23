@@ -37,6 +37,34 @@ export const login_user = (access_token, auth_provider, auth_type) => {
 }
 
 
+export const LOGOUT_INIT = "LOGOUT_INIT";
+const logout_init = () => {
+    return {
+        type: LOGOUT_INIT
+    }
+}
+
+export const LOGOUT = "LOGOUT";
+const logout_resp = (user) => {
+    return {
+        type: LOGOUT,
+        user
+    }
+}
+
+export const logout = () => {
+    const url = `${server.url}/login/logout`;
+
+    return asyncRequest({
+        url,
+        startAction: logout_init,
+        endAction: logout_resp,
+    })
+}
+
+
+
+
 export const SEND_CONNECTION_REQUEST = "SEND_CONNECTION_REQUEST";
 const send_connection_request = () => {
     return {

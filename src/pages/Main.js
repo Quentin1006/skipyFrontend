@@ -10,17 +10,13 @@ import './Main.css';
 
 import Login from "../components/Login";
 import MainBoard from "../components/MainBoard";
-
-
-import { 
-    get_user_discussions,
-    // get_discussion_from_cache
-} from "../actions/discussions";
+import MenuNavbar from "../components/MenuNavbar";
 
 
 import { 
     getUserFriends,
-    checkIfUserIsConnected 
+    checkIfUserIsConnected ,
+    logout
 } from "../actions/userprofile";
 
 
@@ -46,27 +42,25 @@ logger.info("bip")
 class Main extends Component {
     constructor(props){
         super(props);
-        const { dispatch } = this.props;
-        dispatch(checkIfUserIsConnected());
+        const { checkIfUserIsConnected } = this.props;
+        checkIfUserIsConnected();
 
         
     }
 
     componentDidMount(){
-        const { dispatch, isLoggedIn, profile } = this.props;
+        const { isLoggedIn, profile } = this.props;
 
         if(isLoggedIn && profile){
-            dispatch(get_user_discussions(profile.id));
-            dispatch(getUserFriends(profile.id));
+            getUserFriends(profile.id);
         }
        
     }
 
     componentDidUpdate(prevProps){
-        const { isLoggedIn, dispatch, profile } = this.props;
+        const { isLoggedIn, getUserFriends, profile } = this.props;
         if(isLoggedIn && prevProps.isLoggedIn !== isLoggedIn && profile){
-            dispatch(get_user_discussions(profile.id));
-            dispatch(getUserFriends(profile.id));
+            getUserFriends(profile.id);
         }
     }
 
@@ -74,75 +68,67 @@ class Main extends Component {
 
     render(){
         const {
-            discussions, 
             isLoggedIn, 
-            isDiscOpened, 
             profile, 
-            discOpened,
-            friendlist
+            friendlist,
+            cookies,
+            logout
         } = this.props;
         
         return (
-            <div className="main__wrapper">
+            <div className="main__container">
+                <div className="menu-navbar__container">
+                    <MenuNavbar 
+                        isLoggedIn={isLoggedIn} 
+                        title={"skipy"}
+                        logout={logout}
+                    />
+                </div>
+                <div className="mainboard__container">
                 {
                     isLoggedIn 
                     ? <MainBoard 
-                        discussions={discussions} 
-                        isDiscOpened={isDiscOpened}
-                        discOpened={discOpened}
                         profile={profile}
                         friendlist= {friendlist}
                       />
-                    : <Login cookies={this.props.cookies}/>
+                    : <Login cookies={cookies}/>
                 }
+                </div>
+                
             </div>
         );
     }
 }
 
-const refactorDiscussion = (disc, userprofile) => {
-    // We refactor the disc received from server
-    if(disc.id && userprofile.id){
-        const { id, user1, user2, content } = disc;
 
-        const [ user, friend ] = user1.id === userprofile.id 
-                                ? [ user1, user2 ] 
-                                : [ user2, user1 ];
-
-       return {
-            id,
-            user,
-            friend,
-            messages: content
-        }
-    }
-
-    return {};
-}
 
 
 const mapStateToProps = (state) => {
-    const { discussions } = state;
+    
 
-    const openDiscId = state.openDiscId;
+    
     const { recentlyOpenedDiscussions } = state;
-    const isDiscOpened = parseInt(openDiscId, 10) > 0;
+    
     const isLoggedIn = state.userprofile.isLoggedIn;
     const profile = state.userprofile.profile || {};
     const friendlist = state.userprofile.friendlist || [];
 
-    const discOpened = refactorDiscussion(state.discOpened, profile);
+    
 
     return {
-        discussions,
-        isDiscOpened,
-        openDiscId,
         isLoggedIn,
         recentlyOpenedDiscussions,
         profile,
-        discOpened,
-        friendlist
+        friendlist,
     }
 }
 
-export default withCookies(connect(mapStateToProps)(Main));
+const mapDispatchToProps = (dispatch) => {
+    return {
+        checkIfUserIsConnected: () => dispatch(checkIfUserIsConnected()),
+        getUserFriends : (userId) => dispatch(getUserFriends(userId)),
+        logout: () => dispatch(logout())
+    }
+}
+
+export default withCookies(connect(mapStateToProps, mapDispatchToProps)(Main));

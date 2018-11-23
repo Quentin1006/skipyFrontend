@@ -22,7 +22,13 @@ export const setElementUpFront = (fromArr, withEltId) => {
     if(idxToSplice > 0 ){
         fromArr.splice(idxToSplice, 1);
         fromArr.unshift(objToMoveUpFront);
+        return true;
     }
+
+    if(idxToSplice === 0)
+        return true;
+
+    return false;
     
 
 }

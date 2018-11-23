@@ -3,7 +3,8 @@ import {
     RECEIVE_USER_PROFILE,
     SEND_CONNECTION_REQUEST,
     RECEIVE_CONNECTION_RESPONSE,
-    RECEIVE_USERFRIENDS_RESPONSE
+    RECEIVE_USERFRIENDS_RESPONSE,
+    LOGOUT
 } from "../actions/userprofile";
 
 
@@ -38,6 +39,7 @@ export default (state={}, action) => {
                 }
                 
             }
+        
 
         case SEND_CONNECTION_REQUEST:
             return state;
@@ -57,6 +59,16 @@ export default (state={}, action) => {
             return {
                 ...state,
                 friendlist: action.friends
+            }
+
+        
+        case LOGOUT:
+            profile = action.user;
+            isLoggedIn = !(profile.id === undefined);
+            return {
+                ...state,
+                profile,
+                isLoggedIn
             }
 
         default:

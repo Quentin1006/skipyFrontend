@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 
 
-import FormDialog from "../lib/Components/FormDialog";
-import AutosuggestFormField from "../lib/Components/AutosuggestFormField"
+//import FormDialog from "../lib/Components/FormDialog";
+//import AutosuggestFormField from "../lib/Components/AutosuggestFormField"
+
+import ExtendedButton from "../lib/Components/ExtendedButton";
 
 import "./WelcomeLayout.css";
 
-const getFriendName = friend => {
-    const { firstname, lastname } = friend;
-    return `${firstname} ${lastname}`;
-}
 
 class WelcomeLayout extends Component {
     constructor(props){
@@ -18,30 +16,26 @@ class WelcomeLayout extends Component {
         this.state = {
             friendToDiscussWith: ""
         }
-    }
-    
-    startConversation = () => {
-        const { createTemporaryDiscussionThumbnail } = this.props;
-
-    }
+    }   
 
     
-
-
     render() {
-        const  { friendlist, profile } = this.props;
+        const  { profile, startDiscussion } = this.props;
         return (
             <div className="welcome-layout__wrapper">
                 <div className="welcome-layout__content">
-                    <div>Hey {profile.username} !</div>
+                    <div className="welcome-layout__welcome-message">Hey <b>{profile.username}</b> !</div>
                     <div className="welcome-layout__profilepicture">
                         <img src={profile.profilepicture} alt="user"/>
                     </div>
-                    <FormDialog
+
+                    <ExtendedButton onClick={startDiscussion}>{"start discussion"}</ExtendedButton>
+
+                    {/*<FormDialog
                         text= "To subscribe to this website, please enter your email address here. We will send updates occasionally."
                         title="Start your conversation"
                         triggerBtnText="new conversation"
-                        onValidateForm={this.startConversation}
+                        onValidateForm={startDiscussion}
                         validateText = "validate"
                     >
                         <AutosuggestFormField
@@ -61,7 +55,7 @@ class WelcomeLayout extends Component {
                             }}
                         />
                         
-                    </FormDialog>
+                        </FormDialog>*/}
                     
                 </div>
                 

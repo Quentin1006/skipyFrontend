@@ -47,13 +47,11 @@ export const create_temp_disc = (tempDisc) => {
     }
 }
 
-export const CLOSE_TEMP_DISC = "CLOSE_TEMP_DISC";
-export const close_temp_disc = () => {
-    return (dispatch) => {
-        dispatch({
-            type: CLOSE_TEMP_DISC,
-        });
-        dispatch(change_disc_id(-1));
+
+export const EMPTY_TEMP_DISC = "EMPTY_TEMP_DISC";
+export const empty_temp_disc = () => {
+    return {
+        type: EMPTY_TEMP_DISC
     }
 }
 
@@ -66,11 +64,10 @@ export const close_temp_disc = () => {
 
 
 export const MARK_AS_READ = "MARK_AS_READ";
-export const mark_as_read = (discId, userId) => {
+export const mark_as_read = (openedDisc) => {
     return {
         type: MARK_AS_READ,
-        discId,
-        userId
+        openedDisc
     }
 }
 
@@ -110,16 +107,6 @@ export const get_user_discussions = (userId) => {
 }
 
 
-export const UPDATE_DISCUSSIONS_OVERVIEW = "UPDATE_DISCUSSIONS_OVERVIEW";
-export const update_discussions_overview = (discId, msg) => {
-    return {
-        type: UPDATE_DISCUSSIONS_OVERVIEW,
-        discId,
-        msg
-    }
-}
-
-
 // export const RETRIEVE_USER_DISCUSSIONS = "RETRIEVE_USER_DISCUSSIONS";
 // export const retrieveUserDiscussions = (discs) => {
 //     return {
@@ -135,15 +122,6 @@ export const update_discussions_overview = (discId, msg) => {
  * 
  * 
  */
-
-export const UPDATE_DISCUSSION = "UPDATE_DISCUSSION";
-export const update_discussion = (discId, msg) => {
-    return {
-        type: UPDATE_DISCUSSION,
-        discId, 
-        msg
-    }
- }
 
 
 export const REQUEST_DISCUSSION = "REQUEST_DISCUSSION";
@@ -161,7 +139,6 @@ const receive_disc = (disc) => {
         disc
     }
 }
-
 
 
 export const get_discussion = (discId) => {

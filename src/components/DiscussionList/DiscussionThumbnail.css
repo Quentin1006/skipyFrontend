@@ -4,6 +4,7 @@
     padding: 10px 0;
     display:flex;
     position: relative;
+    min-height: 104px;
 }
 
 .thumbnail__text {
@@ -34,11 +35,13 @@
     font-size: 1.2em;
 }
 
-
-.thumbnail__unread-messages {
+.v-center {
     position: absolute;
-    right: 20px;
     top: 50%;
     transform: translateY(-50%)
 }
 
+.set-right {
+    position: absolute;
+    right: 20px;
+}

@@ -1,7 +1,9 @@
-.discussion-list__top {
+.discussion-list__content {
     list-style-type: none;
     padding-left: 0;
     margin: 0;
+    overflow-y: auto;
+    height: calc(100% - 50px);
 }
 
 .discussion-list__btns {

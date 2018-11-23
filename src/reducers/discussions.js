@@ -5,8 +5,14 @@ import {
     RECEIVE_USER_DISCUSSIONS,
     GET_DISCUSSION_FROM_CACHE,
     SEND_MESSAGE,
-    RECEIVE_MESSAGE_FROM_SERVER,
-    MARK_AS_READ
+    UPDATE_DISCUSSION,
+    UPDATE_DISCUSSIONS_OVERVIEW,
+    MARK_AS_READ,
+    CHANGE_DISC_ID,
+    CREATE_TEMP_DISC,
+    SET_RECIPIENT_TEMP,
+    SET_POSSIBLE_RECIPIENTS_TEMP,
+    CLOSE_TEMP_DISC
 
 
 } from "../actions/discussions";
@@ -18,80 +24,52 @@ import ImmutableCache from "../lib/ImmutableCache";
 const MAX_CACHED_DISCS = 10;
 const cache = new ImmutableCache(MAX_CACHED_DISCS);
 
-export const recentlyOpenedDiscussions = (state=cache, action) => {
-    switch(action.type){
-        case RECEIVE_DISCUSSION:
-            state.add(action.disc)
-            return state;
 
-        default:
-            return state
-    } 
-}
 
 
 export const openDiscId = (state=-1, action) => {
     switch(action.type){
-        case RECEIVE_DISCUSSION:
         case GET_DISCUSSION_FROM_CACHE:
-            return action.disc.id || -1; 
+            return action.disc.id || -1;
+        
+        case CHANGE_DISC_ID:
+            return action.discId || -1;
 
+        
         default:
             return state
     } 
 }
 
-
-export const discOpened = (state={}, action) => {
+export const tempDisc = (state={}, action) => {
     switch(action.type){
-        case REQUEST_DISCUSSION:
-            return state;
+        case CREATE_TEMP_DISC:
+            return action.tempDisc;
         
-        case RECEIVE_DISCUSSION:
-        case GET_DISCUSSION_FROM_CACHE:
-            return action.disc; 
-
-
-        case SEND_MESSAGE:
-            return state
-
-        
-        case MARK_AS_READ:
-            const content = state.content.map(mess => {
-                return {
-                    ...mess,
-                    state:2
-                }
-            })
-            
+        case SET_RECIPIENT_TEMP:
             return {
                 ...state,
-                content
+                recipient: action.recipient
             }
         
-        
-        case RECEIVE_MESSAGE_FROM_SERVER:
-            const isDiscussionOpened = () => (state.id && state.id === action.discId); 
-            // add the message to the content
-            if(action.msg && isDiscussionOpened()){
-                const newState = {
-                    ...state,
-                    content: [
-                        ...state.content,
-                        action.msg
-                    ]
-                }
-                return newState;
+        case SET_POSSIBLE_RECIPIENTS_TEMP:
+            return {
+                ...state,
+                suggestedRecipients: action.suggested_recipients
             }
-            return state;
-
+        
+        case CLOSE_TEMP_DISC:
+            return {};
+        
         default:
-            return state
-    } 
+            return state;
+    }
 }
 
+
+
 // discussionsOverview would be more exact
-export const discussions = (state=[], action) => {
+export const discussionsOverview = (state=[], action) => {
     const newState = deepCopy(state);
 
     switch(action.type){
@@ -105,9 +83,13 @@ export const discussions = (state=[], action) => {
             return discussions;
 
         
-        case RECEIVE_MESSAGE_FROM_SERVER:
+        case UPDATE_DISCUSSIONS_OVERVIEW:
             
-            setElementUpFront(newState, action.discId);
+            const done = setElementUpFront(newState, action.discId);
+            // si nouvelle conversation
+            if(!done){
+                // newState.unshift(action.disc);
+            }
             newState[0].lastMessage = action.msg;
 
             // If the message is not from you
@@ -120,7 +102,7 @@ export const discussions = (state=[], action) => {
 
 
         case MARK_AS_READ:
-            const discId = action.openedDisc;
+            const discId = action.discId;
 
             for(let disc of newState){
                 if(disc.id === discId){
@@ -130,6 +112,86 @@ export const discussions = (state=[], action) => {
             }
 
             return newState
+
+        default:
+            return state;
+    }
+}
+
+export const recentlyOpenedDiscussions = (state=cache, action) => {
+    switch(action.type){
+        case RECEIVE_DISCUSSION:
+            state.add(action.disc)
+            return state;
+
+        default:
+            return state
+    } 
+}
+
+
+export const discussions = (state={}, action) => {
+
+    switch(action.type){
+
+        case SEND_MESSAGE:
+            return state;
+
+        case UPDATE_DISCUSSION:
+            const id = action.discId;
+            const discExists = state[id];
+
+            if(discExists){
+                const currentContent =  discExists.content;
+                return {
+                    ...state,
+                    [id]: {
+                        ...state[id],
+                        content : [
+                            ...currentContent,
+                            action.msg
+                        ] 
+                    }
+                }
+
+            }
+
+            return state;
+        
+
+        case REQUEST_DISCUSSION:
+            return state;
+            
+
+        case RECEIVE_DISCUSSION:
+            return {
+                ...state,
+                [action.disc.id]: action.disc
+            }
+            
+        
+        case MARK_AS_READ:
+            const disc = state[action.discId] || {};
+            
+            const { content=[] } = disc;
+            
+            for(const msg of content){
+                // message is addressed to user
+                if(msg.to === action.userId){
+                    if(msg.state === "seen")
+                        break;
+                    
+                    msg.state = "seen";
+                }
+            }
+           
+            return {
+                ...state,
+                [action.discId] : {
+                    ...state[action.discId],
+                    content
+                }
+            }
 
         default:
             return state;

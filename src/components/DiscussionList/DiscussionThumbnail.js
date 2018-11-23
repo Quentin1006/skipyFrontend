@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+
+import Badge from "@material-ui/core/Badge";
+
+
+
 import './DiscussionThumbnail.css';
 
 import defaultpic from "../../images/weldon-Koelpig.png";
@@ -9,7 +14,8 @@ class DiscussionThumbnail extends Component {
 
     render(){
         const { friendsProfilePicture, friendsName, lastMessage, unreadMessagesCount} = this.props;
-        const extractOfLastMessage = getExtract(lastMessage, maxMsgLength)
+        const extractOfLastMessage = getExtract(lastMessage, maxMsgLength);
+
         return (
             
             <div className="thumbnail__wrapper">
@@ -21,8 +27,12 @@ class DiscussionThumbnail extends Component {
                     <div className="thumbnail__text-friends-name">{friendsName}</div>
                     <div className="thumbnail__text-last-message">{extractOfLastMessage}</div>
                 </div>
-                <div className=".thumbnail__unread-messages">
-                    <div>{unreadMessagesCount > 0 ? `(${unreadMessagesCount})` : ""}</div>
+                <div className=".thumbnail__unread-messages v-center set-right">
+                    {
+                        unreadMessagesCount > 0 
+                        && <Badge badgeContent={unreadMessagesCount} color="primary" />
+                    }
+                    
                 </div>
             
             </div>

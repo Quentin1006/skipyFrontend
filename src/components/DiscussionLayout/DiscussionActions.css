@@ -11,4 +11,7 @@
     padding: 7px;
     color: grey;
     font-style: italic;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap
 }

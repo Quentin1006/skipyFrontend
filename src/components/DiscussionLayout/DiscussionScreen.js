@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 
-import { Tooltip, OverlayTrigger } from "react-bootstrap";
-import { format} from 'date-fns';
+import Tooltip from '@material-ui/core/Tooltip';
+import { format, isSameDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import Message from "./DiscussionScreen/Message";
 
@@ -10,6 +10,18 @@ import Message from "./DiscussionScreen/Message";
 import "./DiscussionScreen.css";
 
 
+const LEFT = "left";
+const RIGHT = "right";
+
+const setToOppositeSide = (side) => {
+    return side === LEFT ? RIGHT : LEFT;
+}
+
+const setFormatedDate = (timestamp, locale=fr) => {
+    const now = Date.now();
+    const dateFormat = isSameDay(now, timestamp) ? "HH:MM" : "dd/MM/YYY HH:MM";
+    return format(timestamp, dateFormat, {locale});
+}
 
 class DiscussionScreen extends Component {
 
@@ -30,14 +42,12 @@ class DiscussionScreen extends Component {
     render() {
         const { messages, user, discId } = this.props;
 
-        
-        const listOfMessages = messages.map(mess => {
+        const listOfMessages = (messages || []).map(mess => {
 
-            
             const timestamp = parseInt(mess.date, 10);
-            const side = user.id === mess.from ? "right" : "left";
-            const tooltipPlacement = side === "right" ? "left" : "right";
-            const localeDate = format(timestamp, 'dd/MM/YYY HH:MM', {locale:fr});
+            const side = user.id === mess.from ? RIGHT : LEFT;
+            const tooltipPlacement = setToOppositeSide(side);
+            const localeDate = setFormatedDate(timestamp);
             //const distTime = formatDistance(timestamp, Date.now());
             return (
                 <li className={`message__row message--align-${side}`} key={`${discId}:${mess.id}`}>
@@ -46,18 +56,14 @@ class DiscussionScreen extends Component {
                     </div>
                     <div className="message__container">
                         <a href=" #">
-                            <OverlayTrigger 
-                                overlay={<Tooltip id={mess.id}>{localeDate}</Tooltip>} 
-                                placement={tooltipPlacement}
-                            >
+                            <Tooltip title={localeDate} placement={tooltipPlacement}>
                                 <div>
                                     <Message 
                                         content={mess.content}
                                         date={mess.date}
                                     />    
                                 </div>
-
-                            </OverlayTrigger>
+                            </Tooltip>
                         </a>
                     </div>
                     

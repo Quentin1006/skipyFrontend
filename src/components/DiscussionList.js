@@ -1,21 +1,45 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import DiscussionThumbnail from "./DiscussionList/DiscussionThumbnail";
+import DiscussionThumbnailTemp from "./DiscussionList/DiscussionThumbnailTemp";
 
 
 import "./DiscussionList.css"
+//import { tempDisc } from '../reducers/discussions';
 
 class DiscussionList extends Component {
 
     listItemClick = (e) => {
         e.preventDefault();
-        const id = parseInt(e.currentTarget.getAttribute("data-id"), 10);
-        console.log("thumbnail id =", id);
-        this.props.listItemClick(id);
+        const dataId = e.currentTarget.getAttribute("data-id");
+        const discId = dataId.includes("temp") ? dataId : parseInt(dataId, 10);
+        console.log("thumbnail id =", discId);
+        this.props.listItemClick(discId);
+    }
+
+
+    renderTempDisc = () => {
+        const { openDiscId, tempDisc, closeNewDiscussion } = this.props;
+        return (
+            <li key={tempDisc.id}>
+                <a 
+                href=" #" 
+                data-id={tempDisc.id} 
+                onClick={ this.listItemClick } 
+                className={openDiscId === tempDisc.id ? "highlighted" : ""}
+                >
+                    {
+                        tempDisc.id 
+                        && <DiscussionThumbnailTemp close={closeNewDiscussion}/> 
+                    }
+                </a>
+            </li>
+                    
+        )
     }
     
     render() {
-        const { openDiscId, children } = this.props
+        const { openDiscId, children, tempDisc } = this.props
         const listOfDiscussions = this.props.discussions || [];
 
         const listOfDiscussionsThumbnails = listOfDiscussions.map((disc) => (
@@ -32,13 +56,17 @@ class DiscussionList extends Component {
         ));
 
         return (
-            <ul className="discussion-list__top">
+            <Fragment>
                 <div className="discussion-list__btns">
                     {children}
                 </div>
-                
-                {listOfDiscussionsThumbnails}
-            </ul>
+
+                <ul className="discussion-list__content">
+                    {tempDisc.id && this.renderTempDisc()}
+                    {listOfDiscussionsThumbnails}
+                </ul>
+            </Fragment>
+            
         );
     }
 }

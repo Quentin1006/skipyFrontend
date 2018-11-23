@@ -4,19 +4,21 @@ import userprofile from "./userprofile";
 import lastError from "./error";
 import app from "./application";
 import {
+    discussionsOverview,
     discussions,
-    discOpened,
     openDiscId,
-    recentlyOpenedDiscussions
+    recentlyOpenedDiscussions,
+    tempDisc
 } from "./discussions";
 
 
 const rootReducer = combineReducers({
     userprofile,
+    discussionsOverview,
     discussions,
     openDiscId,
-    discOpened,
     recentlyOpenedDiscussions,
+    tempDisc,
     lastError,
     app
 })

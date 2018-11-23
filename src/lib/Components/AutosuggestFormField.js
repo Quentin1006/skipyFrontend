@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import deburr from "lodash/deburr";
 import Autosuggest from "react-autosuggest";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
-import Popper from "@material-ui/core/Popper";
 import { withStyles } from "@material-ui/core/styles";
 
 function renderInputComponent(inputProps) {
@@ -30,10 +28,6 @@ function renderInputComponent(inputProps) {
   );
 }
 const styles = theme => ({
-  root: {
-    height: 250,
-    flexGrow: 1
-  },
   container: {
     position: "relative"
   },
@@ -51,9 +45,6 @@ const styles = theme => ({
     margin: 0,
     padding: 0,
     listStyleType: "none"
-  },
-  divider: {
-    height: theme.spacing.unit * 2
   }
 });
 
@@ -62,24 +53,15 @@ class AutosuggestFormField extends Component {
     super(props);
     this.state = {
       single: "",
-      popper: "",
       suggestions: []
     };
   }
 
-  renderSuggestionContainer = options => (
-    <Popper anchorEl={this.popperNode} open={Boolean(options.children)}>
-      <Paper
-        square
-        {...options.containerProps}
-        style={{
-          width: this.popperNode ? this.popperNode.clientWidth : null
-        }}
-      >
-        {options.children}
-      </Paper>
-    </Popper>
-  );
+  renderSuggestionsContainer = options => (
+    <Paper {...options.containerProps} square>
+      {options.children}
+    </Paper>
+  )
 
   renderSuggestion = (suggestion, { query, isHighlighted }) => {
     const { getSuggestionValue } = this.props;
@@ -106,42 +88,14 @@ class AutosuggestFormField extends Component {
     );
   };
 
-  getSuggestions = value => {
-    const {
-      listOfSuggestions,
-      getSuggestionValue,
-      nbOfSuggestions
-    } = this.props;
-    const inputValue = deburr(value.trim()).toLowerCase();
-    const inputLength = inputValue.length;
-    let count = 0;
-
-    return inputLength === 0
-      ? []
-      : listOfSuggestions.filter(suggestion => {
-          const value = getSuggestionValue(suggestion);
-          const keep =
-            count < nbOfSuggestions &&
-            value.slice(0, inputLength).toLowerCase() === inputValue;
-
-          if (keep) {
-            count += 1;
-          }
-
-          return keep;
-        });
-  };
 
   handleSuggestionsFetchRequested = ({ value }) => {
-    this.setState({
-      suggestions: this.getSuggestions(value)
-    });
+    const { getSuggestions } = this.props;
+    getSuggestions(value);
   };
 
   handleSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: []
-    });
+    return;
   };
 
   handleChange = name => (event, { newValue }) => {
@@ -151,30 +105,39 @@ class AutosuggestFormField extends Component {
     this.props.onHandleChange(newValue);
   };
 
+  handleOnSuggestionSelected = (event, selectionInfos) => {
+    const { onSuggestionSelected } = this.props;
+    const { suggestion } = selectionInfos;
+
+    onSuggestionSelected(suggestion)
+  }
+
   render() {
-    const { classes, getSuggestionValue, inputProps } = this.props;
+    const { 
+      classes, 
+      getSuggestionValue, 
+      inputProps, 
+    } = this.props;
 
     const autosuggestProps = {
       renderInputComponent,
-      suggestions: this.state.suggestions,
+      suggestions: this.props.listOfSuggestions,
       onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
       onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
-      renderSuggestionContainer: this.renderSuggestionContainer,
+      renderSuggestionsContainer: this.renderSuggestionsContainer,
       getSuggestionValue,
-      renderSuggestion: this.renderSuggestion
+      renderSuggestion: this.renderSuggestion,
+      onSuggestionSelected: this.handleOnSuggestionSelected,
+      alwaysRenderSuggestions: true
     };
 
     return (
-      <div className={classes.root}>
         <Autosuggest
           {...autosuggestProps}
           inputProps={{
             classes,
-            value: this.state.popper,
-            onChange: this.handleChange("popper"),
-            inputRef: node => {
-              this.popperNode = node;
-            },
+            value: this.state.single,
+            onChange: this.handleChange("single"),
             InputLabelProps: {
               shrink: true
             },
@@ -182,17 +145,18 @@ class AutosuggestFormField extends Component {
           }}
           theme={{
             suggestionsList: classes.suggestionsList,
-            suggestion: classes.suggestion
+            suggestion: classes.suggestion,
+            container: classes.container,
+            suggestionsContainerOpen: classes.suggestionsContainerOpen,
           }}
         />
-      </div>
     );
   }
 }
 
 AutosuggestFormField.propTypes = {
   getSuggestionValue: PropTypes.func.isRequired,
-  listOfSuggestions: PropTypes.array.isRequired,
+  getSuggestions: PropTypes.func.isRequired,
   inputProps: PropTypes.shape({
     label: PropTypes.string,
     placeholder: PropTypes.string

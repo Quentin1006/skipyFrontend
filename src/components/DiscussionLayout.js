@@ -12,13 +12,28 @@ import "./DiscussionLayout.css";
 class DiscussionLayout extends Component {
 
     render() {
-        const { disc, openDiscId, onSendMessage, markMessagesAsRead } = this.props;
+        const { 
+            disc, 
+            openDiscId, 
+            markMessagesAsRead, 
+            friendlist, 
+            onSendMessage,
+            fetchMatchingFriends,
+            suggestions,
+            setNewRecipient
+        } = this.props;
+
         const { messages, user, friend } = disc;
+
+        const isTempDisc = String(openDiscId).includes("temp");
+        console.log("isTempDisc DiscussionLayout", isTempDisc);
 
         // const users = {
         //     [user.id]: user,
         //     [friend.id]: friend
         // }
+
+       
 
         return (
             <div className="discussion-layout__container">
@@ -26,6 +41,11 @@ class DiscussionLayout extends Component {
                     <DiscussionHeader 
                         user={user}
                         friend={friend}
+                        isTempDisc = {isTempDisc}
+                        friendlist={friendlist}
+                        fetchMatchingFriends={fetchMatchingFriends}
+                        suggestions={suggestions}
+                        setNewRecipient={setNewRecipient}
                     />
                 </div>
                 <div className="discussion-screen__container">

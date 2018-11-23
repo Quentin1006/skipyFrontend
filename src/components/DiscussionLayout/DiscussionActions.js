@@ -17,7 +17,9 @@ class DiscussionActions extends Component {
     }
 
     componentDidUpdate(){
-        this.sendInput.focus()
+        // Peut etre rajouter une variable qui distingue quand la discussion change
+        // ou dans shouldUpdate
+        //this.sendInput.focus()
     }
 
     onKeyDown(e){

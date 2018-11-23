@@ -12,9 +12,14 @@
 
 
 .welcome-layout__profilepicture img{
-   
     height: 150px;
     width: 150px;
     border-radius: 50%;
+    margin-bottom: 2%
     
+}
+
+.welcome-layout__welcome-message {
+    font-size: 32px;
+    margin-bottom: 5%;
 }

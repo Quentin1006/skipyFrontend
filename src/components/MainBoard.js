@@ -193,8 +193,7 @@ class MainBoard extends Component {
             openDiscId, 
             getDiscussion,
             changeOpenedDiscId,
-            
-            /*recentlyOpenedDiscussions*/ 
+            discussions
         } = this.props;
 
         if(openDiscId === id){
@@ -202,14 +201,13 @@ class MainBoard extends Component {
             return;
         }
 
-        // const discInCache = recentlyOpenedDiscussions.find(id);
-        // if(discInCache){
-        //     logger.info("discussion is in cache");
-        //     dispatch(get_discussion_from_cache(discInCache));
-        //     return;
-        // }
+        const discInCache = (discussions[id] !== undefined);
+        if(!discInCache){
+            logger.info("discussion not in cache, we fetch it");
+            getDiscussion(id); 
+        }
 
-        getDiscussion(id); 
+        
         changeOpenedDiscId(id);           
     }
 

@@ -9,7 +9,7 @@ import Logger from "../lib/Logger";
 import './Main.css';
 
 import Login from "../components/Login";
-import MainBoard from "../components/MainBoard";
+import MainBoard from "../components/MainBoardContainer";
 import MenuNavbar from "../components/MenuNavbar";
 
 
@@ -21,21 +21,7 @@ import {
 
 
 const logger = new Logger("Main");
-logger.info("bip")
-
-
-// const testDiscussions= [
-//     {
-//         friendsProfilepic: "entete-carre-magenta.png",
-//         friendsName:"Liam Neeson",
-//         lastMessage:"Long time no see pal! But i need to add some text to really see how it fits, eventhough its getting quite, i think we haven't met the limit. Now it should be good"
-//     },
-//     {
-//         friendsProfilepic: "entete-carre-magenta.png",
-//         friendsName:"Coco Nuts",
-//         lastMessage:"Just a short text"
-//     }
-// ]
+logger.info("beat")
 
 
 

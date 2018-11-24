@@ -8,9 +8,9 @@ import MessageIcon from "@material-ui/icons/Message";
 
 
 
-import DiscussionList from "../components/DiscussionList";
-import DiscussionLayout from "../components/DiscussionLayout";
-import WelcomeLayout from "../components/WelcomeLayout";
+import DiscussionList from "./DiscussionList";
+import DiscussionLayout from "./DiscussionLayout";
+import WelcomeLayout from "./WelcomeLayout";
 
 
 import { 
@@ -100,8 +100,6 @@ class MainBoard extends Component {
                 updateDiscussion(discUpdatedId, builtMsg);
             }
             
-
-
         });
 
 
@@ -110,21 +108,6 @@ class MainBoard extends Component {
                 markDiscMessageAsRead(discId)
             }
         });
-
-        this.sock.on("createDiscussion response", (disc) => {
-            // if(disc.id){
-            //     // la discussion existe
-            //     // on modifie discOpenedId
-            //     changeOpenedDiscId(disc);
-            //     logger("Trying to create a discussion that already exists");
-            //     return;
-            // }
-
-            // if(friend && friend.id){
-            //     createTempDisc(friend);
-            // }
-
-        })
 
 
         this.sock.on("retrieveActiveDiscs",  (discs) => {
@@ -276,6 +259,7 @@ class MainBoard extends Component {
                     {isDiscOpened 
                         ?   <DiscussionLayout 
                                 disc={discOpened}
+                                profile={profile} 
                                 openDiscId= {openDiscId}
                                 onSendMessage={this.sendMessage}
                                 markMessagesAsRead= {this.markMessagesAsRead}

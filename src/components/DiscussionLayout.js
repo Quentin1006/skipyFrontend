@@ -23,7 +23,7 @@ class DiscussionLayout extends Component {
             setNewRecipient
         } = this.props;
 
-        const { messages, user, friend } = disc;
+        const { messages, profile, friend } = disc;
 
         const isTempDisc = String(openDiscId).includes("temp");
        
@@ -32,7 +32,7 @@ class DiscussionLayout extends Component {
             <div className="discussion-layout__container">
                 <div className="discussion-header__container">
                     <DiscussionHeader 
-                        user={user}
+                        profile={profile}
                         friend={friend}
                         isTempDisc = {isTempDisc}
                         friendlist={friendlist}
@@ -45,7 +45,7 @@ class DiscussionLayout extends Component {
                     <DiscussionScreen 
                         discId={openDiscId}
                         messages={messages}
-                        user={user}
+                        profile={profile}
                     />
                 </div>
                 

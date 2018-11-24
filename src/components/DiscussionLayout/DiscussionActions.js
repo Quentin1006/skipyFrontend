@@ -8,8 +8,8 @@ class DiscussionActions extends Component {
     constructor(props){
         super(props);
 
-        this.onKeyDown = this.onKeyDown.bind(this);
-        this.onFocus = this.onFocus.bind(this);
+        this.onHandleKeyDown = this.onHandleKeyDown.bind(this);
+        this.onHandleFocus = this.onHandleFocus.bind(this);
     }
 
     componentDidMount(){

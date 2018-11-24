@@ -26,13 +26,6 @@ class DiscussionLayout extends Component {
         const { messages, user, friend } = disc;
 
         const isTempDisc = String(openDiscId).includes("temp");
-        console.log("isTempDisc DiscussionLayout", isTempDisc);
-
-        // const users = {
-        //     [user.id]: user,
-        //     [friend.id]: friend
-        // }
-
        
 
         return (

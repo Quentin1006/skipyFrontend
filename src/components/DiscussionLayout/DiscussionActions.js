@@ -22,18 +22,24 @@ class DiscussionActions extends Component {
         //this.sendInput.focus()
     }
 
-    onKeyDown(e){
+    onHandleKeyDown(e){
+        const { onSendMessage } = this.props;
         if(e.keyCode === ENTER){
-            const msg = e.currentTarget.value;
-            this.props.onSendMessage(msg);
-            e.currentTarget.value = "";
+            console.log(this.sendInput);
+            const msg = (e.currentTarget.value).trim();
+
+            if(msg !== ""){
+                onSendMessage(msg);
+                e.currentTarget.value = "";
+            }
+           
         }
 
         
     }
 
-    onFocus(e){
-        this.props.onFocusSendInput()
+    onHandleFocus(e){
+        this.props.onFocusSendInput();
     }
 
 
@@ -48,8 +54,8 @@ class DiscussionActions extends Component {
                         id="sendMessage"
                         data-discid= {discId}
                         placeholder="Send your message..."
-                        onKeyDown={this.onKeyDown} 
-                        onFocus={this.onFocus}
+                        onKeyDown={this.onHandleKeyDown} 
+                        onFocus={this.onHandleFocus}
                         ref={(input) => { this.sendInput = input; }} 
                     />
                 </div>

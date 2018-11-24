@@ -40,9 +40,9 @@ class DiscussionScreen extends Component {
 
     
     render() {
-        const { messages, user, discId } = this.props;
+        const { messages=[], user, discId } = this.props;
 
-        const listOfMessages = (messages || []).map(mess => {
+        const listOfMessages = messages.map(mess => {
 
             const timestamp = parseInt(mess.date, 10);
             const side = user.id === mess.from ? RIGHT : LEFT;
@@ -57,12 +57,9 @@ class DiscussionScreen extends Component {
                     <div className="message__container">
                         <a href=" #">
                             <Tooltip title={localeDate} placement={tooltipPlacement}>
-                                <div>
-                                    <Message 
-                                        content={mess.content}
-                                        date={mess.date}
-                                    />    
-                                </div>
+                                <Message>
+                                    {mess.content}
+                                </Message>
                             </Tooltip>
                         </a>
                     </div>

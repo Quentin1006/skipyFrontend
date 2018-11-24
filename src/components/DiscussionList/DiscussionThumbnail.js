@@ -27,10 +27,10 @@ class DiscussionThumbnail extends Component {
                     <div className="thumbnail__text-friends-name">{friendsName}</div>
                     <div className="thumbnail__text-last-message">{extractOfLastMessage}</div>
                 </div>
-                <div className=".thumbnail__unread-messages v-center set-right">
+                <div className="thumbnail__unread-messages v-center set-right">
                     {
                         unreadMessagesCount > 0 
-                        && <Badge badgeContent={unreadMessagesCount} color="primary" />
+                        && <Badge badgeContent={unreadMessagesCount} color="primary">""</Badge>
                     }
                     
                 </div>

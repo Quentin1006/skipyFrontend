@@ -39,10 +39,9 @@ class DiscussionList extends Component {
     }
     
     render() {
-        const { openDiscId, children, tempDisc } = this.props
-        const listOfDiscussions = this.props.discussions || [];
+        const { openDiscId, children, tempDisc, discsOverview=[] } = this.props
 
-        const listOfDiscussionsThumbnails = listOfDiscussions.map((disc) => (
+        const listOfDiscussionsThumbnails = discsOverview.map((disc) => (
             <li key={disc.id}>
                 <a href=" #" data-id={disc.id} onClick={ this.listItemClick } className={openDiscId === disc.id ? "highlighted" : ""}>
                     <DiscussionThumbnail

@@ -161,7 +161,7 @@ class MainBoard extends Component {
     }
 
 
-    onSendMessage = (content) => {
+    sendMessage = (content) => {
         const { initSendMessage, openDiscId, discOpened, tempDisc } = this.props;
         const to = (discOpened.friend && discOpened.friend.id )
                 || (tempDisc.recipient && tempDisc.recipient.id);
@@ -258,15 +258,14 @@ class MainBoard extends Component {
                 <div className="discussions-list__wrapper">
                     <DiscussionList 
                         openDiscId= {openDiscId}
-                        discussions={this.discsOverview} 
+                        discsOverview={this.discsOverview} 
                         listItemClick = {this.openDiscussion}
                         tempDisc={tempDisc}
                         startDiscussion={this.createNewDiscussion}
                         closeNewDiscussion= {this.closeNewDiscussion}   
-
                     >
-                        <IconButton onClick={this.createNewDiscussion}
-                        >
+
+                        <IconButton onClick={this.createNewDiscussion}>
                             <MessageIcon />
                         </IconButton>
         
@@ -278,7 +277,7 @@ class MainBoard extends Component {
                         ?   <DiscussionLayout 
                                 disc={discOpened}
                                 openDiscId= {openDiscId}
-                                onSendMessage={this.onSendMessage}
+                                onSendMessage={this.sendMessage}
                                 markMessagesAsRead= {this.markMessagesAsRead}
                                 friendlist={friendlist}
                                 fetchMatchingFriends= {this.fetchMatchingFriends}

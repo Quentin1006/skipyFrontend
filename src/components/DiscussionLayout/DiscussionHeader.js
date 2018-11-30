@@ -52,8 +52,8 @@ class DiscussionHeader extends Component {
                             onSuggestionSelected={setNewRecipient}
                                     
                             inputProps={{
-                            placeholder: "Enter a friend's name",
-                            label: ""
+                                placeholder: "Enter a friend's name",
+                                label: ""
                             }}
                         />
                     :   <div className="discussion-header__exchange">

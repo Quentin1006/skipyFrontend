@@ -66,11 +66,10 @@ export const close_temp_disc = () => {
 
 
 export const MARK_AS_READ = "MARK_AS_READ";
-export const mark_as_read = (discId, userId) => {
+export const mark_as_read = (discId) => {
     return {
         type: MARK_AS_READ,
-        discId,
-        userId
+        discId
     }
 }
 

@@ -6,24 +6,45 @@ import DiscussionHeader from "./DiscussionLayout/DiscussionHeader";
 import DiscussionActions from "./DiscussionLayout/DiscussionActions";
 
 
+import { withStyles } from '@material-ui/core/styles';
+import { IconButton } from "@material-ui/core";
+import InsertPhotoIcon from "@material-ui/icons/InsertPhoto"; 
+import PhotoCameraIcon from "@material-ui/icons/PhotoCamera"; 
+
+
+
 import "./DiscussionLayout.css";
+
+
+
+const styles = theme => ({
+    input: {
+      display: 'none',
+    },
+  });
 
 
 class DiscussionLayout extends Component {
 
+    insertPhoto = () => {
+        console.log("insert photo");
+    }
+
     render() {
         const { 
-            disc, 
+            disc,
+            profile,
             openDiscId, 
             markMessagesAsRead, 
             friendlist, 
             onSendMessage,
             fetchMatchingFriends,
             suggestions,
-            setNewRecipient
+            setNewRecipient,
+            classes
         } = this.props;
 
-        const { messages, profile, friend } = disc;
+        const { messages, user, friend } = disc;
 
         const isTempDisc = String(openDiscId).includes("temp");
        
@@ -45,7 +66,7 @@ class DiscussionLayout extends Component {
                     <DiscussionScreen 
                         discId={openDiscId}
                         messages={messages}
-                        profile={profile}
+                        user={user}
                     />
                 </div>
                 
@@ -54,7 +75,20 @@ class DiscussionLayout extends Component {
                         onSendMessage={onSendMessage}
                         onFocusSendInput={markMessagesAsRead}
                         discId = {openDiscId}
-                    />
+                    >
+                    <input accept="image/*" className={classes.input} id="insert-photo" type="file" />
+                    <label htmlFor="insert-photo">
+                        <IconButton className={classes.button} component="span">
+                            <InsertPhotoIcon />
+                        </IconButton>
+                    </label>
+                    <IconButton onClick={this.insertPhoto}>
+                        <PhotoCameraIcon />
+                    </IconButton>
+                        
+
+                    </DiscussionActions>
+                    
                 </div>
                 
             </div>
@@ -65,4 +99,4 @@ class DiscussionLayout extends Component {
 
 
 
-export default DiscussionLayout;
+export default withStyles(styles)(DiscussionLayout);

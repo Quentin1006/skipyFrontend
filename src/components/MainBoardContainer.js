@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import io from "socket.io-client";
 
-import IconButton from "@material-ui/core/IconButton";
+import { IconButton } from "@material-ui/core";
 import MessageIcon from "@material-ui/icons/Message";
 
 

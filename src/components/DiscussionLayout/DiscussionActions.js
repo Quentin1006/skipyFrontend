@@ -25,17 +25,13 @@ class DiscussionActions extends Component {
     onHandleKeyDown(e){
         const { onSendMessage } = this.props;
         if(e.keyCode === ENTER){
-            console.log(this.sendInput);
             const msg = (e.currentTarget.value).trim();
 
             if(msg !== ""){
                 onSendMessage(msg);
                 e.currentTarget.value = "";
             }
-           
         }
-
-        
     }
 
     onHandleFocus(e){
@@ -44,7 +40,7 @@ class DiscussionActions extends Component {
 
 
     render() {
-        const { discId } = this.props;
+        const { discId, children } = this.props;
 
         return (
             <div className="actions__wrapper">
@@ -60,7 +56,7 @@ class DiscussionActions extends Component {
                     />
                 </div>
                 <div className="secondary-actions__wrapper">
-                    Here could go some buttons actions like add a picture, send a sticker
+                    {children}
                 </div>
             </div>
         );

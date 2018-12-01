@@ -1,6 +1,12 @@
 .message__wrapper {
     background: rgb(131, 120, 120);
     border-radius: 5px;
-    padding: 10px 5px;
+    padding: 10px 10px;
     color: #fff;
 } 
+
+
+.message__box {
+    text-align: justify;
+    word-wrap: break-word;
+}

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { findDOMNode } from "react-dom";
 
 
 import DiscussionScreen from "./DiscussionLayout/DiscussionScreen";
@@ -6,31 +7,82 @@ import DiscussionHeader from "./DiscussionLayout/DiscussionHeader";
 import DiscussionActions from "./DiscussionLayout/DiscussionActions";
 
 
+import { Grid } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
-import { IconButton } from "@material-ui/core";
-import InsertPhotoIcon from "@material-ui/icons/InsertPhoto"; 
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera"; 
+ 
 
 
 
 import "./DiscussionLayout.css";
 
-
+const heightSection = 80;
 
 const styles = theme => ({
-    input: {
-      display: 'none',
+    headerContainer: {
+        position: "relative",
+        width:"100%",
+        height:"80px",
+        backgroundColor: "#eee",
     },
+    gridContainer:{ 
+        height:"100%"
+    }
   });
 
 
 class DiscussionLayout extends Component {
 
-    insertPhoto = () => {
-        console.log("insert photo");
+    state = {
+        headerHeight: heightSection + "px",
+        screenHeight: `calc(100% - ${2 * heightSection}px)`,
+        inputContainerHeight: heightSection + "px"
+    };
+
+    componentDidMount() {
+        const screenElement = findDOMNode(this.screen);
+        const screenStyles = getComputedStyle(screenElement);
+        console.log(screenStyles.height);
+        this.setState(state => ({ ...state, screenHeight: screenStyles.height }));
     }
 
+    componentDidUpdate(prevProps) {
+        if( prevProps !== this.props){
+            const screenElement = findDOMNode(this.screen);
+            const screenStyles = getComputedStyle(screenElement);
+            this.setState(state => ({ ...state, screenHeight: screenStyles.height }));
+        }
+    }
+
+    updateHeights = changeOfHeight => {
+        console.log("changeOfHeight:", changeOfHeight);
+        console.log(
+          "updateHeight",
+          this.state.screenHeight,
+          this.state.inputContainerHeight
+        );
+        changeOfHeight = parseInt(changeOfHeight, 10);
+        const screenHeight =
+          parseInt(this.state.screenHeight, 10) - changeOfHeight + "px";
+        const inputContainerHeight =
+          parseInt(this.state.inputContainerHeight, 10) + changeOfHeight + "px";
+    
+        /*console.log(
+          "screenHeight:",
+          screenHeight,
+          ", inputContainerHeight:",
+          inputContainerHeight
+        );*/
+        this.setState(state => ({
+          ...state,
+          screenHeight,
+          inputContainerHeight
+        }));
+      };
+
+
     render() {
+        const { headerHeight, screenHeight, inputContainerHeight } = this.state;
+
         const { 
             disc,
             profile,
@@ -51,45 +103,66 @@ class DiscussionLayout extends Component {
 
         return (
             <div className="discussion-layout__container">
-                <div className="discussion-header__container">
-                    <DiscussionHeader 
-                        profile={profile}
-                        friend={friend}
-                        isTempDisc = {isTempDisc}
-                        friendlist={friendlist}
-                        fetchMatchingFriends={fetchMatchingFriends}
-                        suggestions={suggestions}
-                        setNewRecipient={setNewRecipient}
-                    />
-                </div>
-                <div className="discussion-screen__container">
-                    <DiscussionScreen 
-                        discId={openDiscId}
-                        messages={messages}
-                        user={user}
-                    />
-                </div>
-                
-                <div className="discussion-action__container">
-                    <DiscussionActions
-                        onSendMessage={onSendMessage}
-                        onFocusSendInput={markMessagesAsRead}
-                        discId = {openDiscId}
+                <Grid 
+                    direction={"column"} 
+                    container 
+                    spacing={0} 
+                    className={classes.gridContainer}
+                >
+                    <Grid item 
+                        style={{ height: headerHeight }} 
+                        className="discussion-header__container"
                     >
-                    <input accept="image/*" className={classes.input} id="insert-photo" type="file" />
-                    <label htmlFor="insert-photo">
-                        <IconButton className={classes.button} component="span">
-                            <InsertPhotoIcon />
-                        </IconButton>
-                    </label>
-                    <IconButton onClick={this.insertPhoto}>
-                        <PhotoCameraIcon />
-                    </IconButton>
-                        
 
-                    </DiscussionActions>
+                        <DiscussionHeader 
+                            profile={profile}
+                            friend={friend}
+                            isTempDisc = {isTempDisc}
+                            friendlist={friendlist}
+                            fetchMatchingFriends={fetchMatchingFriends}
+                            suggestions={suggestions}
+                            setNewRecipient={setNewRecipient}
+                        />
+                    </Grid>
+
+                    <Grid 
+                        item 
+                        ref={screen => {
+                            this.screen = screen;
+                        }}
+                        style={{ height: screenHeight }}
+                        className="discussion-screen__container">
+
+                            <DiscussionScreen 
+                                discId={openDiscId}
+                                messages={messages}
+                                user={user}
+                            />
+                    </Grid>
                     
-                </div>
+                    <Grid 
+                        className="discussion-action__container"
+                        ref={tarea => {
+                            this.tarea = tarea;
+                        }}
+                        style={{ height: inputContainerHeight }}
+                        
+                    >
+
+                        <DiscussionActions
+                            onSendMessage={onSendMessage}
+                            onFocusSendInput={markMessagesAsRead}
+                            discId = {openDiscId}
+                            onInputSizeChanged={this.updateHeights}
+                        >
+                        
+                            
+
+                        </DiscussionActions>
+                        
+                    </Grid>
+                </Grid>
+                
                 
             </div>
         );

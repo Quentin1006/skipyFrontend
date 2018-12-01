@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 
 import { withStyles } from "@material-ui/core";
-import sizeMe from "react-sizeme";
 
 const fontSize = 14;
 
@@ -20,11 +19,14 @@ const styles = theme => {
       fontFamily: "Courier"
     },
     sendInput: {
-      width: "calc(100% - 6px)",
+      boxSizing: "border-box",
+      width: "calc(100%)",
       resize: "none",
       overflow: "hidden",
       fontSize: fontSize + "px",
-      fontFamily: "Courier"
+      fontFamily: "Courier",
+      padding: "4px 8px",
+      overflowWrap: "break-space" 
     }
   };
 };
@@ -36,6 +38,13 @@ const getNumberOfCharPerLine = (fontSize, parentWidth) => {
   return Math.floor(widthContainer / widthChar);
 };
 
+const getPad = (computedStyle) => {
+  return parseFloat(computedStyle.paddingLeft) 
+          + parseFloat(computedStyle.paddingRight)
+          + parseFloat(computedStyle.borderLeft)
+          + parseFloat(computedStyle.borderRight)
+}
+
 class AutoGrowTextarea extends Component {
   state = {
     rows: 1,
@@ -43,15 +52,19 @@ class AutoGrowTextarea extends Component {
     charPerLine: 0,
     widthOfChar: 0,
     value: "",
-    tareaWidth: 0
+    tareaWidth: 0,
+    // represents the padding + border of textarea
+    // since we are using border-box
+    pad:0
   };
 
   onWidthChange = () => {
-    const { widthOfChar } = this.state;
-    const tareaWidth = getComputedStyle(this.tarea).width;
+    const { widthOfChar, pad } = this.state;
+    const tareaWidth = parseFloat(getComputedStyle(this.tarea).width) - pad;
+
 
     const charPerLine = getNumberOfCharPerLine(widthOfChar, tareaWidth);
-    /*console.log(
+    console.log(
       "widthOfChar:",
       widthOfChar,
       ", charPerLine:",
@@ -59,7 +72,7 @@ class AutoGrowTextarea extends Component {
       ", tareaWidth:",
       tareaWidth
     );
-  */
+  
 
     this.setState(state => ({
       ...state,
@@ -72,10 +85,19 @@ class AutoGrowTextarea extends Component {
     const widthOfChar = this.getWidthOfChar();
     const computedStyle = getComputedStyle(this.tarea);
     const rowHeight = parseInt(computedStyle.height, 10);
-    const tareaWidth = computedStyle.width;
+    const pad = getPad(computedStyle);
+  
+    const tareaWidth = parseFloat(computedStyle.width) - pad;
 
     const charPerLine = getNumberOfCharPerLine(widthOfChar, tareaWidth);
-
+    console.log(
+      "widthOfChar:",
+      widthOfChar,
+      ", charPerLine:",
+      charPerLine,
+      ", tareaWidth:",
+      tareaWidth
+    );
     window.addEventListener("resize", this.onWidthChange);
 
     this.setState(state => ({
@@ -83,7 +105,8 @@ class AutoGrowTextarea extends Component {
       widthOfChar,
       charPerLine,
       tareaWidth,
-      rowHeight
+      rowHeight,
+      pad
     }));
   }
 
@@ -117,8 +140,8 @@ class AutoGrowTextarea extends Component {
       Math.ceil(this.tarea.textLength / this.state.charPerLine),
       1
     );
-    //console.log(this.state.charPerLine, this.tarea.textLength);
-    //console.log("rows:", rows, " rowsNeeded:", rowsNeeded);
+    console.log(this.state.charPerLine, this.tarea.textLength);
+    console.log("rows:", rows, " rowsNeeded:", rowsNeeded);
 
     if (rows !== rowsNeeded) {
       const heightChange = (rowsNeeded - rows) * rowHeight;
@@ -142,7 +165,8 @@ class AutoGrowTextarea extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    console.log("!!!!!!! PROBLEM WITH SPACE AT THE END OF A LINE !!!!!!")
+    const { classes, inputProps } = this.props;
     const { rows } = this.state;
     //console.log("in render:", rows);
     return (
@@ -158,12 +182,13 @@ class AutoGrowTextarea extends Component {
           rows={rows}
           className={classes.sendInput}
           onChange={this.onHandleChange}
-          wrap="hard"
+          wrap="soft"
           onKeyUp={this.onHandleKeyUp}
           maxLength={1000}
           ref={tarea => {
             this.tarea = tarea;
           }}
+          {...inputProps}
         />
       </Fragment>
     );
@@ -180,4 +205,4 @@ AutoGrowTextarea.defaultProps = {
   onInputSizeChanged: () => {}
 };
 
-export default withStyles(styles)(sizeMe()(AutoGrowTextarea));
+export default withStyles(styles)(AutoGrowTextarea);

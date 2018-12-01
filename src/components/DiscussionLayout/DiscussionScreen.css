@@ -10,6 +10,7 @@ li.message__row {
 
 .message__container {
     display: inline-block;
+    max-width: 80%
 }
 
 

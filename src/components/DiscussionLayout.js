@@ -153,7 +153,7 @@ class DiscussionLayout extends Component {
                             onSendMessage={onSendMessage}
                             onFocusSendInput={markMessagesAsRead}
                             discId = {openDiscId}
-                            onInputSizeChanged={this.updateHeights}
+                            onElementSizeChanged={this.updateHeights}
                         >
                         
                             

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/HighlightOff';
 
 const styles = {
     imgPreview: {
@@ -12,22 +14,51 @@ const styles = {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)"
-
+    },
+    closeBtn: {
+        position: "absolute",
+        top: "0",
+        right: "0",
+        padding: "0",
+        transform: "translate(50%, -50%)",
+        zIndex: "1000",
+        color: "#fff",
+        backgroundColor: "#7d7777"
+    },
+    imgPreviewWrapper: {
+        position: "relative"
     }
 }
 
 class PreviewImage extends Component {
+
+    onHandleClick = (e) => {
+        const { closePreview, id } = this.props;
+
+        closePreview(id);
+    }
     render() {
-        const { src, width, height, alt, className,  classes } = this.props;
+        const { src, id, width, height, alt, className, classes } = this.props;
         return (
-            <div className={className} style={{width:width, height:height}}>
-                <img 
-                    className={classes.imgPreview} 
-                    src={src} 
+                
+                <div className={`${classes.imgPreviewWrapper} ${className}`} style={{width:width, height:height}}>
+                    <IconButton 
+                        className={classes.closeBtn} 
+                        aria-label="delete" 
+                        color="primary"
+                        onClick={this.onHandleClick}
+                        dataId={id}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    <img 
+                        className={classes.imgPreview} 
+                        src={src} 
+                
+                        alt={alt}
+                    />
+                </div>
             
-                    alt={alt}
-                />
-            </div>
         );
     }
 }

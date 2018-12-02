@@ -11,6 +11,11 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import "./DiscussionActions.css";
 
 const ENTER = 13;
+const MAX_CONCURRENT_UPLOAD = 3;
+// NE PAS LE LAISSER EN DUR
+const PREVIEW_HEIGHT = 132;
+
+let idGen = 0;
 
 const styles = {
     input: {
@@ -25,24 +30,36 @@ class DiscussionActions extends Component {
         this.state = {
             uploadedImgs : [],
             nbUploaded: 0,
-            uploading: false
+            uploading: false,
+            previewOpen: false
         }
 
-        this.onHandleKeyDown = this.onHandleKeyDown.bind(this);
-        this.onHandleFocus = this.onHandleFocus.bind(this);
+
+        // this.onHandleKeyDown = this.onHandleKeyDown.bind(this);
+        // this.onHandleFocus = this.onHandleFocus.bind(this);
     }
 
     componentDidMount(){
         //this.sendInput.focus()
+        console.log("previewWrapper", this.previewWrapper)
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps, prevState){
+        const { onElementSizeChanged } = this.props;
         // Peut etre rajouter une variable qui distingue quand la discussion change
         // ou dans shouldUpdate
         //this.sendInput.focus()
+        if(!prevState.previewOpen && this.state.previewOpen){
+            onElementSizeChanged(PREVIEW_HEIGHT);
+        }
+
+        if(prevState.previewOpen && !this.state.previewOpen){
+            onElementSizeChanged(-PREVIEW_HEIGHT);
+        }
+        
     }
 
-    onHandleKeyDown(e){
+    onHandleKeyDown = (e) => {
         const { onSendMessage } = this.props;
         if(e.keyCode === ENTER){
             const msg = (e.currentTarget.value).trim();
@@ -54,7 +71,7 @@ class DiscussionActions extends Component {
         }
     }
 
-    onHandleFocus(e){
+    onHandleFocus = (e) => {
         this.props.onFocusSendInput();
     }
 
@@ -80,7 +97,7 @@ class DiscussionActions extends Component {
                 ...state, 
                 uploadedImgs: [
                     ...state.uploadedImgs, 
-                    {name, size, type, preview}
+                    {name, size, type, preview, id:idGen++}
                 ]
             }));
            
@@ -96,20 +113,43 @@ class DiscussionActions extends Component {
     }
 
     onHandleChange = (e) => {
-        let { nbUploaded } = this.state;
-        let filesToUpload = Array.from(this.uploadInput.files) || [];
+        //const { onElementSizeChanged } = this.props;
+        let { nbUploaded, previewOpen } = this.state;
+        const filesToUpload = Array.from(this.uploadInput.files) || [];
         // boucle sur le nombre d'item uploadés
-        while(nbUploaded < 3 && filesToUpload[0]){
+        while(nbUploaded < MAX_CONCURRENT_UPLOAD && filesToUpload[0]){
             this.previewImage(filesToUpload[0]);
 
             filesToUpload.shift();
             nbUploaded++;
+
+            // If we upload the first file
+            previewOpen = (nbUploaded >= 1);
         }
-        
 
-
-        this.setState( state => ({...state, nbUploaded}))
+        this.setState( state => ({...state, nbUploaded, previewOpen}))
         
+    }
+
+    closePreview = (id) => {
+        let previewExists = false;
+        const uploadedImgs = this.state.uploadedImgs.filter(upload => {
+            if(upload.id === id)
+                previewExists =false;
+
+            return upload.id !== id
+        });
+
+        const nbUploaded = uploadedImgs.length;
+
+        const previewOpen = nbUploaded > 0;
+
+        this.setState(state => ({
+            ...state,
+            previewOpen,
+            nbUploaded,
+            uploadedImgs
+        }))
     }
 
 
@@ -117,25 +157,35 @@ class DiscussionActions extends Component {
         const { uploadedImgs } = this.state;
 
         return (
-            <div className="action__preview-wrapper">
-                { uploadedImgs.map(upload => (
-                    <PreviewImage src={upload.preview} className="action__preview-image"/>
-                )) }
-            </div>
+                 uploadedImgs.map((upload) => (
+                    <PreviewImage 
+                        key={upload.id} 
+                        id={upload.id}
+                        src={upload.preview} 
+                        className="action__preview-image"
+                        closePreview={this.closePreview}
+                    />
+                ))
         )
     }
 
 
     render() {
-        const { uploadedImgs } = this.state;
-        const { discId, onInputSizeChanged, classes } = this.props;
+        const { uploadedImgs, nbUploaded } = this.state;
+        const { discId, onElementSizeChanged, classes } = this.props;
+        const canUpload = nbUploaded < MAX_CONCURRENT_UPLOAD;
 
         return (
-            <div className="actions__wrapper">
-                {
-                    uploadedImgs.length > 0 
-                    && this.renderPreview()
+            <div className="actions__wrapper" >
+                <div className="action__preview-container" ref={preview => {this.previewWrapper = preview}}>
+                {  
+                        uploadedImgs.length > 0 
+                        && 
+                        <div className="action__preview-wrapper" > 
+                            {this.renderPreview()}
+                        </div>
                 }
+                </div>
                
                 <div className="action__send-message">
                     <AutoGrowTextArea 
@@ -148,7 +198,7 @@ class DiscussionActions extends Component {
                             onKeyDown: this.onHandleKeyDown 
                         }} 
                         ref={(input) => { this.sendInput = input; }} 
-                        onInputSizeChanged={onInputSizeChanged}
+                        onInputSizeChanged={onElementSizeChanged}
                     />
                 </div>
                 <div className="secondary-actions__wrapper">
@@ -160,13 +210,14 @@ class DiscussionActions extends Component {
                         onChange={this.onHandleChange}
                         multiple
                         ref= {input => {this.uploadInput = input}}
+                        disabled={!canUpload}
                     />
                     <label htmlFor="insert-photo">
-                        <IconButton className={classes.button} component="span">
+                        <IconButton disabled={!canUpload} className={classes.button} component="span">
                             <InsertPhotoIcon />
                         </IconButton>
                     </label>
-                    <IconButton onClick={this.insertPhoto}>
+                    <IconButton onClick={this.insertPhoto} >
                         <PhotoCameraIcon />
                     </IconButton>
                 </div>

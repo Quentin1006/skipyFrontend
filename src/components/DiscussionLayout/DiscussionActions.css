@@ -1,11 +1,14 @@
-.action__send-message > input {
-    width: 100%;
-    height:32px;
-    padding: 0 10px;
-    box-sizing: border-box;
-
+.action__textarea {
+    width: calc(100% - 48px);
+    
 }
 
+.action__send_btn {
+}
+
+.action__send-message {
+    display: flex
+}
 
 .secondary-actions__wrapper {
     color: grey;

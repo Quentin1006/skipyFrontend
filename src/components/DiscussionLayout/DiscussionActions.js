@@ -7,6 +7,7 @@ import { IconButton } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import InsertPhotoIcon from "@material-ui/icons/InsertPhoto"; 
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
+import SendIcon from "@material-ui/icons/Send";
 
 
 import NewWindow from '../../lib/Components/NewWindow';
@@ -34,6 +35,7 @@ class DiscussionActions extends Component {
         super(props);
 
         this.state = {
+            inputValue:"",
             uploadedImgs : [],
             nbUploaded: 0,
             uploading: false,
@@ -68,15 +70,15 @@ class DiscussionActions extends Component {
     }
 
     onHandleKeyDown = (e) => {
-        const { onSendMessage } = this.props;
         if(e.keyCode === ENTER){
-            const msg = (e.currentTarget.value).trim();
-
-            if(msg !== ""){
-                onSendMessage(msg);
-                e.currentTarget.value = "";
-            }
+            e.preventDefault();
+            this._sendMessage(e);
         }
+    }
+
+
+    onHandleClickSend = (e) => {
+        this._sendMessage(e);
     }
 
 
@@ -88,6 +90,21 @@ class DiscussionActions extends Component {
     onHandleChange = (e) => {
         const filesToUpload = Array.from(this.uploadInput.files) || [];
         this._addPictureToUploads(filesToUpload); 
+    }
+
+    onInputValueChange = (inputValue) => {
+        this.setState(state => ({...state, inputValue}))
+    }
+
+
+    _sendMessage = (e) => {
+        const { onSendMessage } = this.props;
+
+        const msg = (this.state.inputValue).trim();
+        if(msg !== ""){
+            onSendMessage(msg);
+            this.setState(state => ({...state, inputValue: ""}));
+        }
     }
 
     
@@ -267,18 +284,29 @@ class DiscussionActions extends Component {
                 </div>
                
                 <div className="action__send-message">
-                    <AutoGrowTextArea 
-                        
-                        inputProps= {{
-                            id:"sendMessage",
-                            "data-discid": discId,
-                            placeholder:"Send your message...",
-                            onFocus: this.onHandleFocus,
-                            onKeyDown: this.onHandleKeyDown 
-                        }} 
-                        ref={(input) => { this.sendInput = input; }} 
-                        onInputSizeChanged={onElementSizeChanged}
-                    />
+                    <div className="action__textarea">
+                        <AutoGrowTextArea 
+                            
+                            inputProps= {{
+                                id:"sendMessage",
+                                "data-discid": discId,
+                                placeholder:"Send your message...",
+                                onFocus: this.onHandleFocus,
+                                onKeyDown: this.onHandleKeyDown,
+                                value: this.state.inputValue
+                                
+                            }} 
+                            ref={(input) => { this.sendInput = input; }}
+                            onInputValueChange= {this.onInputValueChange}
+                            onInputSizeChanged={onElementSizeChanged}
+                        />
+                    </div>
+                    <div className="action__send_btn">
+                        <IconButton style={{padding: "2px 12px"}} onClick={this.onHandleClickSend}>
+                            <SendIcon />
+                        </IconButton>
+                    </div>
+                    
                 </div>
                 <div className="secondary-actions__wrapper">
                     <input 

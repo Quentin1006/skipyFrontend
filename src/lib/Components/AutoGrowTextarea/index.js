@@ -133,6 +133,7 @@ class AutoGrowTextarea extends Component {
     return ctx.measureText(txt).width;
   };
 
+
   checkIfShouldUpdateHeight = () => {
     const { onInputSizeChanged } = this.props;
     const { rows, rowHeight } = this.state;
@@ -153,16 +154,19 @@ class AutoGrowTextarea extends Component {
     }
   };
 
+
   onHandleChange = e => {
-    const { handleInputValue } = this.props;
+    const { onInputValueChange } = this.props;
     const value = e.currentTarget.value;
 
-    handleInputValue(value);
+    onInputValueChange(value);
   };
+
 
   onHandleKeyUp = () => {
     this.checkIfShouldUpdateHeight();
   };
+
 
   render() {
     console.log("!!!!!!! PROBLEM WITH SPACE AT THE END OF A LINE !!!!!!")

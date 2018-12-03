@@ -13,7 +13,7 @@ class Message extends Component {
         const props = this.props;
 
         return (
-            <div className={"message__wrapper"} {...props}>
+            <div  {...props} className="message__wrapper">
                 <div className="message__box">
                     {children}
                 </div>

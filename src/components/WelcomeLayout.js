@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 //import FormDialog from "../lib/Components/FormDialog";
 //import AutosuggestFormField from "../lib/Components/AutosuggestFormField"
 
-import ExtendedButton from "../lib/Components/ExtendedButton";
+import Fab from "@material-ui/core/Fab";
 
 import "./WelcomeLayout.css";
 
@@ -29,7 +29,7 @@ class WelcomeLayout extends Component {
                         <img src={profile.profilepicture} alt="user"/>
                     </div>
 
-                    <ExtendedButton onClick={startDiscussion}>{"start discussion"}</ExtendedButton>
+                    <Fab variant="extended" onClick={startDiscussion}>{"start discussion"}</Fab>
 
                     {/*<FormDialog
                         text= "To subscribe to this website, please enter your email address here. We will send updates occasionally."

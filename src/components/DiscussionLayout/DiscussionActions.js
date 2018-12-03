@@ -8,6 +8,11 @@ import { withStyles } from '@material-ui/core/styles';
 import InsertPhotoIcon from "@material-ui/icons/InsertPhoto"; 
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 
+
+import NewWindow from '../../lib/Components/NewWindow';
+import WebcamRenderer from '../../lib/Components/WebcamRenderer';
+import CapturedImage from '../../lib/Components/CapturedImage';
+
 import "./DiscussionActions.css";
 
 const ENTER = 13;
@@ -16,6 +21,7 @@ const MAX_CONCURRENT_UPLOAD = 3;
 const PREVIEW_HEIGHT = 132;
 
 let idGen = 0;
+const generateId = () => (idGen++);
 
 const styles = {
     input: {
@@ -31,7 +37,9 @@ class DiscussionActions extends Component {
             uploadedImgs : [],
             nbUploaded: 0,
             uploading: false,
-            previewOpen: false
+            previewOpen: false,
+            cameraOpen: false,
+            pictureTaken: null
         }
 
 
@@ -41,7 +49,6 @@ class DiscussionActions extends Component {
 
     componentDidMount(){
         //this.sendInput.focus()
-        console.log("previewWrapper", this.previewWrapper)
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -49,11 +56,12 @@ class DiscussionActions extends Component {
         // Peut etre rajouter une variable qui distingue quand la discussion change
         // ou dans shouldUpdate
         //this.sendInput.focus()
-        if(!prevState.previewOpen && this.state.previewOpen){
+        if(prevState.nbUploaded === 0 && this.state.nbUploaded > 0){
             onElementSizeChanged(PREVIEW_HEIGHT);
         }
 
-        if(prevState.previewOpen && !this.state.previewOpen){
+
+        if(prevState.nbUploaded > 0 && this.state.nbUploaded === 0){
             onElementSizeChanged(-PREVIEW_HEIGHT);
         }
         
@@ -71,15 +79,19 @@ class DiscussionActions extends Component {
         }
     }
 
+
     onHandleFocus = (e) => {
         this.props.onFocusSendInput();
     }
 
-    insertPhoto = () => {
-        console.log("insert photo");
+
+    onHandleChange = (e) => {
+        const filesToUpload = Array.from(this.uploadInput.files) || [];
+        this._addPictureToUploads(filesToUpload); 
     }
 
-    previewImage = (fileToUpload) => {
+    
+    _previewImage = (fileToUpload) => {
         const { name, size, type } = fileToUpload;
         const reader = new FileReader();
 
@@ -97,7 +109,7 @@ class DiscussionActions extends Component {
                 ...state, 
                 uploadedImgs: [
                     ...state.uploadedImgs, 
-                    {name, size, type, preview, id:idGen++}
+                    {name, size, type, preview, id:generateId()}
                 ]
             }));
            
@@ -112,13 +124,13 @@ class DiscussionActions extends Component {
         reader.readAsDataURL(fileToUpload);
     }
 
-    onHandleChange = (e) => {
+
+    _addPictureToUploads = (filesToUpload) => {
         //const { onElementSizeChanged } = this.props;
         let { nbUploaded, previewOpen } = this.state;
-        const filesToUpload = Array.from(this.uploadInput.files) || [];
         // boucle sur le nombre d'item uploadés
         while(nbUploaded < MAX_CONCURRENT_UPLOAD && filesToUpload[0]){
-            this.previewImage(filesToUpload[0]);
+            this._previewImage(filesToUpload[0]);
 
             filesToUpload.shift();
             nbUploaded++;
@@ -128,20 +140,13 @@ class DiscussionActions extends Component {
         }
 
         this.setState( state => ({...state, nbUploaded, previewOpen}))
-        
     }
 
+    
     closePreview = (id) => {
-        let previewExists = false;
-        const uploadedImgs = this.state.uploadedImgs.filter(upload => {
-            if(upload.id === id)
-                previewExists =false;
-
-            return upload.id !== id
-        });
-
+       
+        const uploadedImgs = this.state.uploadedImgs.filter(upload => upload.id !== id);
         const nbUploaded = uploadedImgs.length;
-
         const previewOpen = nbUploaded > 0;
 
         this.setState(state => ({
@@ -150,6 +155,80 @@ class DiscussionActions extends Component {
             nbUploaded,
             uploadedImgs
         }))
+    }
+
+
+    takePhoto = () => {
+        this.setState(state => ({ ...state, cameraOpen: true }));
+    }
+
+
+    onTakeScreenshot = (imgData) => {
+        if(!imgData)
+            return;
+
+        const pictureTaken = imgData;
+        this.setState(state => ({...state, pictureTaken}));
+    }
+
+
+    onKeepPictureTaken = () => {
+        const { pictureTaken, nbUploaded } = this.state;
+
+        if(nbUploaded < MAX_CONCURRENT_UPLOAD){
+            const id = generateId();
+            const newUpload = {
+                id,
+                name:`screenshot${id}`,
+                size: 0,
+                preview: pictureTaken,
+                type:"image/png"
+            }
+
+
+            this.setState(state => ({ 
+                ...state, 
+                uploadedImgs: [
+                    ...state.uploadedImgs,
+                    newUpload
+                ],
+                nbUploaded:nbUploaded+1,
+                pictureTaken: null,
+                cameraOpen: false
+            }));
+        }
+        
+        // This function expects an array as argument
+        
+    }
+
+
+    onDeletePictureTaken = () => {
+        this.setState(state => ({...state, pictureTaken: null}))
+    }
+
+
+    closeNewWindow = () => {
+        this.setState(state => ({...state, cameraOpen: false}))
+    }
+
+
+    renderCameraWindow = () => {
+        const { pictureTaken } = this.state;
+        return (
+            <NewWindow closeNewWindow={() => this.closeNewWindow()}>
+                {
+                    pictureTaken === null
+                    ? <WebcamRenderer onTakeScreenshot={(img) => this.onTakeScreenshot(img)}/>
+                    : <CapturedImage 
+                        onAccept={this.onKeepPictureTaken}
+                        onCancel={this.onDeletePictureTaken}
+                        src={pictureTaken}
+                      />
+
+                }
+            </NewWindow>
+        )
     }
 
 
@@ -171,7 +250,7 @@ class DiscussionActions extends Component {
 
 
     render() {
-        const { uploadedImgs, nbUploaded } = this.state;
+        const { uploadedImgs, nbUploaded, cameraOpen } = this.state;
         const { discId, onElementSizeChanged, classes } = this.props;
         const canUpload = nbUploaded < MAX_CONCURRENT_UPLOAD;
 
@@ -217,13 +296,16 @@ class DiscussionActions extends Component {
                             <InsertPhotoIcon />
                         </IconButton>
                     </label>
-                    <IconButton onClick={this.insertPhoto} >
+                    <IconButton disabled={!canUpload} onClick={this.takePhoto} >
                         <PhotoCameraIcon />
+                        {cameraOpen && this.renderCameraWindow()}
                     </IconButton>
                 </div>
             </div>
         );
     }
 }
+
+
 
 export default withStyles(styles)(DiscussionActions);

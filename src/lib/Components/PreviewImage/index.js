@@ -32,13 +32,14 @@ const styles = {
 
 class PreviewImage extends Component {
 
-    onHandleClick = (e) => {
+    onHandleClick = () => {
         const { closePreview, id } = this.props;
-
         closePreview(id);
     }
+
+    
     render() {
-        const { src, id, width, height, alt, className, classes } = this.props;
+        const { src, width, height, alt, className, classes } = this.props;
         return (
                 
                 <div className={`${classes.imgPreviewWrapper} ${className}`} style={{width:width, height:height}}>
@@ -47,18 +48,15 @@ class PreviewImage extends Component {
                         aria-label="delete" 
                         color="primary"
                         onClick={this.onHandleClick}
-                        dataId={id}
                     >
                         <CloseIcon />
                     </IconButton>
                     <img 
                         className={classes.imgPreview} 
                         src={src} 
-                
                         alt={alt}
                     />
                 </div>
-            
         );
     }
 }

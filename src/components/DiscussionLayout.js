@@ -38,12 +38,14 @@ class DiscussionLayout extends Component {
         inputContainerHeight: heightSection + "px"
     };
 
+
     componentDidMount() {
         const screenElement = findDOMNode(this.screen);
         const screenStyles = getComputedStyle(screenElement);
         console.log(screenStyles.height);
         this.setState(state => ({ ...state, screenHeight: screenStyles.height }));
     }
+
 
     componentDidUpdate(prevProps) {
         if( prevProps !== this.props){
@@ -52,6 +54,7 @@ class DiscussionLayout extends Component {
             this.setState(state => ({ ...state, screenHeight: screenStyles.height }));
         }
     }
+
 
     updateHeights = changeOfHeight => {
         console.log("changeOfHeight:", changeOfHeight);
@@ -93,6 +96,8 @@ class DiscussionLayout extends Component {
             fetchMatchingFriends,
             suggestions,
             setNewRecipient,
+            isWritingMessage,
+            updateWritingMessage,
             classes
         } = this.props;
 
@@ -122,6 +127,7 @@ class DiscussionLayout extends Component {
                             fetchMatchingFriends={fetchMatchingFriends}
                             suggestions={suggestions}
                             setNewRecipient={setNewRecipient}
+
                         />
                     </Grid>
 
@@ -154,6 +160,8 @@ class DiscussionLayout extends Component {
                             onFocusSendInput={markMessagesAsRead}
                             discId = {openDiscId}
                             onElementSizeChanged={this.updateHeights}
+                            isWritingMessage={isWritingMessage}
+                            updateWritingMessage={updateWritingMessage}
                         >
                         
                             

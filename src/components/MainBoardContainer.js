@@ -11,6 +11,7 @@ import MessageIcon from "@material-ui/icons/Message";
 import DiscussionList from "./DiscussionList";
 import DiscussionLayout from "./DiscussionLayout";
 import WelcomeLayout from "./WelcomeLayout";
+import ShowLeaveDiscussionDialog from "./ShowLeaveDiscussionDialog";
 
 
 import { 
@@ -56,6 +57,13 @@ class MainBoard extends Component {
             markDiscMessageAsRead,
             changeOpenedDiscId
         } = this.props;
+
+        this.state = {
+            isWritingMessage: false,
+            showLeaveDiscussionDialog: false,
+            isSendingMessage: false,
+            discIdRequested: -1
+        }
 
         this.discsOverview = getOverview(discussionsOverview);
 
@@ -169,6 +177,49 @@ class MainBoard extends Component {
     }
 
 
+    updateWritingMessage = (bool) => {
+        this.setState({isWritingMessage: bool});
+    }
+
+
+    onContinueLeaveDiscussion = () => {
+        const { discIdRequested } = this.state;
+
+        this.openDiscussion(discIdRequested);
+
+        this.setState({
+            isWritingMessage:false,
+            showLeaveDiscussionDialog: false,
+            discIdRequested: -1
+        })
+    }
+
+
+    onCancelLeaveDiscussion = () => {
+        this.setState({
+            showLeaveDiscussionDialog: false,
+            discIdRequested: -1
+        }) 
+    }
+
+
+    requestDiscussion = (id) => {
+        const { isWritingMessage } = this.state;
+        
+        if(isWritingMessage){
+            this.setState({
+                showLeaveDiscussionDialog: true,
+                discIdRequested: id
+            });
+        }
+
+        else {
+            this.openDiscussion(id);
+        }
+    }
+
+
+    
 
     openDiscussion = (id) => {
         const { 
@@ -177,6 +228,8 @@ class MainBoard extends Component {
             changeOpenedDiscId,
             discussions
         } = this.props;
+
+
 
         if(openDiscId === id){
             logger.info("Discussion already open");
@@ -233,6 +286,8 @@ class MainBoard extends Component {
             friendlist, 
             tempDisc 
         } = this.props;
+
+        const { showLeaveDiscussionDialog, isWritingMessage } = this.state;
         
         
         return (
@@ -241,7 +296,7 @@ class MainBoard extends Component {
                     <DiscussionList 
                         openDiscId= {openDiscId}
                         discsOverview={this.discsOverview} 
-                        listItemClick = {this.openDiscussion}
+                        listItemClick = {this.requestDiscussion}
                         tempDisc={tempDisc}
                         startDiscussion={this.createNewDiscussion}
                         closeNewDiscussion= {this.closeNewDiscussion}   
@@ -266,6 +321,8 @@ class MainBoard extends Component {
                                 fetchMatchingFriends= {this.fetchMatchingFriends}
                                 suggestions = {tempDisc.suggestedRecipients || []}
                                 setNewRecipient= { this.setNewRecipient}
+                                isWritingMessage={isWritingMessage}
+                                updateWritingMessage={this.updateWritingMessage}
                             /> 
                         :   <WelcomeLayout 
                                 profile={profile} 
@@ -274,6 +331,14 @@ class MainBoard extends Component {
                             />
                     }
                 </div>
+
+                { 
+                    showLeaveDiscussionDialog && 
+                    <ShowLeaveDiscussionDialog 
+                        onAccept= {this.onContinueLeaveDiscussion}
+                        onCancel= {this.onCancelLeaveDiscussion}
+                    /> 
+                }
             
             </div>
         );

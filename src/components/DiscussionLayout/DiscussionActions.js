@@ -56,11 +56,18 @@ class DiscussionActions extends Component {
 
 
     componentDidUpdate(prevProps, prevState){
-        const { onElementSizeChanged, discId } = this.props;
-        const { nbUploaded, cameraOpen } = this.state;
+        const { 
+            onElementSizeChanged, 
+            discId, 
+            updateWritingMessage 
+        } = this.props;
+
+        const { nbUploaded, cameraOpen, inputValue } = this.state;
         // Peut etre rajouter une variable qui distingue quand la discussion change
         // ou dans shouldUpdate
         //this.sendInput.focus()
+
+        // control if the upload container is open
         if(prevState.nbUploaded === 0 && nbUploaded > 0){
             onElementSizeChanged(PREVIEW_HEIGHT);
         }
@@ -70,12 +77,30 @@ class DiscussionActions extends Component {
             onElementSizeChanged(-PREVIEW_HEIGHT);
         }
 
+        // Control if uploads limit is reached
         if(nbUploaded === MAX_CONCURRENT_UPLOAD && cameraOpen){
             this.closeNewWindow();
         }
 
+        // Control if the discussion has changed
         if(prevProps.discId !== discId){
             this.resetState();
+        }
+
+
+        // Control if the user is writing
+        if(
+            prevProps.isWritingMessage
+            && ( inputValue === "" && nbUploaded === 0)
+        ){
+            updateWritingMessage(false);
+        }
+
+        if(
+            !prevProps.isWritingMessage
+            && ( inputValue !== "" || nbUploaded > 0)
+        ){
+            updateWritingMessage(true);
         }
         
     }
@@ -108,6 +133,7 @@ class DiscussionActions extends Component {
     onInputValueChange = (inputValue) => {
         this.setState(state => ({...state, inputValue}))
     }
+
 
     resetState = () => {
         this.setState({
@@ -187,7 +213,7 @@ class DiscussionActions extends Component {
             previewOpen = (nbUploaded >= 1);
         }
 
-        this.setState( state => ({...state, nbUploaded, previewOpen}))
+        this.setState( state => ({...state, nbUploaded, previewOpen}));
     }
 
     

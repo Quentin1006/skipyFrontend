@@ -43,14 +43,13 @@ class DiscussionScreen extends Component {
     
 
     componentDidMount() {
-        this.scrollToBottom();
         this.messagesRendering = this.renderListOfMessages();
+        this.scrollToBottom();
     }
       
 
     componentDidUpdate(prevProps) {
         const { messages, discId } = this.props;
-        this.scrollToBottom();
 
         if(
             messageAdded(prevProps.messages.length, messages.length)
@@ -62,6 +61,8 @@ class DiscussionScreen extends Component {
         if(prevProps.messages !== messages){
             this.messagesRendering = this.renderListOfMessages();
         }
+
+        this.scrollToBottom();
     }
 
 

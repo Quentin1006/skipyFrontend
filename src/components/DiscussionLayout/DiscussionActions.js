@@ -56,7 +56,7 @@ class DiscussionActions extends Component {
 
 
     componentDidUpdate(prevProps, prevState){
-        const { onElementSizeChanged } = this.props;
+        const { onElementSizeChanged, discId } = this.props;
         const { nbUploaded, cameraOpen } = this.state;
         // Peut etre rajouter une variable qui distingue quand la discussion change
         // ou dans shouldUpdate
@@ -72,6 +72,10 @@ class DiscussionActions extends Component {
 
         if(nbUploaded === MAX_CONCURRENT_UPLOAD && cameraOpen){
             this.closeNewWindow();
+        }
+
+        if(prevProps.discId !== discId){
+            this.resetState();
         }
         
     }
@@ -103,6 +107,18 @@ class DiscussionActions extends Component {
 
     onInputValueChange = (inputValue) => {
         this.setState(state => ({...state, inputValue}))
+    }
+
+    resetState = () => {
+        this.setState({
+            inputValue:"",
+            uploadedImgs : [],
+            nbUploaded: 0,
+            uploading: false,
+            previewOpen: false,
+            cameraOpen: false,
+            pictureTaken: null
+        });
     }
 
 

@@ -21,6 +21,7 @@ const styles = theme => {
     sendInput: {
       boxSizing: "border-box",
       width: "calc(100%)",
+      minWidth: "50px",
       resize: "none",
       overflow: "hidden",
       fontSize: fontSize + "px",

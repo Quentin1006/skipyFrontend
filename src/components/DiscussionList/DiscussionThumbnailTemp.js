@@ -7,9 +7,7 @@ class DiscussionThumbnailTemp extends Component {
         const { close } = this.props;
         return (
             <div className="thumbnail__wrapper">
-
-            <div className="thumbnail__profilepicture">
-            </div>
+            <div style={{width:"70px"}}></div>
             <div className="thumbnail__text">
                 <div className="thumbnail__new-message v-center">{"Nouveau Message"}</div>
             </div>

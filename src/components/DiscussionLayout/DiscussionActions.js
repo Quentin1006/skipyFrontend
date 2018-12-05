@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 
-import AutoGrowTextArea from "../../lib/Components/AutoGrowTextarea";
-import PreviewImage from "../../lib/Components/PreviewImage";
 
-import { IconButton } from "@material-ui/core";
+
 import { withStyles } from '@material-ui/core/styles';
+import { IconButton } from "@material-ui/core";
 import InsertPhotoIcon from "@material-ui/icons/InsertPhoto"; 
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import SendIcon from "@material-ui/icons/Send";
 
-
+import AutoGrowTextArea from "../../lib/Components/AutoGrowTextarea";
+import PreviewImage from "../../lib/Components/PreviewImage";
 import NewWindow from '../../lib/Components/NewWindow';
 import WebcamRenderer from '../../lib/Components/WebcamRenderer';
 import CapturedImage from '../../lib/Components/CapturedImage';
@@ -49,25 +49,33 @@ class DiscussionActions extends Component {
         // this.onHandleFocus = this.onHandleFocus.bind(this);
     }
 
+
     componentDidMount(){
         //this.sendInput.focus()
     }
 
+
     componentDidUpdate(prevProps, prevState){
         const { onElementSizeChanged } = this.props;
+        const { nbUploaded, cameraOpen } = this.state;
         // Peut etre rajouter une variable qui distingue quand la discussion change
         // ou dans shouldUpdate
         //this.sendInput.focus()
-        if(prevState.nbUploaded === 0 && this.state.nbUploaded > 0){
+        if(prevState.nbUploaded === 0 && nbUploaded > 0){
             onElementSizeChanged(PREVIEW_HEIGHT);
         }
 
 
-        if(prevState.nbUploaded > 0 && this.state.nbUploaded === 0){
+        if(prevState.nbUploaded > 0 && nbUploaded === 0){
             onElementSizeChanged(-PREVIEW_HEIGHT);
+        }
+
+        if(nbUploaded === MAX_CONCURRENT_UPLOAD && cameraOpen){
+            this.closeNewWindow();
         }
         
     }
+
 
     onHandleKeyDown = (e) => {
         if(e.keyCode === ENTER){
@@ -92,6 +100,7 @@ class DiscussionActions extends Component {
         this._addPictureToUploads(filesToUpload); 
     }
 
+
     onInputValueChange = (inputValue) => {
         this.setState(state => ({...state, inputValue}))
     }
@@ -99,11 +108,17 @@ class DiscussionActions extends Component {
 
     _sendMessage = (e) => {
         const { onSendMessage } = this.props;
+        const { inputValue, uploadedImgs } = this.state;
 
-        const msg = (this.state.inputValue).trim();
-        if(msg !== ""){
-            onSendMessage(msg);
-            this.setState(state => ({...state, inputValue: ""}));
+        const msg = inputValue.trim();
+        if(msg !== "" || uploadedImgs.length > 0){
+            onSendMessage(msg, uploadedImgs);
+            this.setState(state => ({
+                ...state, 
+                inputValue: "", 
+                uploadedImgs:[],
+                nbUploaded: 0
+            }));
         }
     }
 
@@ -242,7 +257,6 @@ class DiscussionActions extends Component {
                         onCancel={this.onDeletePictureTaken}
                         src={pictureTaken}
                       />
-
                 }
             </NewWindow>
         )

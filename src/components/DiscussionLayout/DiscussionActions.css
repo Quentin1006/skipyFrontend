@@ -3,11 +3,9 @@
     
 }
 
-.action__send_btn {
-}
-
 .action__send-message {
-    display: flex
+    display: flex;
+    align-items: center;
 }
 
 .secondary-actions__wrapper {

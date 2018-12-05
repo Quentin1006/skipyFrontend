@@ -128,7 +128,6 @@ class AutosuggestFormField extends Component {
       getSuggestionValue,
       renderSuggestion: this.renderSuggestion,
       onSuggestionSelected: this.handleOnSuggestionSelected,
-      alwaysRenderSuggestions: true
     };
 
     return (

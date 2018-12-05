@@ -57,7 +57,6 @@ class MainBoard extends Component {
             changeOpenedDiscId
         } = this.props;
 
-
         this.discsOverview = getOverview(discussionsOverview);
 
         this.sock = io.connect(`${server.url}/messages`);
@@ -72,7 +71,7 @@ class MainBoard extends Component {
         // peut etre faudrait il changer le nom de l'event
         this.sock.on("sendMessage response", (resp) => {
             const { 
-                emptyTempDisc, 
+                closeTempDisc, 
                 getDiscussion, 
                 discussions, 
                 updateDiscussion, 
@@ -84,7 +83,7 @@ class MainBoard extends Component {
 
             if(_discussionWasCreated(discRequestedId, discUpdatedId)){
                 this.requestLastActiveDiscussions();
-                emptyTempDisc();
+                closeTempDisc();
                 changeOpenedDiscId(discUpdatedId);
                 
             }
@@ -144,12 +143,12 @@ class MainBoard extends Component {
     }
 
 
-    sendMessage = (content) => {
+    onSendMessage = (content, uploads) => {
         const { initSendMessage, openDiscId, discOpened, tempDisc } = this.props;
         const to = (discOpened.friend && discOpened.friend.id )
                 || (tempDisc.recipient && tempDisc.recipient.id);
 
-        const msg = {content, to};
+        const msg = {content, to, uploads};
         logger.info(msg);
 
         if(to){
@@ -261,7 +260,7 @@ class MainBoard extends Component {
                                 disc={discOpened}
                                 profile={profile} 
                                 openDiscId= {openDiscId}
-                                onSendMessage={this.sendMessage}
+                                onSendMessage={this.onSendMessage}
                                 markMessagesAsRead= {this.markMessagesAsRead}
                                 friendlist={friendlist}
                                 fetchMatchingFriends= {this.fetchMatchingFriends}
@@ -308,7 +307,7 @@ const refactorDiscussion = (disc, userprofile) => {
             id,
             user,
             friend,
-            messages: content
+            messages: content,
         }
     }
 

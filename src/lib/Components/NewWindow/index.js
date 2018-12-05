@@ -77,7 +77,6 @@ class NewWindow extends Component {
 
         this.externalWindow.addEventListener('beforeunload', (event) => {
             event.preventDefault();
-            event.returnValue = "";
             closeNewWindow();
             
         });

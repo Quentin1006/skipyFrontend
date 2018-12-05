@@ -17,7 +17,7 @@
 }
 
 .thumbnail__profilepicture {
-    width: 130px;
+    width: 110px;
     text-align: center;
     float: left;
 }
@@ -32,7 +32,13 @@
 .thumbnail__text-friends-name {
     padding-bottom: 5px;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.1em;
+}
+
+.thumbnail__text-last-message {
+    color: grey;
+    font-size: 0.9em;
+    padding-top:5px;
 }
 
 .v-center {

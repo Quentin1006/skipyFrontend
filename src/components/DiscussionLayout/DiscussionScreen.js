@@ -35,7 +35,8 @@ class DiscussionScreen extends Component {
         this.state = {
             galleryOpened: false,
             images: [],
-            photoInit: 0 // the photo idx to open tha gallery at
+            photoInit: 0, // the photo idx to open tha gallery at,
+            imagesLoaded:0
         }
 
         this.messagesRendering = null;
@@ -105,6 +106,13 @@ class DiscussionScreen extends Component {
         return images;
     }
 
+    onImageLoaded = () => {
+        console.log("1 image Loaded")
+        this.setState(state => ({
+            imagesLoaded: state.imagesLoaded+1
+        }))
+    }
+
 
     scrollToBottom = (behavior="auto") => {
         this.messagesEnd.scrollIntoView({ behavior});
@@ -137,6 +145,7 @@ class DiscussionScreen extends Component {
                     <ImageMessage 
                         imgs={mess.uploads} 
                         onHandleClick={this.onHandleImageClick}
+                        onHandleLoad={this.onImageLoaded}
                     />
                 }
             </div>

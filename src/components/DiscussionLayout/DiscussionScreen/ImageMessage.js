@@ -6,12 +6,17 @@ import "./Message.css";
 class ImageMessage extends Component {
 
     renderImage = (image) => {
-        const { onHandleClick } = this.props;
+        const { onHandleLoad, onHandleClick } = this.props;
         const { src } = image;
         return (
             <a href=" #" dataid={image.id} onClick={onHandleClick}>  
                 <div  className={"message__image-wrapper"}>
-                    <img src={src} className={"message__image"} alt="message upload"/>
+                    <img 
+                        src={src} 
+                        className={"message__image"} 
+                        alt="message upload"
+                        onLoad={onHandleLoad}
+                    />
                 </div>
             </a>
         )

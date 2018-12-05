@@ -41,19 +41,25 @@ class MenuAppBar extends React.Component {
   };
 
   render() {
-    const { classes, isLoggedIn, title } = this.props;
+    const { classes, isLoggedIn, title, logout } = this.props;
     const { anchorEl } = this.state;
-    const { logout } = this.props;
     const open = Boolean(anchorEl);
 
     return (
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <IconButton 
+              className={classes.menuButton} 
+              color="inherit" 
+              aria-label="Menu"
+              onClick={() =>{}}
+            >
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              {title.toUpperCase()}
+            <a href=" #">
+            {title.toUpperCase()}
+            </a>
             </Typography>
             {isLoggedIn && (
               <div>

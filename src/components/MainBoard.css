@@ -1,5 +1,5 @@
 .discussions-list__wrapper {    
-    width: 350px;
+    width: 400px;
     float: left;
     height:100%;
     border-bottom: 1px solid #eee;
@@ -11,7 +11,7 @@
 .discussion-content__wrapper {
     position: relative;
     box-sizing: border-box;
-    width: calc(100% - 350px);
+    width: calc(100% - 400px);
     float:left;
     height: 100%;
     background-color: #d8d1d1;

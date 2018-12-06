@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { withStyles } from '@material-ui/core/styles';
+
 import "./Message.css";
+
+const styles = {
+
+}
 
 class ImageMessage extends Component {
 
@@ -10,7 +16,7 @@ class ImageMessage extends Component {
         const { src } = image;
         return (
             <a href=" #" dataid={image.id} onClick={onHandleClick}>  
-                <div  className={"message__image-wrapper"}>
+                <div>
                     <img 
                         src={src} 
                         className={"message__image"} 
@@ -29,7 +35,7 @@ class ImageMessage extends Component {
             <div className="message__container message__images-container">            
                 {
                     imgs.map(img => (
-                        <div key={img.id}>
+                        <div key={img.id} className={"message__image-wrapper"}>
                             {this.renderImage(img)} 
                         </div>
                     ))
@@ -43,4 +49,4 @@ ImageMessage.propTypes = {
     imgs : PropTypes.array.isRequired
 };
 
-export default ImageMessage;
+export default withStyles(styles)(ImageMessage);

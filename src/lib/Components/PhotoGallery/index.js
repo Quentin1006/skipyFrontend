@@ -48,7 +48,6 @@ class PhotoGallery extends Component {
                         onClickThumbnail={this.goToImage}
                         isOpen={true}
                         showThumbnails= {true}
-                        backdropClosesModal={true}
                         showImageCount={false}
                         
                     />

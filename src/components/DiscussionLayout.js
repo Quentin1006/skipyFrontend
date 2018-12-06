@@ -114,7 +114,8 @@ class DiscussionLayout extends Component {
                     spacing={0} 
                     className={classes.gridContainer}
                 >
-                    <Grid item 
+                    <Grid 
+                        item 
                         style={{ height: headerHeight }} 
                         className="discussion-header__container"
                     >
@@ -163,9 +164,6 @@ class DiscussionLayout extends Component {
                             isWritingMessage={isWritingMessage}
                             updateWritingMessage={updateWritingMessage}
                         >
-                        
-                            
-
                         </DiscussionActions>
                         
                     </Grid>

@@ -4,15 +4,19 @@ import { format, isSameDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 import Tooltip from '@material-ui/core/Tooltip';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import Message from "./DiscussionScreen/Message";
 import ImageMessage from "./DiscussionScreen/ImageMessage";
 import PhotoGallery from "../../lib/Components/PhotoGallery";
 
 import "./DiscussionScreen.css";
 
-
-const LEFT = "left";
-const RIGHT = "right";
+import {
+    SEND_MESSAGE_STATUS,
+    SENDING_MESSAGE,
+    LEFT,
+    RIGHT} from "../../config"
 
 const setToOppositeSide = (side) => {
     return side === LEFT ? RIGHT : LEFT;
@@ -174,11 +178,24 @@ class DiscussionScreen extends Component {
     
     render() {
         const { images, galleryOpened, photoInit } = this.state;
+        const { sendMessageStatus } = this.props;
+        const isSendingMessage = SEND_MESSAGE_STATUS[sendMessageStatus] === SENDING_MESSAGE;
+        
+        console.log("isSendingMessage", isSendingMessage);
         return (
             <div className="messagescreen__wrapper">
+                <div>
                 <ul className="messagescreen__list">
                     {this.messagesRendering}
                 </ul>
+                </div>
+               
+                <div className="messagescreen__loader">
+                    {
+                        isSendingMessage &&
+                        <CircularProgress size={20}/>
+                    }
+                </div>
                 <div style={{ float:"left", clear: "both" }}
                     ref={(el) => { this.messagesEnd = el; }}>
                 </div> 

@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-import { findDOMNode } from "react-dom";
-
 
 import DiscussionScreen from "./DiscussionLayout/DiscussionScreen";
 import DiscussionHeader from "./DiscussionLayout/DiscussionHeader";
 import DiscussionActions from "./DiscussionLayout/DiscussionActions";
+import UploadsPreview from "./DiscussionLayout/UploadsPreview";
 
 
 import { Grid } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
  
 
-
-
 import "./DiscussionLayout.css";
 
-const heightSection = 80;
+const MAX_CONCURRENT_UPLOAD = 3;
+let idGen = 0;
+const generateId = () => (idGen++);
 
 const styles = theme => ({
     headerContainer: {
@@ -25,6 +24,8 @@ const styles = theme => ({
         backgroundColor: "#eee",
     },
     gridContainer:{ 
+        display: "flex",
+        flexFlow: "column",
         height:"100%"
     }
   });
@@ -33,79 +34,190 @@ const styles = theme => ({
 class DiscussionLayout extends Component {
 
     state = {
-        headerHeight: heightSection + "px",
-        screenHeight: `calc(100% - ${2 * heightSection}px)`,
-        inputContainerHeight: heightSection + "px"
+        uploadedImgs: [],
+        nbUploads:0,
+        inputValue:"",
+        uploading:false,
+        previewOpen: false
     };
 
 
-    componentDidMount() {
-        const screenElement = findDOMNode(this.screen);
-        const screenStyles = getComputedStyle(screenElement);
-        console.log(screenStyles.height);
-        this.setState(state => ({ ...state, screenHeight: screenStyles.height }));
+    componentDidUpdate(prevProps, prevState) {
+        const { updateWritingMessage, discId } = this.props;
+        const { nbUploads, inputValue } = this.state;
+
+        // Controls the togggling of the preview container
+        if(prevState.nbUploads === 0 && nbUploads > 0){
+            this.setState({previewOpen: true});
+        }
+
+        if(prevState.nbUploads > 0 && nbUploads === 0){
+            this.setState({previewOpen: false});
+        }
+
+        // To detect when the user is writing
+        if(
+            prevProps.isWritingMessage
+            && ( inputValue === "" && nbUploads === 0)
+        ){
+            updateWritingMessage(false);
+        }
+
+        if(
+            !prevProps.isWritingMessage
+            && ( inputValue !== "" || nbUploads > 0)
+        ){
+            updateWritingMessage(true);
+        }
+
+        // réinitialise pour une nouvelle conversation
+        if(prevProps.discId !== discId){
+            this.resetState();
+        }
+    }
+
+    resetState = () => this.setState({
+        uploadedImgs: [],
+        nbUploads:0,
+        inputValue:"",
+        uploading:false,
+        previewOpen: false
+    })
+
+
+    updateMessageText = (inputValue)  => {
+        this.setState({inputValue})
     }
 
 
-    componentDidUpdate(prevProps) {
-        if( prevProps !== this.props){
-            const screenElement = findDOMNode(this.screen);
-            const screenStyles = getComputedStyle(screenElement);
-            this.setState(state => ({ ...state, screenHeight: screenStyles.height }));
+    updateUploadedImgs = (uploadedImg) => {
+        this.setState(state => {
+            uploadedImg.id = generateId();
+            const uploadedImgs =[...state.uploadedImgs, uploadedImg]
+            const nbUploads = uploadedImgs.length;
+            return {
+                ...state,
+                nbUploads,
+                uploadedImgs
+            }
+        })
+    }
+
+
+    uploadFileImg = (upload) => {
+        this._readImageFile(upload)
+        .then(image => {
+            this.updateUploadedImgs(image)
+        })
+        .catch(console.log);
+    }
+
+
+    addUploads = (uploads) => {
+        let { nbUploads } = this.state;
+
+        uploads = Array.isArray(uploads) ? uploads : [uploads];
+        while(nbUploads < MAX_CONCURRENT_UPLOAD && uploads[0]){
+        
+            if(uploads[0] instanceof Blob){
+                this.uploadFileImg(uploads[0]);
+            }
+            else {
+                this.updateUploadedImgs(uploads[0])
+            }
+
+            uploads.shift();
+            nbUploads++;
+        }        
+    }
+
+
+    deleteUpload = (id) => {
+        this.setState(state => {
+            const uploadedImgs= state.uploadedImgs.filter(upload => upload.id !== id);
+            const nbUploads = uploadedImgs.length
+            return {
+                ...state,
+                nbUploads,
+                uploadedImgs 
+            }  
+        })
+    }
+
+
+    _readImageFile = (fileToUpload) => {
+        const { name, size, type } = fileToUpload;
+        const reader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+
+            reader.onloadstart = () => {
+                this.setState({uploading: true})
+            }
+    
+            reader.onloadend = () => { 
+                this.setState({uploading: false})
+            }
+        
+            reader.onload = (e) => {
+                const preview = e.target.result;
+                const uploadedImg ={
+                    name, 
+                    size, 
+                    type, 
+                    preview, 
+                }
+                resolve(uploadedImg)
+            }
+    
+            reader.onerror = reject;
+    
+            reader.onprogress = (e) => {
+                console.log(e.loaded / e.total * 100);
+            }
+        
+            reader.readAsDataURL(fileToUpload);
+        })
+    }
+
+
+    onHandleSendMessage = () => {
+        const { onSendMessage } = this.props;
+        const { uploadedImgs, inputValue } = this.state;
+        const msg = inputValue.trim();
+        //const uploads = JSON.parse(JSON.stringify(uploadedImgs));
+
+        if(msg !== "" || uploadedImgs.length > 0){
+            onSendMessage(msg, uploadedImgs);
+            this.resetState();
         }
     }
 
 
-    updateHeights = changeOfHeight => {
-        console.log("changeOfHeight:", changeOfHeight);
-        console.log(
-          "updateHeight",
-          this.state.screenHeight,
-          this.state.inputContainerHeight
-        );
-        changeOfHeight = parseInt(changeOfHeight, 10);
-        const screenHeight =
-          parseInt(this.state.screenHeight, 10) - changeOfHeight + "px";
-        const inputContainerHeight =
-          parseInt(this.state.inputContainerHeight, 10) + changeOfHeight + "px";
-    
-        /*console.log(
-          "screenHeight:",
-          screenHeight,
-          ", inputContainerHeight:",
-          inputContainerHeight
-        );*/
-        this.setState(state => ({
-          ...state,
-          screenHeight,
-          inputContainerHeight
-        }));
-      };
-
-
     render() {
-        const { headerHeight, screenHeight, inputContainerHeight } = this.state;
+        const { 
+            previewOpen,
+            uploadedImgs,
+            nbUploads,
+            inputValue
+        } = this.state;
 
         const { 
             disc,
             profile,
-            openDiscId, 
+            discId, 
             markMessagesAsRead, 
             friendlist, 
-            onSendMessage,
             fetchMatchingFriends,
             suggestions,
             setNewRecipient,
-            isWritingMessage,
-            updateWritingMessage,
+            sendMessageStatus,
             classes
         } = this.props;
 
         const { messages, user, friend } = disc;
-
-        const isTempDisc = String(openDiscId).includes("temp");
+        const isTempDisc = String(discId).includes("temp");
        
-
         return (
             <div className="discussion-layout__container">
                 <Grid 
@@ -116,7 +228,6 @@ class DiscussionLayout extends Component {
                 >
                     <Grid 
                         item 
-                        style={{ height: headerHeight }} 
                         className="discussion-header__container"
                     >
 
@@ -137,32 +248,44 @@ class DiscussionLayout extends Component {
                         ref={screen => {
                             this.screen = screen;
                         }}
-                        style={{ height: screenHeight }}
                         className="discussion-screen__container">
 
                             <DiscussionScreen 
-                                discId={openDiscId}
+                                discId={discId}
                                 messages={messages}
                                 user={user}
+                                sendMessageStatus={sendMessageStatus}
                             />
                     </Grid>
+                    
+                    {
+                        previewOpen && 
+                        <Grid
+                            item
+                            className="discussion-preview__container"
+                        >
+                            <UploadsPreview 
+                                uploads={uploadedImgs}
+                                deleteUpload={this.deleteUpload}
+                            />
+                        </Grid>
+                    }
                     
                     <Grid 
                         className="discussion-action__container"
                         ref={tarea => {
                             this.tarea = tarea;
-                        }}
-                        style={{ height: inputContainerHeight }}
-                        
+                        }}      
                     >
 
                         <DiscussionActions
-                            onSendMessage={onSendMessage}
+                            triggerSendMessage={this.onHandleSendMessage}
                             onFocusSendInput={markMessagesAsRead}
-                            discId = {openDiscId}
-                            onElementSizeChanged={this.updateHeights}
-                            isWritingMessage={isWritingMessage}
-                            updateWritingMessage={updateWritingMessage}
+                            discId = {discId}
+                            updateMessageText={this.updateMessageText}
+                            addUploads={this.addUploads}
+                            inputValue = {inputValue}
+                            canUpload={nbUploads < MAX_CONCURRENT_UPLOAD}
                         >
                         </DiscussionActions>
                         

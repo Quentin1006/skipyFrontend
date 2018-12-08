@@ -23,9 +23,19 @@ li.message__row {
     text-align: right;
 }
 
+
 .message--align-left {
     margin-left: 15px;
     text-align: left;
+}
+
+
+.messagescreen__loader {
+    float:left;
+    clear: both;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 ;
 }
 
 

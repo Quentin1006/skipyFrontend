@@ -1,9 +1,14 @@
 .message__wrapper {
-    background: rgb(131, 120, 120);
-    border-radius: 15px;
-    padding: 5px 10px;
-    color: #fff;
+    box-sizing: border-box;
     display: inline-block;
+    max-width: 100%;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background: rgb(131, 120, 120);
+    color: #fff;
+    
+    
+    
 } 
 
 

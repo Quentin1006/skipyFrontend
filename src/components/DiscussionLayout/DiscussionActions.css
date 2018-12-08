@@ -15,17 +15,17 @@
     overflow: hidden;
     white-space: nowrap
 }
-
+/* 
 .action__preview-wrapper {
     padding: 2px 10px;
     display: flex;
     flex-direction: row-reverse;
-}
+} */
 
-.action__preview-image {
+/* .action__preview-image {
     margin: 4px 10px;
     background-color: #000;
     border-radius: 4px;
 
-}
+} */
 

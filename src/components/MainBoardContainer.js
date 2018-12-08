@@ -33,7 +33,12 @@ import {
 
 import Logger from "../lib/Logger"; 
 import server from "../config/server";
-
+import {
+    NOT_SENDING , 
+    SENDING_MESSAGE, 
+    SENDING_SUCCESS, 
+    SENDING_FAILURE
+} from "../config";
 
 import "./MainBoard.css";
 
@@ -47,7 +52,6 @@ const _discussionWasCreated = (prevId, nextId) => {
     return prevId !== nextId && prevId.includes("temp")
 }
 
-
 class MainBoard extends Component {
 
     constructor(props){
@@ -59,9 +63,9 @@ class MainBoard extends Component {
         } = this.props;
 
         this.state = {
+            sendMessageStatus: NOT_SENDING,
             isWritingMessage: false,
             showLeaveDiscussionDialog: false,
-            isSendingMessage: false,
             discIdRequested: -1
         }
 
@@ -106,7 +110,8 @@ class MainBoard extends Component {
             else {
                 updateDiscussion(discUpdatedId, builtMsg);
             }
-            
+
+            this.setState({sendMessageStatus:SENDING_SUCCESS});
         });
 
 
@@ -133,7 +138,6 @@ class MainBoard extends Component {
     }
 
     componentDidMount(){
-    
         this.requestLastActiveDiscussions();
     }
 
@@ -155,13 +159,17 @@ class MainBoard extends Component {
         const { initSendMessage, openDiscId, discOpened, tempDisc } = this.props;
         const to = (discOpened.friend && discOpened.friend.id )
                 || (tempDisc.recipient && tempDisc.recipient.id);
-
+        
         const msg = {content, to, uploads};
         logger.info(msg);
 
         if(to){
             this.sock.emit("sendMessage", openDiscId, msg);
             initSendMessage();
+            this.setState({sendMessageStatus: SENDING_MESSAGE});
+        }
+        else {
+            this.setState({sendMessageStatus: SENDING_FAILURE});
         }
         
     }
@@ -287,7 +295,11 @@ class MainBoard extends Component {
             tempDisc 
         } = this.props;
 
-        const { showLeaveDiscussionDialog, isWritingMessage } = this.state;
+        const { 
+            showLeaveDiscussionDialog, 
+            isWritingMessage,
+            sendMessageStatus
+        } = this.state;
         
         
         return (
@@ -314,7 +326,7 @@ class MainBoard extends Component {
                         ?   <DiscussionLayout 
                                 disc={discOpened}
                                 profile={profile} 
-                                openDiscId= {openDiscId}
+                                discId= {openDiscId}
                                 onSendMessage={this.onSendMessage}
                                 markMessagesAsRead= {this.markMessagesAsRead}
                                 friendlist={friendlist}
@@ -322,6 +334,7 @@ class MainBoard extends Component {
                                 suggestions = {tempDisc.suggestedRecipients || []}
                                 setNewRecipient= { this.setNewRecipient}
                                 isWritingMessage={isWritingMessage}
+                                sendMessageStatus={sendMessageStatus}
                                 updateWritingMessage={this.updateWritingMessage}
                             /> 
                         :   <WelcomeLayout 

@@ -9,7 +9,7 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import SendIcon from "@material-ui/icons/Send";
 
 import AutoGrowTextArea from "../../lib/Components/AutoGrowTextarea";
-import PreviewImage from "../../lib/Components/PreviewImage";
+
 import NewWindow from '../../lib/Components/NewWindow';
 import WebcamRenderer from '../../lib/Components/WebcamRenderer';
 import CapturedImage from '../../lib/Components/CapturedImage';
@@ -17,12 +17,6 @@ import CapturedImage from '../../lib/Components/CapturedImage';
 import "./DiscussionActions.css";
 
 const ENTER = 13;
-const MAX_CONCURRENT_UPLOAD = 3;
-// NE PAS LE LAISSER EN DUR
-const PREVIEW_HEIGHT = 132;
-
-let idGen = 0;
-const generateId = () => (idGen++);
 
 const styles = {
     input: {
@@ -35,11 +29,6 @@ class DiscussionActions extends Component {
         super(props);
 
         this.state = {
-            inputValue:"",
-            uploadedImgs : [],
-            nbUploaded: 0,
-            uploading: false,
-            previewOpen: false,
             cameraOpen: false,
             pictureTaken: null
         }
@@ -56,53 +45,16 @@ class DiscussionActions extends Component {
 
 
     componentDidUpdate(prevProps, prevState){
-        const { 
-            onElementSizeChanged, 
-            discId, 
-            updateWritingMessage 
-        } = this.props;
-
-        const { nbUploaded, cameraOpen, inputValue } = this.state;
+        const { canUpload } = this.props;
+        const { cameraOpen } = this.state;
         // Peut etre rajouter une variable qui distingue quand la discussion change
         // ou dans shouldUpdate
         //this.sendInput.focus()
 
-        // control if the upload container is open
-        if(prevState.nbUploaded === 0 && nbUploaded > 0){
-            onElementSizeChanged(PREVIEW_HEIGHT);
-        }
-
-
-        if(prevState.nbUploaded > 0 && nbUploaded === 0){
-            onElementSizeChanged(-PREVIEW_HEIGHT);
-        }
-
         // Control if uploads limit is reached
-        if(nbUploaded === MAX_CONCURRENT_UPLOAD && cameraOpen){
+        if(!canUpload && cameraOpen){
             this.closeNewWindow();
-        }
-
-        // Control if the discussion has changed
-        if(prevProps.discId !== discId){
-            this.resetState();
-        }
-
-
-        // Control if the user is writing
-        if(
-            prevProps.isWritingMessage
-            && ( inputValue === "" && nbUploaded === 0)
-        ){
-            updateWritingMessage(false);
-        }
-
-        if(
-            !prevProps.isWritingMessage
-            && ( inputValue !== "" || nbUploaded > 0)
-        ){
-            updateWritingMessage(true);
-        }
-        
+        }  
     }
 
 
@@ -125,23 +77,21 @@ class DiscussionActions extends Component {
 
 
     onHandleChange = (e) => {
+        const { addUploads } = this.props;
         const filesToUpload = Array.from(this.uploadInput.files) || [];
-        this._addPictureToUploads(filesToUpload); 
+        
+        addUploads(filesToUpload); 
     }
 
 
     onInputValueChange = (inputValue) => {
-        this.setState(state => ({...state, inputValue}))
+        const { updateMessageText } = this.props;
+        updateMessageText(inputValue);
     }
 
 
     resetState = () => {
         this.setState({
-            inputValue:"",
-            uploadedImgs : [],
-            nbUploaded: 0,
-            uploading: false,
-            previewOpen: false,
             cameraOpen: false,
             pictureTaken: null
         });
@@ -149,86 +99,8 @@ class DiscussionActions extends Component {
 
 
     _sendMessage = (e) => {
-        const { onSendMessage } = this.props;
-        const { inputValue, uploadedImgs } = this.state;
-
-        const msg = inputValue.trim();
-        if(msg !== "" || uploadedImgs.length > 0){
-            onSendMessage(msg, uploadedImgs);
-            this.setState(state => ({
-                ...state, 
-                inputValue: "", 
-                uploadedImgs:[],
-                nbUploaded: 0
-            }));
-        }
-    }
-
-    
-    _previewImage = (fileToUpload) => {
-        const { name, size, type } = fileToUpload;
-        const reader = new FileReader();
-
-        reader.onloadstart = () => {
-            this.setState(state => ({...state, uploading: true}))
-        }
-
-        reader.onloadend = () => { 
-            this.setState(state => ({...state, uploading: false}))
-        }
-    
-        reader.onload = (e) => {
-            const preview = e.target.result;
-            this.setState(state => ({
-                ...state, 
-                uploadedImgs: [
-                    ...state.uploadedImgs, 
-                    {name, size, type, preview, id:generateId()}
-                ]
-            }));
-           
-        }
-
-        reader.onerror = (e) => { console.log("error")}
-
-        reader.onprogress = (e) => {
-            console.log(e.loaded / e.total * 100);
-        }
-    
-        reader.readAsDataURL(fileToUpload);
-    }
-
-
-    _addPictureToUploads = (filesToUpload) => {
-        //const { onElementSizeChanged } = this.props;
-        let { nbUploaded, previewOpen } = this.state;
-        // boucle sur le nombre d'item uploadés
-        while(nbUploaded < MAX_CONCURRENT_UPLOAD && filesToUpload[0]){
-            this._previewImage(filesToUpload[0]);
-
-            filesToUpload.shift();
-            nbUploaded++;
-
-            // If we upload the first file
-            previewOpen = (nbUploaded >= 1);
-        }
-
-        this.setState( state => ({...state, nbUploaded, previewOpen}));
-    }
-
-    
-    closePreview = (id) => {
-       
-        const uploadedImgs = this.state.uploadedImgs.filter(upload => upload.id !== id);
-        const nbUploaded = uploadedImgs.length;
-        const previewOpen = nbUploaded > 0;
-
-        this.setState(state => ({
-            ...state,
-            previewOpen,
-            nbUploaded,
-            uploadedImgs
-        }))
+        const { triggerSendMessage } = this.props;
+        triggerSendMessage();
     }
 
 
@@ -247,33 +119,22 @@ class DiscussionActions extends Component {
 
 
     onKeepPictureTaken = () => {
-        const { pictureTaken, nbUploaded } = this.state;
+        const { pictureTaken } = this.state;
+        const { addUploads } = this.props;
 
-        if(nbUploaded < MAX_CONCURRENT_UPLOAD){
-            const id = generateId();
-            const newUpload = {
-                id,
-                name:`screenshot${id}`,
-                size: 0,
-                preview: pictureTaken,
-                type:"image/png"
-            }
-
-
-            this.setState(state => ({ 
-                ...state, 
-                uploadedImgs: [
-                    ...state.uploadedImgs,
-                    newUpload
-                ],
-                nbUploaded:nbUploaded+1,
-                pictureTaken: null,
-                cameraOpen: false
-            }));
+        const newUpload = {
+            name:`screenshot${Date.now()}`,
+            size: 0,
+            preview: pictureTaken,
+            type:"image/png"
         }
-        
-        // This function expects an array as argument
-        
+
+        addUploads(newUpload);
+
+        this.setState({
+            pictureTaken: null,
+            cameraOpen: false
+        });
     }
 
 
@@ -305,40 +166,12 @@ class DiscussionActions extends Component {
     }
 
 
-    renderPreview = () => {
-        const { uploadedImgs } = this.state;
-
-        return (
-                 uploadedImgs.map((upload) => (
-                    <PreviewImage 
-                        key={upload.id} 
-                        id={upload.id}
-                        src={upload.preview} 
-                        className="action__preview-image"
-                        closePreview={this.closePreview}
-                    />
-                ))
-        )
-    }
-
-
     render() {
-        const { uploadedImgs, nbUploaded, cameraOpen } = this.state;
-        const { discId, onElementSizeChanged, classes } = this.props;
-        const canUpload = nbUploaded < MAX_CONCURRENT_UPLOAD;
+        const { cameraOpen } = this.state;
+        const { discId, canUpload, inputValue, classes } = this.props;
 
         return (
             <div className="actions__wrapper" >
-                <div className="action__preview-container" ref={preview => {this.previewWrapper = preview}}>
-                {  
-                        uploadedImgs.length > 0 
-                        && 
-                        <div className="action__preview-wrapper" > 
-                            {this.renderPreview()}
-                        </div>
-                }
-                </div>
-               
                 <div className="action__send-message">
                     <div className="action__textarea">
                         <AutoGrowTextArea 
@@ -349,12 +182,11 @@ class DiscussionActions extends Component {
                                 placeholder:"Send your message...",
                                 onFocus: this.onHandleFocus,
                                 onKeyDown: this.onHandleKeyDown,
-                                value: this.state.inputValue
+                                value: inputValue
                                 
                             }} 
                             ref={(input) => { this.sendInput = input; }}
                             onInputValueChange= {this.onInputValueChange}
-                            onInputSizeChanged={onElementSizeChanged}
                         />
                     </div>
                     <div className="action__send_btn">

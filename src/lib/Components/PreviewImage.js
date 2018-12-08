@@ -20,7 +20,7 @@ const styles = {
         top: "0",
         right: "0",
         padding: "0",
-        transform: "translate(50%, -50%)",
+        transform: "translate(25%, -25%)",
         zIndex: "1000",
         color: "#fff",
         backgroundColor: "#7d7777"

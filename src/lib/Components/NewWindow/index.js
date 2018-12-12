@@ -1,3 +1,8 @@
+/***
+ * ATTENTION SI LA NEW WINDOW S'OUVRE DE FACON ASYNCHRONE 
+ * CHROME LA CONSIDERE COMME UN POPUP ET LA BLOQUE
+ */
+
 import { Component } from "react";
 import ReactDOM from "react-dom";
 
@@ -45,12 +50,15 @@ const copyStylesheet = (sourceDoc, targetDoc) => {
 }
 
 
-
 class NewWindow extends Component {
     constructor(props) {
         super(props);
         this.containerEl = document.createElement('div');
         this.externalWindow = null;
+
+        this.state = {
+            open: false
+        }
 
     }
 
@@ -63,26 +71,11 @@ class NewWindow extends Component {
     }
   
     componentDidMount() {
-        const { closeNewWindow } = this.props;
+        this.openWindow();
         
-        this.externalWindow = window.open(
-            '', 
-            '', 
-            'width=600,height=400,left=200,top=200'
-        );
-    
-        copyStylesheet(document, this.externalWindow.document);
-
-        this.externalWindow.document.body.appendChild(this.containerEl);
-
-        this.externalWindow.addEventListener('beforeunload', (event) => {
-            event.preventDefault();
-            closeNewWindow();
-            
-        });
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         copyStylesheet(
             document, 
             this.externalWindow.document
@@ -91,6 +84,29 @@ class NewWindow extends Component {
   
     componentWillUnmount() {
         this.externalWindow.close();
+    }
+    
+
+    openWindow = () => {
+        const { closeNewWindow } = this.props;
+        
+        this.externalWindow = window.open(
+            '', 
+            '', 
+            'width=600,height=400,left=200,top=200'
+        );
+
+        if(this.externalWindow !== null){
+            copyStylesheet(document, this.externalWindow.document);
+
+            this.externalWindow.document.body.appendChild(this.containerEl);
+            this.externalWindow.addEventListener('beforeunload', (event) => {
+                event.preventDefault();
+                closeNewWindow();   
+            });
+
+            this.setState({open: true})
+        }
     }
   }
 

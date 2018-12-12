@@ -199,17 +199,3 @@ export const send_message = () => {
         type: SEND_MESSAGE,
     }
 }
-
-
-/**
- * 
- * Whether u were the sender or the receiver u'll go thru that event
- */
-export const RECEIVE_MESSAGE_FROM_SERVER = "RECEIVE_MESSAGE_FROM_SERVER";
-export const receive_message_from_server = (msg, discId) => {
-    return {
-        type: RECEIVE_MESSAGE_FROM_SERVER,
-        msg,
-        discId
-    }
-}

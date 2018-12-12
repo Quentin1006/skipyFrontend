@@ -5,9 +5,13 @@ import DiscussionHeader from "./DiscussionLayout/DiscussionHeader";
 import DiscussionActions from "./DiscussionLayout/DiscussionActions";
 import UploadsPreview from "./DiscussionLayout/UploadsPreview";
 
+import Notification from "../lib/Components/Notification"; 
+
 
 import { Grid } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
+
+import Dropzone from "react-dropzone";
  
 
 import "./DiscussionLayout.css";
@@ -38,13 +42,15 @@ class DiscussionLayout extends Component {
         nbUploads:0,
         inputValue:"",
         uploading:false,
-        previewOpen: false
+        previewOpen: false,
+        dropzoneActive: false,
+        dropRejected: false
     };
 
 
     componentDidUpdate(prevProps, prevState) {
         const { updateWritingMessage, discId } = this.props;
-        const { nbUploads, inputValue } = this.state;
+        const { nbUploads, inputValue, dropRejected } = this.state;
 
         // Controls the togggling of the preview container
         if(prevState.nbUploads === 0 && nbUploads > 0){
@@ -74,6 +80,13 @@ class DiscussionLayout extends Component {
         if(prevProps.discId !== discId){
             this.resetState();
         }
+
+
+        // remettre automatiquement le state dropRejected a false
+        if(dropRejected){
+            window.setTimeout(() => this.cancelRejectNotif(), 1500)
+            
+        }
     }
 
     resetState = () => this.setState({
@@ -81,7 +94,8 @@ class DiscussionLayout extends Component {
         nbUploads:0,
         inputValue:"",
         uploading:false,
-        previewOpen: false
+        previewOpen: false,
+        dropzoneActive: false
     })
 
 
@@ -193,13 +207,36 @@ class DiscussionLayout extends Component {
         }
     }
 
+    onDragEnter = (ev) => {   
+        ev.preventDefault();
+        this.setState({dropzoneActive: true});
+    }
+    
+    onDragLeave = () => {
+        this.setState({dropzoneActive: false});
+    }
+    
+    onDrop = () => {
+        this.setState({dropzoneActive: false});
+    }
+
+    onDropRejected = (uploads) => {
+        this.setState({dropRejected: true});
+    }
+
+    cancelRejectNotif = () => {
+        this.setState({dropRejected: false});
+    }
+
 
     render() {
         const { 
             previewOpen,
             uploadedImgs,
             nbUploads,
-            inputValue
+            inputValue,
+            dropzoneActive,
+            dropRejected
         } = this.state;
 
         const { 
@@ -217,83 +254,114 @@ class DiscussionLayout extends Component {
 
         const { messages, user, friend } = disc;
         const isTempDisc = String(discId).includes("temp");
+        const canUpload = nbUploads < MAX_CONCURRENT_UPLOAD;
        
         return (
-            <div className="discussion-layout__container">
-                <Grid 
-                    direction={"column"} 
-                    container 
-                    spacing={0} 
-                    className={classes.gridContainer}
-                >
+            <Dropzone
+                disabled={!canUpload}
+                onDropAccepted={this.addUploads}
+                onDropRejected={this.onDropRejected}
+                onDrop={this.onDrop}
+                onDragLeave={this.onDragLeave}
+                onDragEnter={this.onDragEnter}
+                disableClick
+                accept={"image/*"}
+                style={{height:"100%", width:"100%"}}
+            >
+                {
+                    dropRejected && 
+                    <Notification 
+                        close={this.cancelRejectNotif}
+                        type="error"
+                        message={"Your file was not accepted"}
+                    />
+                }
+                
+                { 
+                    dropzoneActive && 
+                    <div className={"discussion-layout__dropzone"}>
+                        <div className={"discussion-layout__dropzone-content"}>
+                            Drop Your Files...
+                        </div>
+                        
+                    </div> 
+                }
+
+                <div className="discussion-layout__container">
                     <Grid 
-                        item 
-                        className="discussion-header__container"
+                        direction={"column"} 
+                        container 
+                        spacing={0} 
+                        className={classes.gridContainer}
                     >
-
-                        <DiscussionHeader 
-                            profile={profile}
-                            friend={friend}
-                            isTempDisc = {isTempDisc}
-                            friendlist={friendlist}
-                            fetchMatchingFriends={fetchMatchingFriends}
-                            suggestions={suggestions}
-                            setNewRecipient={setNewRecipient}
-
-                        />
-                    </Grid>
-
-                    <Grid 
-                        item 
-                        ref={screen => {
-                            this.screen = screen;
-                        }}
-                        className="discussion-screen__container">
-
-                            <DiscussionScreen 
-                                discId={discId}
-                                messages={messages}
-                                user={user}
-                                sendMessageStatus={sendMessageStatus}
-                            />
-                    </Grid>
-                    
-                    {
-                        previewOpen && 
-                        <Grid
-                            item
-                            className="discussion-preview__container"
+                        <Grid 
+                            item 
+                            className="discussion-header__container"
                         >
-                            <UploadsPreview 
-                                uploads={uploadedImgs}
-                                deleteUpload={this.deleteUpload}
+
+                            <DiscussionHeader 
+                                profile={profile}
+                                friend={friend}
+                                isTempDisc = {isTempDisc}
+                                friendlist={friendlist}
+                                fetchMatchingFriends={fetchMatchingFriends}
+                                suggestions={suggestions}
+                                setNewRecipient={setNewRecipient}
+
                             />
                         </Grid>
-                    }
-                    
-                    <Grid 
-                        className="discussion-action__container"
-                        ref={tarea => {
-                            this.tarea = tarea;
-                        }}      
-                    >
 
-                        <DiscussionActions
-                            triggerSendMessage={this.onHandleSendMessage}
-                            onFocusSendInput={markMessagesAsRead}
-                            discId = {discId}
-                            updateMessageText={this.updateMessageText}
-                            addUploads={this.addUploads}
-                            inputValue = {inputValue}
-                            canUpload={nbUploads < MAX_CONCURRENT_UPLOAD}
-                        >
-                        </DiscussionActions>
+                        <Grid 
+                            item 
+                            ref={screen => {
+                                this.screen = screen;
+                            }}
+                            className="discussion-screen__container">
+
+                                <DiscussionScreen 
+                                    discId={discId}
+                                    messages={messages}
+                                    user={user}
+                                    sendMessageStatus={sendMessageStatus}
+                                />
+                        </Grid>
                         
+                        {
+                            previewOpen && 
+                            <Grid
+                                item
+                                className="discussion-preview__container"
+                            >
+                                <UploadsPreview 
+                                    uploads={uploadedImgs}
+                                    deleteUpload={this.deleteUpload}
+                                />
+                            </Grid>
+                        }
+                        
+                        <Grid 
+                            className="discussion-action__container"
+                            ref={tarea => {
+                                this.tarea = tarea;
+                            }}      
+                        >
+
+                            <DiscussionActions
+                                triggerSendMessage={this.onHandleSendMessage}
+                                onFocusSendInput={markMessagesAsRead}
+                                discId = {discId}
+                                updateMessageText={this.updateMessageText}
+                                addUploads={this.addUploads}
+                                inputValue = {inputValue}
+                                canUpload={canUpload}
+                            >
+                            </DiscussionActions>
+                            
+                        </Grid>
                     </Grid>
-                </Grid>
                 
-                
-            </div>
+                </div>
+            </Dropzone>
         );
     }
 }

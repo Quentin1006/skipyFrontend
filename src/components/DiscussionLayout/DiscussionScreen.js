@@ -16,7 +16,8 @@ import {
     SEND_MESSAGE_STATUS,
     SENDING_MESSAGE,
     LEFT,
-    RIGHT} from "../../config"
+    RIGHT
+} from "../../config"
 
 const setToOppositeSide = (side) => {
     return side === LEFT ? RIGHT : LEFT;

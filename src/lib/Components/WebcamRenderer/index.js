@@ -28,7 +28,7 @@ const styles = {
 
 class WebcamRenderer extends Component {
     state = {
-        hasGetUserMedia: null,
+        permissionDenied: false,
         streaming: false,
         stream: null
 
@@ -36,8 +36,8 @@ class WebcamRenderer extends Component {
 
 
     componentDidMount() {
-        const constraints = { video: true };
-        this.startWebcam(constraints);
+        const permissions = { video: true };
+        this.startWebcam(permissions);
     }
 
 
@@ -61,15 +61,16 @@ class WebcamRenderer extends Component {
     }
 
 
-    startWebcam = (constraints) => {
-        
+    startWebcam = (permissions) => {
+        const { onAcceptCamera } = this.props;
         if (!this._hasGetUserMedia()) return;
 
         navigator.mediaDevices
-        .getUserMedia(constraints)
+        .getUserMedia(permissions)
         .then(stream => {
             this.video.srcObject = stream;
-            this.setState(state => ({ ...state, streaming: true, stream }));
+            this.setState({streaming: true, stream });
+            onAcceptCamera();
         })
         .catch(this._errBack);
     }
@@ -88,12 +89,17 @@ class WebcamRenderer extends Component {
 
     _errBack = err => {
         console.log(err);
+        // if(err.match("Permission denied")){
+        //     this.setState({permissionDenied: true});
+        // }
+        
     };
 
     
     render() {
         const { classes } = this.props;
         return (
+
             <div className={classes.cameraWrapper}>
                 <video
                 autoPlay

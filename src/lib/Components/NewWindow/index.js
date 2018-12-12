@@ -1,5 +1,6 @@
 /***
  * ATTENTION SI LA NEW WINDOW S'OUVRE DE FACON ASYNCHRONE 
+ * (PAS DIRECTEMENT SUITE A UNE ACTION UTILISATEUR)
  * CHROME LA CONSIDERE COMME UN POPUP ET LA BLOQUE
  */
 
@@ -76,16 +77,19 @@ class NewWindow extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        copyStylesheet(
-            document, 
-            this.externalWindow.document
-        );
+        if(this.externalWindow !== null){
+            copyStylesheet(
+                document, 
+                this.externalWindow.document
+            );
+        }
+        
     }
   
     componentWillUnmount() {
-        this.externalWindow.close();
+        this.externalWindow && this.externalWindow.close();
     }
-    
+
 
     openWindow = () => {
         const { closeNewWindow } = this.props;
@@ -93,7 +97,7 @@ class NewWindow extends Component {
         this.externalWindow = window.open(
             '', 
             '', 
-            'width=600,height=400,left=200,top=200'
+            'width=600,height=400,left=400,top=400'
         );
 
         if(this.externalWindow !== null){

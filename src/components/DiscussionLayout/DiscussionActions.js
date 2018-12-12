@@ -29,31 +29,29 @@ class DiscussionActions extends Component {
         super(props);
 
         this.state = {
-            cameraOpen: false,
+            openCamera: false,
             pictureTaken: null,
             cameraPermissionAccepted: false
         }
 
-
-        // this.onHandleKeyDown = this.onHandleKeyDown.bind(this);
-        // this.onHandleFocus = this.onHandleFocus.bind(this);
     }
 
 
     componentDidMount(){
         //this.sendInput.focus()
+        this.checkCameraPermission();
     }
 
 
     componentDidUpdate(prevProps, prevState){
         const { canUpload } = this.props;
-        const { cameraOpen } = this.state;
+        const { openCamera } = this.state;
         // Peut etre rajouter une variable qui distingue quand la discussion change
         // ou dans shouldUpdate
         //this.sendInput.focus()
 
         // Control if uploads limit is reached
-        if(!canUpload && cameraOpen){
+        if(!canUpload && openCamera){
             this.closeNewWindow();
         }  
     }
@@ -93,9 +91,9 @@ class DiscussionActions extends Component {
 
     resetState = () => {
         this.setState({
-            cameraOpen: false,
+            openCamera: false,
             pictureTaken: null,
-            videoPermissionAccepted: false
+            cameraPermissionAccepted: false
         });
     }
 
@@ -106,18 +104,18 @@ class DiscussionActions extends Component {
     }
 
 
-    // _checkPermission = (permissionName) => {
-    //     return navigator.permissions.query({name: permissionName})
-    // }
+    _checkPermission = (permissionName) => {
+        return navigator.permissions.query({name: permissionName})
+    }
 
 
-    // checkCameraPermission = () => {
-    //     return this._checkPermission("camera")
-    //     .then(res => {
-    //         res.state === "granted" 
-    //         && this.setState({cameraPermissionAccepted: true})   
-    //     })       
-    // }
+    checkCameraPermission = () => {
+        return this._checkPermission("camera")
+        .then(res => {
+            res.state === "granted" 
+            && this.setState({cameraPermissionAccepted: true})   
+        })       
+    }
 
 
     _promptCamera = () => {
@@ -133,7 +131,8 @@ class DiscussionActions extends Component {
 
 
     openCamera = () => {
-        this.setState({cameraOpen: true })        
+        //this._promptCamera()
+        this.setState({openCamera: true })
     }
 
 
@@ -142,7 +141,7 @@ class DiscussionActions extends Component {
             return;
 
         const pictureTaken = imgData;
-        this.setState(state => ({...state, pictureTaken}));
+        this.setState({pictureTaken});
     }
 
 
@@ -161,18 +160,18 @@ class DiscussionActions extends Component {
 
         this.setState({
             pictureTaken: null,
-            cameraOpen: false
+            openCamera: false
         });
     }
 
 
     onDeletePictureTaken = () => {
-        this.setState(state => ({...state, pictureTaken: null}))
+        this.setState({pictureTaken: null});
     }
 
 
     closeNewWindow = () => {
-        this.setState(state => ({...state, cameraOpen: false}))
+        this.setState({openCamera: false});
     }
 
     renderCameraWindow = () => {
@@ -198,7 +197,7 @@ class DiscussionActions extends Component {
 
 
     render() {
-        const { cameraOpen, videoPermissionAccepted } = this.state;
+        const { openCamera, cameraPermissionAccepted } = this.state;
         const { discId, canUpload, inputValue, classes } = this.props;
 
         return (
@@ -248,7 +247,8 @@ class DiscussionActions extends Component {
                     </IconButton>
                 </div>
                 {
-                    cameraOpen &&
+                    openCamera &&
+                    //cameraPermissionAccepted &&
                     this.renderCameraWindow()
                 }
             </div>

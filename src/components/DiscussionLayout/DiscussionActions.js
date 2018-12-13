@@ -31,7 +31,7 @@ class DiscussionActions extends Component {
         this.state = {
             openCamera: false,
             pictureTaken: null,
-            cameraPermissionAccepted: false
+            cameraPermissionAccepted: false // pas utilisé
         }
 
     }
@@ -131,7 +131,6 @@ class DiscussionActions extends Component {
 
 
     openCamera = () => {
-        //this._promptCamera()
         this.setState({openCamera: true })
     }
 
@@ -177,19 +176,26 @@ class DiscussionActions extends Component {
     renderCameraWindow = () => {
         const { pictureTaken, cameraPermissionAccepted } = this.state;
         return (
-            <NewWindow updater={cameraPermissionAccepted} closeNewWindow={() => this.closeNewWindow()}>
+            <NewWindow closeNewWindow={() => this.closeNewWindow()}>
                 {
-                    pictureTaken === null
-                    ? <WebcamRenderer 
-                        onAcceptCamera={this.onAcceptCamera}
-                        onTakeScreenshot={(img) => this.onTakeScreenshot(img)}
+                    (windowHandle) => {
+                        return (
+                            pictureTaken === null
+                            ? <WebcamRenderer 
+                                onAcceptCamera={this.onAcceptCamera}
+                                onTakeScreenshot={(img) => this.onTakeScreenshot(img)}
+                                //onError={() => windowHandle.close()}
 
-                    />
-                    : <CapturedImage 
-                        onAccept={this.onKeepPictureTaken}
-                        onCancel={this.onDeletePictureTaken}
-                        src={pictureTaken}
-                      />
+                            />
+                            : <CapturedImage 
+                                onAccept={this.onKeepPictureTaken}
+                                onCancel={this.onDeletePictureTaken}
+                                src={pictureTaken}
+                            />
+                        )
+                        
+                    }
+                    
                 }
             </NewWindow>
         )
@@ -197,7 +203,7 @@ class DiscussionActions extends Component {
 
 
     render() {
-        const { openCamera, cameraPermissionAccepted } = this.state;
+        const { openCamera } = this.state;
         const { discId, canUpload, inputValue, classes } = this.props;
 
         return (
@@ -248,7 +254,6 @@ class DiscussionActions extends Component {
                 </div>
                 {
                     openCamera &&
-                    //cameraPermissionAccepted &&
                     this.renderCameraWindow()
                 }
             </div>

@@ -66,9 +66,10 @@ class NewWindow extends Component {
     
     render() {
         return ReactDOM.createPortal(
-            this.props.children, 
+            this.props.children(this.externalWindow), 
             this.containerEl
-        );
+        )
+        
     }
   
     componentDidMount() {

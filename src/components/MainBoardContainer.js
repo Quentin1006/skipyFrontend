@@ -268,8 +268,9 @@ class MainBoard extends Component {
     }
 
     closeNewDiscussion = () => {
-        const { closeTempDisc } = this.props;
+        const { closeTempDisc } = this.props;        
         closeTempDisc();
+        this.setState({isWritingMessage:false});
     }
 
 

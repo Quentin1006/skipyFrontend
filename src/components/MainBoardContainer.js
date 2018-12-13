@@ -285,6 +285,28 @@ class MainBoard extends Component {
 
     
 
+    renderDiscussionList = () => {
+        const { openDiscId, tempDisc } = this.props;
+
+        return ( 
+            <DiscussionList 
+                openDiscId= {openDiscId}
+                discsOverview={this.discsOverview} 
+                listItemClick = {this.requestDiscussion}
+                tempDisc={tempDisc}
+                startDiscussion={this.createNewDiscussion}
+                closeNewDiscussion= {this.closeNewDiscussion}   
+            >
+
+                <IconButton onClick={this.createNewDiscussion}>
+                    <MessageIcon />
+                </IconButton>
+
+
+            </DiscussionList> 
+        )
+    }
+
 
     render() {
         const { 
@@ -306,21 +328,7 @@ class MainBoard extends Component {
         return (
             <div className="mainboard__wrapper">
                 <div className="discussions-list__wrapper">
-                    <DiscussionList 
-                        openDiscId= {openDiscId}
-                        discsOverview={this.discsOverview} 
-                        listItemClick = {this.requestDiscussion}
-                        tempDisc={tempDisc}
-                        startDiscussion={this.createNewDiscussion}
-                        closeNewDiscussion= {this.closeNewDiscussion}   
-                    >
-
-                        <IconButton onClick={this.createNewDiscussion}>
-                            <MessageIcon />
-                        </IconButton>
-        
-
-                    </DiscussionList> 
+                    {this.renderDiscussionList()}
                 </div>
                 <div className="discussion-content__wrapper">
                     {isDiscOpened 

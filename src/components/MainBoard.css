@@ -1,6 +1,5 @@
 .discussions-list__wrapper {    
-    width: 400px;
-    float: left;
+    flex: 0 0 380px;
     height:100%;
     border-bottom: 1px solid #eee;
     background-color: #fff;;
@@ -11,13 +10,15 @@
 .discussion-content__wrapper {
     position: relative;
     box-sizing: border-box;
-    width: calc(100% - 400px);
-    float:left;
+    flex: 1 1 auto;
     height: 100%;
     background-color: #d8d1d1;
     min-width: 100px
+
 }
 
 .mainboard__wrapper {
     height: 100%;
+    display: flex;
+    flex-flow: row nowrap
 }

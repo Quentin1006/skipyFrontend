@@ -1,5 +1,7 @@
 .discussions-list__wrapper {    
-    flex: 0 0 380px;
+    flex: 0 0 30%;
+    max-width: 420px;
+    min-width: 240px;
     height:100%;
     border-bottom: 1px solid #eee;
     background-color: #fff;;

@@ -16,3 +16,50 @@
 a.highlighted {
     background-color: rgb(206, 178, 178);
 }
+
+.discussions-list__wrapper {    
+    flex: 0 0 30%;
+    max-width: 420px;
+    min-width: 240px;
+    height:100%;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;;
+    box-sizing: border-box;
+    border-right: 1px solid #d2d0d0;
+}
+
+
+
+
+
+.blackscreen {
+    position: absolute;
+    z-index: 3000;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5)
+}
+
+
+@media only screen and (max-width: 600px) {
+    .discussions-list__wrapper {
+        position: absolute;
+        width: 360px;
+        height:100vh;
+        z-index: 3001;
+        top: 0;
+        left:0;
+        max-width: 360px;
+        transform: translateX(-360px);
+        /* transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1) */
+    }
+
+
+
+    .discussions-list__wrapper.open {
+        transform: translateX(0px);
+        transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1)
+    }
+  }

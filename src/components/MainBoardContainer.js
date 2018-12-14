@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import io from "socket.io-client";
 
-import { IconButton } from "@material-ui/core";
+import { 
+    IconButton
+} from "@material-ui/core";
 import MessageIcon from "@material-ui/icons/Message";
 
 
@@ -327,9 +329,8 @@ class MainBoard extends Component {
         
         return (
             <div className="mainboard__wrapper">
-                <div className="discussions-list__wrapper">
-                    {this.renderDiscussionList()}
-                </div>
+                {this.renderDiscussionList()}
+
                 <div className="discussion-content__wrapper">
                     {isDiscOpened 
                         ?   <DiscussionLayout 

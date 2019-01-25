@@ -17,10 +17,10 @@ const facebookAppId = server.facebook.appId;
 class Login extends Component {
 
     responseFacebook = (response) => {
-        const {dispatch} = this.props;
+        const { loginUser } = this.props;
         const {provider} = server.facebook;
         const auth_type = "token";
-        dispatch(login_user(response.accessToken, provider, auth_type));
+        loginUser(response.accessToken, provider, auth_type);
         
         return (
             <Redirect to={{pathname:"/home"}}/>
@@ -32,7 +32,6 @@ class Login extends Component {
     }
 
     render() {
-        console.log(this.props.cookies);
         return (
             <div className="login__wrapper">
                 <FacebookLogin
@@ -47,6 +46,10 @@ class Login extends Component {
     }
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginUser: (token, provider, type) => dispatch(login_user(token, provider, type))
+    }
+}
 
-
-export default connect()(Login);
+export default connect(null, mapDispatchToProps)(Login);

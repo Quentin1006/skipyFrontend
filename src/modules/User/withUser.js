@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import { connect } from "react-redux";
 //import { compose } from "redux";
@@ -12,15 +12,33 @@ import {
 
 
 const withUser = ComponentToWrap => {
-    return ({isLoggedIn, profile, ...props}) => {
-        return (
-            <ComponentToWrap 
+    return class extends Component{
+        componentDidMount(){
+            const { checkIfUserIsConnected } = this.props;
+            checkIfUserIsConnected()
+        }
+
+        // componentDidUpdate(prevProps){
+        //     const { checkIfUserIsConnected, isLoggedIn } = this.props;
+
+        //     if(prevProps.isLoggedIn !== isLoggedIn){
+        //         checkIfUserIsConnected()
+        //     }
+                
+        // }
+
+        render(){
+            const { isLoggedIn, profile } = this.props
+            return (
+            <ComponentToWrap
+                {...this.props} 
                 isLoggedIn={isLoggedIn} 
                 profile={profile} 
-                {...props}
+                
             />
         );
-    };
+        }
+    } 
 };
 
 const mapStateToProps = (state) => {

@@ -2,21 +2,25 @@ import React, { Component } from 'react';
 
 import { Provider } from "react-redux";
 import { CookiesProvider } from 'react-cookie';
+import { BrowserRouter } from "react-router-dom";
+
 import store from "./store";
 
+import PrimaryLayout from "./layouts/PrimaryLayout"
+
 import './App.css';
-import Main from "./pages/Main";
 
 class App extends Component {
+	
 	render() {
 		return (
 			<CookiesProvider>
 				<Provider store={store}>
-					<Main />
+					<BrowserRouter >
+						<PrimaryLayout/>
+					</BrowserRouter>
 				</Provider>
 			</CookiesProvider>
-			
-			
 		);
 	}
 }

@@ -3,6 +3,12 @@
     
 }
 
+.action__textarea .textfield {
+    width: 100%;
+    margin: 4px 0;
+
+}
+
 .action__send-message {
     display: flex;
     align-items: center;

@@ -99,7 +99,7 @@ class DiscussionLayout extends Component {
     })
 
 
-    updateMessageText = (inputValue)  => {
+    updateInputValue = (inputValue)  => {
         this.setState({inputValue})
     }
 
@@ -350,7 +350,7 @@ class DiscussionLayout extends Component {
                                 triggerSendMessage={this.onHandleSendMessage}
                                 onFocusSendInput={markMessagesAsRead}
                                 discId = {discId}
-                                updateMessageText={this.updateMessageText}
+                                updateInputValue={this.updateInputValue}
                                 addUploads={this.addUploads}
                                 inputValue = {inputValue}
                                 canUpload={canUpload}

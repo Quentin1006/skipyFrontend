@@ -2,6 +2,16 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-color: black;
   overflow: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  display:block; 
+  height:100%; 
+}
+
+a:hover {
+  opacity:0.8
 }

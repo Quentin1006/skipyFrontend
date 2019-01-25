@@ -30,10 +30,10 @@ const cache = new ImmutableCache(MAX_CACHED_DISCS);
 export const openDiscId = (state=-1, action) => {
     switch(action.type){
         case GET_DISCUSSION_FROM_CACHE:
-            return action.disc.id || -1;
+            return action.disc.id;
         
         case CHANGE_DISC_ID:
-            return action.discId || -1;
+            return action.discId;
 
         
         default:

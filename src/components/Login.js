@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import FacebookLogin from "react-facebook-login";
 
+import { Redirect } from "react-router";
+
 
 import { login_user } from "../actions/userprofile";
 
@@ -19,6 +21,10 @@ class Login extends Component {
         const {provider} = server.facebook;
         const auth_type = "token";
         dispatch(login_user(response.accessToken, provider, auth_type));
+        
+        return (
+            <Redirect to={{pathname:"/home"}}/>
+        )
     }
 
     componentClicked = () => {

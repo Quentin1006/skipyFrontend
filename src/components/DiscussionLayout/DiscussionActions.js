@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 
 
 import { withStyles } from '@material-ui/core/styles';
-import { IconButton } from "@material-ui/core";
+import { IconButton, Input } from "@material-ui/core";
 import InsertPhotoIcon from "@material-ui/icons/InsertPhoto"; 
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import SendIcon from "@material-ui/icons/Send";
 
-import AutoGrowTextArea from "../../lib/Components/AutoGrowTextarea";
+import AutoSizeTextArea from "react-textarea-autosize";
+
 
 import NewWindow from '../../lib/Components/NewWindow';
 import WebcamRenderer from '../../lib/Components/WebcamRenderer';
@@ -83,9 +84,10 @@ class DiscussionActions extends Component {
     }
 
 
-    onInputValueChange = (inputValue) => {
-        const { updateMessageText } = this.props;
-        updateMessageText(inputValue);
+    onInputValueChange = (e) => {
+        const value = e.target.value;
+        const { updateInputValue } = this.props;
+        updateInputValue(value);
     }
 
 
@@ -174,7 +176,7 @@ class DiscussionActions extends Component {
     }
 
     renderCameraWindow = () => {
-        const { pictureTaken, cameraPermissionAccepted } = this.state;
+        const { pictureTaken } = this.state;
         return (
             <NewWindow closeNewWindow={() => this.closeNewWindow()}>
                 {
@@ -204,26 +206,27 @@ class DiscussionActions extends Component {
 
     render() {
         const { openCamera } = this.state;
-        const { discId, canUpload, inputValue, classes } = this.props;
+        const { discId, inputValue, canUpload, classes } = this.props;
 
         return (
             <div className="actions__wrapper" >
                 <div className="action__send-message">
                     <div className="action__textarea">
-                        <AutoGrowTextArea 
-                            
-                            inputProps= {{
-                                id:"sendMessage",
+                        <Input
+                            id="sendMessage"
+                            placeholder="Send your message..."
+                            inputProps={{
+                                style: {resize: "none"},
                                 "data-discid": discId,
-                                placeholder:"Send your message...",
-                                onFocus: this.onHandleFocus,
-                                onKeyDown: this.onHandleKeyDown,
-                                value: inputValue
-                                
-                            }} 
-                            ref={(input) => { this.sendInput = input; }}
-                            onInputValueChange= {this.onInputValueChange}
-                        />
+                                maxRows: 4
+                            }}
+                            value={inputValue}
+                            onChange={this.onInputValueChange}
+                            onKeyDown= {this.onHandleKeyDown}
+                            onFocus= {this.onHandleFocus}
+                            inputComponent={AutoSizeTextArea}
+                            className="textfield"
+                            />
                     </div>
                     <div className="action__send_btn">
                         <IconButton style={{padding: "2px 12px"}} onClick={this.onHandleClickSend}>

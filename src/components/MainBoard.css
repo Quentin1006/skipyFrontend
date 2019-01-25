@@ -20,7 +20,10 @@
 }
 
 .mainboard__wrapper {
-    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: calc( 100vh - 64px); /* PAS CLAIR le "-64px" est en réalité la hauteur de la navbar entrée dans le component MenuNavbar */ 
     display: flex;
-    flex-flow: row nowrap
+    flex-flow: row nowrap;
+    background-color: white;
 }

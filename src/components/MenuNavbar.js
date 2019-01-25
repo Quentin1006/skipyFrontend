@@ -1,4 +1,7 @@
 import React from 'react';
+
+import { Link } from "react-router-dom";
+
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -7,8 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import MessageIcon from '@material-ui/icons/Message';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+
+
 
 const styles = {
   root: {
@@ -21,6 +27,11 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  container: {
+    height: 64,
+    position: "relative",
+    zIndex: 1000
+  }
 };
 
 class MenuAppBar extends React.Component {
@@ -41,11 +52,12 @@ class MenuAppBar extends React.Component {
   };
 
   render() {
-    const { classes, isLoggedIn, title, logout } = this.props;
+    const { classes, isLoggedIn, logout } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
     return (
+      <div className="container">
         <AppBar position="static">
           <Toolbar>
             <IconButton 
@@ -57,12 +69,22 @@ class MenuAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-            <a href=" #">
-            {title.toUpperCase()}
-            </a>
+            <Link to="/app">
+              SKIPY
+            </Link>
             </Typography>
             {isLoggedIn && (
               <div>
+               
+                  <IconButton 
+                    color="inherit" 
+                    component={Link}
+                    to="/app/messenger"
+                  >
+                    <MessageIcon />
+                  </IconButton>
+                
+                
                 <IconButton
                   aria-owns={open ? 'menu-appbar' : undefined}
                   aria-haspopup="true"
@@ -85,14 +107,19 @@ class MenuAppBar extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <Link to="/app/profile">
+                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  </Link>
+                  <Link to="/app/profile">
+                    <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  </Link>
                   <MenuItem onClick={logout}>Log out</MenuItem>
                 </Menu>
               </div>
             )}
           </Toolbar>
         </AppBar>
+      </div>
     );
   }
 }

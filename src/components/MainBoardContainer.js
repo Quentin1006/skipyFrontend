@@ -8,8 +8,6 @@ import {
 } from "@material-ui/core";
 import MessageIcon from "@material-ui/icons/Message";
 
-
-
 import DiscussionList from "./DiscussionList";
 import DiscussionLayout from "./DiscussionLayout";
 import WelcomeLayout from "./WelcomeLayout";
@@ -375,7 +373,7 @@ const getOverview = (discussions) => {
         return {
             id: disc.id,
             friendsName: `${friends.firstname} ${friends.lastname}`,
-            friendsProfilePicture: friends.profilepicture,
+            friendsProfilePicture: friends.profilepic,
             lastMessage:disc.lastMessage.content || "",
             unreadMessagesCount: disc.unreadMessagesCount
         }
@@ -384,7 +382,7 @@ const getOverview = (discussions) => {
 
 const refactorDiscussion = (disc, userprofile) => {
     // We refactor the disc received from server
-    if(disc && disc.id && userprofile.id){
+    if(disc && disc.id >= 0 && userprofile.id){
         const { id, user1, user2, content } = disc;
 
         const [ user, friend ] = user1.id === userprofile.id 
@@ -406,7 +404,7 @@ const refactorDiscussion = (disc, userprofile) => {
 const mapStateToProps = (state, ownProps) => {
     const { openDiscId, discussionsOverview, tempDisc, discussions } = state;
 
-    const discOpened = openDiscId > 0
+    const discOpened = openDiscId >= 0
                     ? refactorDiscussion(discussions[openDiscId], ownProps.profile) 
                     : tempDisc;
 

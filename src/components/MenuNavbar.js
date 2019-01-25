@@ -4,15 +4,21 @@ import { Link } from "react-router-dom";
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
+
+
+import { 
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  MenuItem,
+  Menu
+
+} from '@material-ui/core';
+
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MessageIcon from '@material-ui/icons/Message';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 
 
 
@@ -22,6 +28,7 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
+    
   },
   menuButton: {
     marginLeft: -12,
@@ -58,7 +65,7 @@ class MenuAppBar extends React.Component {
   }
 
   render() {
-    const { classes, isLoggedIn, logout } = this.props;
+    const { classes, isLoggedIn } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -75,7 +82,7 @@ class MenuAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-            <Link to="/app">
+            <Link to="/app" style={{display: "inline-block"}}>
               SKIPY
             </Link>
             </Typography>

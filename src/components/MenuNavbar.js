@@ -51,6 +51,12 @@ class MenuAppBar extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  onHandleLogout = () => {
+    const { logout } = this.props;
+    this.handleClose();
+    logout();
+  }
+
   render() {
     const { classes, isLoggedIn, logout } = this.props;
     const { anchorEl } = this.state;
@@ -113,7 +119,7 @@ class MenuAppBar extends React.Component {
                   <Link to="/app/profile">
                     <MenuItem onClick={this.handleClose}>My account</MenuItem>
                   </Link>
-                  <MenuItem onClick={logout}>Log out</MenuItem>
+                  <MenuItem onClick={this.onHandleLogout}>Log out</MenuItem>
                 </Menu>
               </div>
             )}

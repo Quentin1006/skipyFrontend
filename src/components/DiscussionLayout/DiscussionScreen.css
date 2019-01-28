@@ -1,19 +1,9 @@
-
-
-ul {
-    padding-left: 0;
-}
-
-li.message__row {
-    list-style: none;
-    margin-bottom: 10px; 
-    padding-left: 0;
+.message__row {
+    display: flex;
 }
 
 .message__container {
-    float: right;
     margin-bottom: 10px;
-    clear: both;
     max-width: 80%
 }
 
@@ -21,12 +11,14 @@ li.message__row {
 .message--align-right {
     margin-right: 15px;
     text-align: right;
+    flex-direction: row-reverse
 }
 
 
 .message--align-left {
     margin-left: 15px;
     text-align: left;
+    flex-direction: row
 }
 
 
@@ -36,6 +28,10 @@ li.message__row {
     width: 100%;
     text-align: center;
     margin: 10px 0 ;
+}
+
+.messagescreen__wrapper {
+    margin-top:15px;
 }
 
 

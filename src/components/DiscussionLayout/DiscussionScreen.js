@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import { format, isSameDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -131,7 +131,7 @@ class DiscussionScreen extends Component {
         const hasImages = mess.uploads.length > 0;
 
         return (
-            <div>
+            <Fragment>
                 <div className="message__container">
                     {
                         mess.content &&
@@ -153,7 +153,7 @@ class DiscussionScreen extends Component {
                         onHandleLoad={this.onImageLoaded}
                     />
                 }
-            </div>
+            </Fragment>
         )
     }
 
@@ -167,10 +167,10 @@ class DiscussionScreen extends Component {
                 
                 //const distTime = formatDistance(timestamp, Date.now());
                 return (
-                    <li className={`message__row message--align-${side}`} key={`${discId}:${mess.id}`}>
+                    <div className={`message__row message--align-${side}`} key={`${discId}:${mess.id}`}>
                         <div className="message__time-distance"></div>
                         {this.renderMessage(mess, side)}
-                    </li>
+                    </div>
                 )
             })
         )
@@ -186,9 +186,9 @@ class DiscussionScreen extends Component {
         return (
             <div className="messagescreen__wrapper">
                 <div>
-                <ul className="messagescreen__list">
+                <div className="messagescreen__list">
                     {this.messagesRendering}
-                </ul>
+                </div>
                 </div>
                
                 <div className="messagescreen__loader">

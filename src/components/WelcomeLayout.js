@@ -26,7 +26,7 @@ class WelcomeLayout extends Component {
                 <div className="welcome-layout__content">
                     <div className="welcome-layout__welcome-message">Hey <b>{profile.username}</b> !</div>
                     <div className="welcome-layout__profilepicture">
-                        <img src={profile.profilepicture} alt="user"/>
+                        <img src={profile.profilepic} alt="user"/>
                     </div>
 
                     <Fab variant="extended" onClick={startDiscussion}>{"start discussion"}</Fab>

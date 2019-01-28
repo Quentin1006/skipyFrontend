@@ -19,6 +19,7 @@ const PrimaryLayout = ({ isLoggedIn, profile, logout }) => {
       <Fragment>
         <Route path="/" render={() => <MenuNavbar logout={logout} isLoggedIn={isLoggedIn}/>} />
         <Switch>
+            <Route exact path="/" render={() => <Redirect to="/app"/>} />
             <UserRoute path="/app" component={AppLayout} isLoggedIn={isLoggedIn} redirect={loginPath} />
             
             {

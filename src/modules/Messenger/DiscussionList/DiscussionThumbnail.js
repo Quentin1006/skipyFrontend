@@ -7,7 +7,7 @@ import PhotoIcon from "@material-ui/icons/Photo";
 
 import './DiscussionThumbnail.css';
 
-import defaultpic from "../../images/weldon-Koelpig.png";
+import defaultpic from "../../../images/weldon-Koelpig.png";
 
 const maxMsgLength = 45;
 

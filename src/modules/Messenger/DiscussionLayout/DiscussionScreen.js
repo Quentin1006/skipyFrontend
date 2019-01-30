@@ -8,7 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Message from "./DiscussionScreen/Message";
 import ImageMessage from "./DiscussionScreen/ImageMessage";
-import PhotoGallery from "../../lib/Components/PhotoGallery";
+import PhotoGallery from "../../../lib/Components/PhotoGallery";
 
 import "./DiscussionScreen.css";
 
@@ -17,7 +17,7 @@ import {
     SENDING_MESSAGE,
     LEFT,
     RIGHT
-} from "../../config"
+} from "../../../config"
 
 const setToOppositeSide = (side) => {
     return side === LEFT ? RIGHT : LEFT;

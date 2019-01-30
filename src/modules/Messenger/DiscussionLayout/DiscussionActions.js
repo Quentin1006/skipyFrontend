@@ -11,9 +11,9 @@ import SendIcon from "@material-ui/icons/Send";
 import AutoSizeTextArea from "react-textarea-autosize";
 
 
-import NewWindow from '../../lib/Components/NewWindow';
-import WebcamRenderer from '../../lib/Components/WebcamRenderer';
-import CapturedImage from '../../lib/Components/CapturedImage';
+import NewWindow from '../../../lib/Components/NewWindow';
+import WebcamRenderer from '../../../lib/Components/WebcamRenderer';
+import CapturedImage from '../../../lib/Components/CapturedImage';
 
 import "./DiscussionActions.css";
 

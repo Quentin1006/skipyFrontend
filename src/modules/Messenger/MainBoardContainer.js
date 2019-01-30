@@ -28,17 +28,17 @@ import {
     close_temp_disc
 
 
-} from "../actions/discussions";
+} from "../../actions/discussions";
 
 
-import Logger from "../lib/Logger"; 
-import server from "../config/server";
+import Logger from "../../lib/Logger"; 
+import server from "../../config/server";
 import {
     NOT_SENDING , 
     SENDING_MESSAGE, 
     SENDING_SUCCESS, 
     SENDING_FAILURE
-} from "../config";
+} from "../../config";
 
 import "./MainBoard.css";
 

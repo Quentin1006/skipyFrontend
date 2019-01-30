@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import ConfirmationDialog from "../lib/Components/ConfirmationDialog";
+import ConfirmationDialog from "../../lib/Components/ConfirmationDialog";
 
 class ShowLeaveDiscussionDialog extends Component {
     render() {

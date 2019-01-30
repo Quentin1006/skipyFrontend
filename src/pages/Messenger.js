@@ -8,7 +8,7 @@ import Logger from "../lib/Logger";
 
 import './Messenger.css';
 
-import MainBoard from "../components/MainBoardContainer";
+import MainBoard from "../modules/Messenger/MainBoardContainer";
 
 import { 
     checkIfUserIsConnected ,
@@ -22,7 +22,7 @@ logger.info("beat")
 
 
 
-class Main extends Component {
+class Messenger extends Component {
     constructor(props){
         super(props);
         const { checkIfUserIsConnected } = this.props;
@@ -100,4 +100,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withCookies(connect(mapStateToProps, mapDispatchToProps)(Main));
+export default withCookies(connect(mapStateToProps, mapDispatchToProps)(Messenger));

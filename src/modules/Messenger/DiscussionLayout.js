@@ -5,7 +5,7 @@ import DiscussionHeader from "./DiscussionLayout/DiscussionHeader";
 import DiscussionActions from "./DiscussionLayout/DiscussionActions";
 import UploadsPreview from "./DiscussionLayout/UploadsPreview";
 
-import Notification from "../lib/Components/Notification"; 
+import Notification from "../../lib/Components/Notification"; 
 
 
 import { Grid } from "@material-ui/core";

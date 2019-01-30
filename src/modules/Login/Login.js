@@ -5,9 +5,9 @@ import FacebookLogin from "react-facebook-login";
 import { Redirect } from "react-router";
 
 
-import { login_user } from "../actions/userprofile";
+import { login_user } from "../../actions/userprofile";
 
-import server from "../config/server";
+import server from "../../config/server";
 
 import "./Login.css";
 

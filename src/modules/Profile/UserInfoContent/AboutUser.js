@@ -58,12 +58,7 @@ const signupSchema =  Yup.object().shape({
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
-    email: Yup.object().shape({
-        main: Yup.string().email("Invalid Email").required("Email is required"),
-        backup: Yup.string()
-            .notOneOf([Yup.ref("main")], "Back up email should be different from the main email")
-            .email("Invalid Email")
-    })
+    email: Yup.string().email("Invalid Email").required("Email is required")
 })
 
 
@@ -121,8 +116,7 @@ class AboutUser extends Component {
                                 <fieldset disabled={!isEditing} style={{border: "none"}}>
                                     <FormikField label={"Firstname"} name={"firstname"} className={classes.textField}/>
                                     <FormikField label={"Lastname"} name={"lastname"} className={classes.textField}/>
-                                    <FormikField label={"Email"} name={"email.main"} className={classes.textField}/>
-                                    <FormikField label={"Backup Email"} name={"email.backup"} className={classes.textField}/>
+                                    <FormikField label={"Email"} name={"email"} className={classes.textField}/>
                                     <FormikSelect
                                         label={"Country"} 
                                         name={"country"}

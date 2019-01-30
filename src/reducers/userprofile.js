@@ -3,8 +3,11 @@ import {
     RECEIVE_USER_PROFILE,
     SEND_CONNECTION_REQUEST,
     RECEIVE_CONNECTION_RESPONSE,
+    REQUEST_USERFRIENDS,
     RECEIVE_USERFRIENDS_RESPONSE,
-    LOGOUT
+    LOGOUT,
+    SEND_UPDATE_USER,
+    RECEIVE_UPDATED_USER
 } from "../actions/userprofile";
 
 
@@ -54,11 +57,31 @@ export default (state={}, action) => {
                 profile
             }
         
+        case REQUEST_USERFRIENDS:
+            return {
+                ...state,
+                requestingUserFriends: true
+            }
 
         case RECEIVE_USERFRIENDS_RESPONSE:
             return {
                 ...state,
-                friendlist: action.friends
+                friendlist: action.friends,
+                requestingUserFriends: true
+            }
+        
+        case SEND_UPDATE_USER: 
+            return {
+                ...state,
+                updatingUser: true,
+            }
+        
+        case RECEIVE_UPDATED_USER:
+            profile = action.user;
+            return {
+                ...state,
+                profile,
+                updatingUser: false,
             }
 
         

@@ -136,7 +136,7 @@ class DiscussionScreen extends Component {
                     {
                         mess.content &&
                         <Tooltip title={localeDate} placement={tooltipPlacement}>
-                            <Message>
+                            <Message side={side}>
                                 <div>
                                     {mess.content}  
                                 </div>

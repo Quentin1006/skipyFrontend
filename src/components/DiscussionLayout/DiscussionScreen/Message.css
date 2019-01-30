@@ -3,13 +3,24 @@
     display: inline-block;
     max-width: 100%;
     padding: 5px 10px;
-    border-radius: 15px;
     background: rgb(131, 120, 120);
     color: #fff;
-    
-    
-    
 } 
+
+.message__wrapper.left {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+
+.message__wrapper.right {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;    
+}
 
 
 .message__box {

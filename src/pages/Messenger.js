@@ -11,8 +11,8 @@ import './Messenger.css';
 import MainBoard from "../components/MainBoardContainer";
 
 import { 
-    getUserFriends,
     checkIfUserIsConnected ,
+    get_user_friends,
     logout
 } from "../actions/userprofile";
 
@@ -32,10 +32,10 @@ class Main extends Component {
     }
 
     componentDidMount(){
-        const { isLoggedIn, profile } = this.props;
+        const { isLoggedIn, profile, getUserFriends } = this.props;
 
         if(isLoggedIn && profile){
-            getUserFriends(profile.id);
+            getUserFriends();
         }
        
     }
@@ -43,7 +43,7 @@ class Main extends Component {
     componentDidUpdate(prevProps){
         const { isLoggedIn, getUserFriends, profile } = this.props;
         if(isLoggedIn && prevProps.isLoggedIn !== isLoggedIn && profile){
-            getUserFriends(profile.id);
+            getUserFriends();
         }
     }
 
@@ -95,7 +95,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         checkIfUserIsConnected: () => dispatch(checkIfUserIsConnected()),
-        getUserFriends : (userId) => dispatch(getUserFriends(userId)),
+        getUserFriends : () => dispatch(get_user_friends()),
         logout: () => dispatch(logout())
     }
 }

@@ -91,11 +91,10 @@ export const checkIfUserIsConnected = () => {
 }
 
 
-export const SEND_USERFRIENDS_REQUEST = "SEND_USERFRIENDS_REQUEST";
-const send_userfriends_request = (userId) => {
+export const REQUEST_USERFRIENDS = "REQUEST_USERFRIENDS";
+const request_userfriends = () => {
     return {
-        type: SEND_USERFRIENDS_REQUEST,
-        userId
+        type: REQUEST_USERFRIENDS,
     }
 }
 
@@ -108,12 +107,39 @@ const receive_userfriends_response = (friends) => {
 }
 
 
-export const getUserFriends = (userId) => {
-    const url = `${server.url}/users/${userId}/friends`;
+export const get_user_friends = () => {
+    const url = `${server.url}/users/me/friends`;
     return asyncRequest({
         url,
-        startAction: send_userfriends_request,
-        startActionParams: [userId],
+        startAction: request_userfriends,
         endAction: receive_userfriends_response
     })
 }
+
+
+export const SEND_UPDATE_USER = "SEND_UPDATE_USER";
+const send_update_user =  (fields) => ({
+    type: SEND_UPDATE_USER,
+    fields
+});
+
+export const RECEIVE_UPDATED_USER = "RECEIVE_UPDATED_USER";
+const receive_updated_user =  (user) => ({
+    type: RECEIVE_UPDATED_USER,
+    user
+})
+
+export const update_user = (fields) => {
+    const url = `${server.url}/users/me/update`;
+    const body = fields;
+
+    return asyncRequest({
+        url,
+        startAction: send_update_user,
+        params: fields,
+        endAction: receive_updated_user,
+        method: "post",
+        body
+    })
+}
+

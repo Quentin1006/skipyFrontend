@@ -10,6 +10,7 @@
     "date-fns": "^2.0.0-alpha.25",
     "debug": "^4.1.0",
     "formik": "^1.4.3",
+    "object-to-formdata": "^1.6.2",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-autosuggest": "^9.4.2",

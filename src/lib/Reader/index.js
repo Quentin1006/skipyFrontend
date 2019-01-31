@@ -1,5 +1,4 @@
 export const _readImageFile = (fileToUpload) => {
-    const { name, size, type } = fileToUpload;
     const reader = new FileReader();
 
     return new Promise((resolve, reject) => {
@@ -12,10 +11,8 @@ export const _readImageFile = (fileToUpload) => {
     
         reader.onload = (e) => {
             const preview = e.target.result;
-            const uploadedImg ={
-                name, 
-                size, 
-                type, 
+            const uploadedImg = {
+                fileToUpload,
                 preview, 
             }
             resolve(uploadedImg)

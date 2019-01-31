@@ -21,8 +21,7 @@ class Profile extends Component {
     render() {
         const { 
             updateUser, 
-            userprofile, 
-            changeLandscape, 
+            userprofile,  
             getFriends, 
             classes 
         }  = this.props;
@@ -32,7 +31,7 @@ class Profile extends Component {
             <div className={classes.container}>
                 <Header 
                     landscape={userprofile.landscapePicture}
-                    onChangeLandscape={changeLandscape}
+                    updateUser={updateUser}
                     ppicture={userprofile.profilepic}
                     firstname={userprofile.firstname}
                     lastname={userprofile.lastname}

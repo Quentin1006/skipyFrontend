@@ -136,9 +136,10 @@ export const update_user = (fields) => {
     return asyncRequest({
         url,
         startAction: send_update_user,
-        params: fields,
+        startActionParams: fields,
         endAction: receive_updated_user,
         method: "post",
+        //headers: {"Content-Type": "multipart/form-data"},
         body
     })
 }

@@ -67,16 +67,24 @@ class Header extends Component {
         showLandscapeEditBtn: false
     }
 
-
+    componentDidUpdate(prevProps){
+        const { landscape } = this.props;
+        if(prevProps.landscape !== landscape){
+            this.setState({
+                isEditingLandscape: false,
+                tempLandscape: null,
+            })
+        }
+    }
 
 
     onHandleChange = async (e) => {
         const newLandscape = e.target.files[0]; 
         try{
-            const dataUri = await _readImageFile(newLandscape);
+            const upload = await _readImageFile(newLandscape);
             this.setState({
                 isEditingLandscape: true,
-                tempLandscape: dataUri
+                tempLandscape: upload
             });
         }
         catch(e){
@@ -93,15 +101,10 @@ class Header extends Component {
     }
 
     onConfirm = () => {
-        const { onChangeLandscape } = this.props;
+        const { updateUser } = this.props;
         const { tempLandscape } = this.state;
 
-        onChangeLandscape(tempLandscape.preview);
-        this.setState({
-            isEditingLandscape: false,
-            tempLandscape: null,
-        })
-
+        updateUser({landscapePicture: tempLandscape.fileToUpload});
     }
 
     displayEditLandscapeBtn = () => {

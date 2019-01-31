@@ -4,6 +4,7 @@ import {
     ERR_ASYNC_REQUEST,
     UNAUTHORIZED_ASYNC_REQUEST
 } from "./error";
+import objectToFormData from 'object-to-formdata';
 
 
 
@@ -32,9 +33,10 @@ export const asyncRequest = ({
         dispatch(startAction(...startActionParams));
 
         if(method.toLowerCase() === 'post'){
-            fetchOpts.body = serializeParams(body);
-            fetchOpts.headers['Accept'] = 'application/json, text/plain, application/x-www-form-urlencoded';
-            fetchOpts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            fetchOpts.body = objectToFormData(body);
+            //fetchOpts.body = serializeParams(body);
+            fetchOpts.headers['Accept'] = 'application/json, text/plain, application/x-www-form-urlencoded, multipart/form-data';
+            //fetchOpts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
         }
         
         fetch(url, fetchOpts)
@@ -93,4 +95,14 @@ const serializeParams = (params) => {
             [key, params[key]].map(encodeURIComponent).join("=")
         )).join("&") 
         : '' 
+}
+
+const buildBody = (params) => {
+    const formData = new FormData()
+    Object.keys(params).map((key) => {
+        formData.append(key, params[key]);
+    });
+
+    return formData;
+        
 }

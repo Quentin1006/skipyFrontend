@@ -82,10 +82,9 @@ class AboutUser extends Component {
 
     onHandleSubmit = (values, actions) => {
         const { updateUser } = this.props;
-        updateUser(values).then(() => {
-            actions.setSubmitting(false);
-            this.leaveEditingMode();
-        })
+        updateUser(values)
+        actions.setSubmitting(false);
+        this.leaveEditingMode();
         
     }
 

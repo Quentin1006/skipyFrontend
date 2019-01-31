@@ -25,7 +25,7 @@ const setToOppositeSide = (side) => {
 
 const setFormatedDate = (timestamp, locale=fr) => {
     const now = Date.now();
-    const dateFormat = isSameDay(now, timestamp) ? "HH:MM" : "dd/MM/YYY HH:MM";
+    const dateFormat = isSameDay(now, timestamp) ? "HH:mm" : "dd/MM/YYY HH:mm";
     return format(timestamp, dateFormat, {locale});
 }
 

@@ -1,5 +1,6 @@
 .message__row {
     display: flex;
+    flex-direction: column;
 }
 
 .message__container {
@@ -11,14 +12,15 @@
 .message--align-right {
     margin-right: 15px;
     text-align: right;
-    flex-direction: row-reverse
+    align-items: flex-end
+    
 }
 
 
 .message--align-left {
     margin-left: 15px;
     text-align: left;
-    flex-direction: row
+    align-items: flex-start
 }
 
 

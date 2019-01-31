@@ -30,9 +30,10 @@ class ProfilePage extends Component {
 
     getFriends = (filter="") => {
         const { friendlist } = this.props;
+        filter = filter.toLowerCase();
     
         return friendlist.filter(f => {
-            const fullname = `${f.firstname} ${f.lastname}`;
+            const fullname = `${f.firstname} ${f.lastname}`.toLowerCase();
             return fullname.includes(filter);
         })
     }

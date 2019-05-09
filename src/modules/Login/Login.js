@@ -34,13 +34,16 @@ class Login extends Component {
     render() {
         return (
             <div className="login__wrapper">
-                <FacebookLogin
-                    appId={facebookAppId}
-                    autoLoad={false}
-                    fields="name,email,picture"
-                    onClick={this.componentClicked}
-                    callback={this.responseFacebook}
-                />
+                <div className="login__btn-wrapper">
+                    <FacebookLogin
+                        appId={facebookAppId}
+                        autoLoad={false}
+                        fields="name,email,picture"
+                        onClick={this.componentClicked}
+                        callback={this.responseFacebook}
+                    />
+                </div>
+                
             </div>
         );
     }

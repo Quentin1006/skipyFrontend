@@ -1,4 +1,12 @@
 .login__wrapper {
-    padding-top: 120px;
     text-align: center;
+    height: calc( 100vh - 64px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.login__btn-wrapper {
+    
 }

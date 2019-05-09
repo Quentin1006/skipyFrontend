@@ -1,7 +1,14 @@
+const { 
+    REACT_APP_API_PROTOCOL,
+    REACT_APP_API_DOMAIN,
+    REACT_APP_API_PORT,
+    REACT_APP_API_FB_APPID
+} = process.env;
+
+
 export default {
-    url: "https://localhost:3001",
+    url: `${REACT_APP_API_PROTOCOL}://${REACT_APP_API_DOMAIN}:${REACT_APP_API_PORT}`,
     facebook : {
-        appId : "1978073672430696",
-        provider: "facebook"
+        appId : REACT_APP_API_FB_APPID,        provider: "facebook"
     }
 }

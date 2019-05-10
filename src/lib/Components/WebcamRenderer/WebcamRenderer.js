@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 import { withStyles } from "@material-ui/core/styles";
 import { CircularProgress, Grow } from "@material-ui/core";
-import Fab from "@material-ui/core/Fab";
 
 import CapturedImage from './CapturedImage';
 import Webcam from "./Webcam";
@@ -65,11 +64,6 @@ class WebcamRenderer extends Component {
         
     }
 
-    componentDidUpdate(prevProps){
-        // if(this.video && prevProps.src !== this.props.src){
-        //     this.video.srcObject = this.state.stream;
-        // }   
-    }
 
     componentWillUnmount(){
         this.closeStream();
@@ -135,30 +129,6 @@ class WebcamRenderer extends Component {
         )
     }
 
-    // renderWebcam = () => {
-    //     const { classes } = this.props;
-    //     return (
-    //        <div>
-    //            <video
-    //             autoPlay
-    //             ref={videoTag => {
-    //                 this.video = videoTag;
-    //             }}
-    //             className={classes.cameraVideo}
-    //             >
-    //             Your browser doesn't support the use of a Webcam
-    //             </video>
-    //             <Fab 
-    //                 color="primary" 
-    //                 aria-label="capture" 
-    //                 className={classes.cameraBtn} 
-    //                 onClick={() => this.onHandleClick()}
-    //             >
-    //                 <PhotoCameraIcon />
-    //             </Fab>
-    //        </div>
-    //     )
-    // }
 
     renderWebcam = () => {
         const { src, onAccept, onCancel, classes } = this.props;

@@ -10,7 +10,7 @@ const styles = {
 }
 
 const UploadButton = ({
-    onHandleChange, 
+    handleChange, 
     accept="image/*", 
     inputProps, 
     buttonType="contained", 
@@ -24,7 +24,7 @@ const UploadButton = ({
                 className={classes.input}
                 id="contained-button-file"
                 type="file"
-                onChange={onHandleChange}
+                onChange={handleChange}
                 {...inputProps}
             />
             <label htmlFor="contained-button-file">

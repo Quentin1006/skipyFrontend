@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 
 import { withStyles } from '@material-ui/core/styles';
-import { IconButton, Input } from "@material-ui/core";
+import { IconButton, Input, Dialog, DialogContent } from "@material-ui/core";
 import InsertPhotoIcon from "@material-ui/icons/InsertPhoto"; 
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import SendIcon from "@material-ui/icons/Send";
@@ -11,9 +11,7 @@ import SendIcon from "@material-ui/icons/Send";
 import AutoSizeTextArea from "react-textarea-autosize";
 
 
-import NewWindow from '../../../lib/Components/NewWindow';
 import WebcamRenderer from '../../../lib/Components/WebcamRenderer';
-import CapturedImage from '../../../lib/Components/CapturedImage';
 
 import "./DiscussionActions.css";
 
@@ -22,6 +20,9 @@ const ENTER = 13;
 const styles = {
     input: {
         display: "none"
+    },
+    dialogContent: {
+        padding: "12px"
     }
 }
 
@@ -32,7 +33,6 @@ class DiscussionActions extends Component {
         this.state = {
             openCamera: false,
             pictureTaken: null,
-            cameraPermissionAccepted: false // pas utilisé
         }
 
     }
@@ -40,7 +40,6 @@ class DiscussionActions extends Component {
 
     componentDidMount(){
         //this.sendInput.focus()
-        this.checkCameraPermission();
     }
 
 
@@ -53,7 +52,7 @@ class DiscussionActions extends Component {
 
         // Control if uploads limit is reached
         if(!canUpload && openCamera){
-            this.closeNewWindow();
+            this.closeCameraModal();
         }  
     }
 
@@ -95,45 +94,13 @@ class DiscussionActions extends Component {
         this.setState({
             openCamera: false,
             pictureTaken: null,
-            cameraPermissionAccepted: false
         });
     }
 
 
-    _sendMessage = (e) => {
+    _sendMessage = () => {
         const { triggerSendMessage } = this.props;
         triggerSendMessage();
-    }
-
-
-    _checkPermission = (permissionName) => {
-        return navigator.permissions.query({name: permissionName})
-    }
-
-
-    checkCameraPermission = () => {
-        return this._checkPermission("camera")
-        .then(res => {
-            res.state === "granted" 
-            && this.setState({cameraPermissionAccepted: true})   
-        })       
-    }
-
-
-    _promptCamera = () => {
-        return navigator.mediaDevices
-            .getUserMedia({video: true})
-            .then(() => this.setState({cameraPermissionAccepted: true}))
-            .catch(() => this.setState({cameraPermissionAccepted: false}));
-    }
-
-    onAcceptCamera = () => {
-        this.setState({cameraPermissionAccepted: true})
-    }
-
-
-    openCamera = () => {
-        this.setState({openCamera: true })
     }
 
 
@@ -170,42 +137,36 @@ class DiscussionActions extends Component {
         this.setState({pictureTaken: null});
     }
 
+    
+    openCamera = () => {
+        this.setState({openCamera: true })
+    }
 
-    closeNewWindow = () => {
+
+    closeCamera = () => {
         this.setState({openCamera: false});
     }
 
-    renderCameraWindow = () => {
-        const { pictureTaken } = this.state;
-        return (
-            <NewWindow closeNewWindow={() => this.closeNewWindow()}>
-                {
-                    (windowHandle) => {
-                        return (
-                            pictureTaken === null
-                            ? <WebcamRenderer 
-                                onAcceptCamera={this.onAcceptCamera}
-                                onTakeScreenshot={(img) => this.onTakeScreenshot(img)}
-                                //onError={() => windowHandle.close()}
 
-                            />
-                            : <CapturedImage 
-                                onAccept={this.onKeepPictureTaken}
-                                onCancel={this.onDeletePictureTaken}
-                                src={pictureTaken}
-                            />
-                        )
-                        
-                    }
-                    
-                }
-            </NewWindow>
+    renderCameraModal = () => {
+        const { classes } = this.props;
+        const { pictureTaken, openCamera } = this.state;
+        return (
+            <Dialog onClose={this.closeCamera} open={openCamera} fullWidth>
+                <DialogContent className={classes.dialogContent}>
+                    <WebcamRenderer 
+                        onTakeScreenshot={(img) => this.onTakeScreenshot(img)}
+                        onAccept={this.onKeepPictureTaken}
+                        onCancel={this.onDeletePictureTaken}
+                        src={pictureTaken}
+                    />
+                </DialogContent>
+            </Dialog>
         )
     }
 
 
     render() {
-        const { openCamera } = this.state;
         const { discId, inputValue, canUpload, classes } = this.props;
 
         return (
@@ -255,10 +216,7 @@ class DiscussionActions extends Component {
                         <PhotoCameraIcon />
                     </IconButton>
                 </div>
-                {
-                    openCamera &&
-                    this.renderCameraWindow()
-                }
+                    {this.renderCameraModal()}
             </div>
         );
     }

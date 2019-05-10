@@ -2,26 +2,31 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { withStyles } from "@material-ui/core/styles";
+import { CircularProgress, Grow } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
+
+import CapturedImage from './CapturedImage';
+import Webcam from "./Webcam";
 
 
 const styles = {
-    cameraBtn: {
-        position: "absolute",
-        bottom: "20px",
-        left: "50%",
-        transform: "translateX(-50%)"
-    },
+    
     cameraWrapper: {
         position: "relative",
-        height:"100%",
-        width:"100%"
+        height:"calc(100% - 3px)",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+
     },
 
-    cameraVideo: {
-        width: "100%",
-        height: "100%"
+    capturedImg: {
+        position: "absolute",
+        height:"calc(100% - 3px)",
+        width:"100%",
+        top: 0,
+        left: 0,
     },
 
     errorWrapper: {
@@ -31,20 +36,28 @@ const styles = {
         justifyContent: "center",
         backgroundColor: "#000",
         color: "#fff",
-        margin: "80px",
+        height:"calc(100% - 3px)",
+        width: "100%",
+        padding: "80px",
         textAlign: "center"
-    }
+    },
+    
 };
 
 
 class WebcamRenderer extends Component {
-    state = {
-        streaming: false,
-        stream: null,
-        hasPermission: false
-
-    };
-
+    constructor(props){
+        super(props);
+        
+        this.state = {
+            isLoading: true,
+            streaming: false,
+            stream: null,
+            hasPermission: false
+    
+        };
+    }
+    
 
     componentDidMount() {
         const permissions = { video: true };
@@ -52,20 +65,20 @@ class WebcamRenderer extends Component {
         
     }
 
-    componentDidUpdate(){
-        console.log(this.state.hasPermission)
+    componentDidUpdate(prevProps){
+        // if(this.video && prevProps.src !== this.props.src){
+        //     this.video.srcObject = this.state.stream;
+        // }   
     }
-
 
     componentWillUnmount(){
         this.closeStream();
     }
 
 
-    onHandleClick = (e) => {
+    handleTakeScreenshot = () => {
         const { onTakeScreenshot } = this.props;
         
-
         const canvas = document.createElement("canvas");
         canvas.width = this.video.videoWidth;
         canvas.height = this.video.videoHeight;
@@ -78,19 +91,17 @@ class WebcamRenderer extends Component {
 
 
     startWebcam = (permissions) => {
-        const { onAcceptCamera } = this.props;
         if (!this._hasGetUserMedia()) return;
 
         navigator.mediaDevices
         .getUserMedia(permissions)
         .then(stream => {
-            this.setState({hasPermission: true, streaming: true})
+            this.setState({hasPermission: true, streaming: true, isLoading: false})
             return stream;
         })
         .then(stream => {
             this.video.srcObject = stream;
             this.setState({stream});
-            onAcceptCamera();
         })
         .catch(this._errBack);
     }
@@ -108,8 +119,7 @@ class WebcamRenderer extends Component {
 
 
     _errBack = err => {
-        console.log("err in WebcamRenderer: ", err);
-        this.setState({hasPermission: false})
+        this.setState({hasPermission: false, isLoading: false})
         this.props.onError(); 
     };
 
@@ -125,43 +135,67 @@ class WebcamRenderer extends Component {
         )
     }
 
+    // renderWebcam = () => {
+    //     const { classes } = this.props;
+    //     return (
+    //        <div>
+    //            <video
+    //             autoPlay
+    //             ref={videoTag => {
+    //                 this.video = videoTag;
+    //             }}
+    //             className={classes.cameraVideo}
+    //             >
+    //             Your browser doesn't support the use of a Webcam
+    //             </video>
+    //             <Fab 
+    //                 color="primary" 
+    //                 aria-label="capture" 
+    //                 className={classes.cameraBtn} 
+    //                 onClick={() => this.onHandleClick()}
+    //             >
+    //                 <PhotoCameraIcon />
+    //             </Fab>
+    //        </div>
+    //     )
+    // }
+
     renderWebcam = () => {
-        const { classes } = this.props;
+        const { src, onAccept, onCancel, classes } = this.props;
+        const screenshotTaken = src !== null;
         return (
-           <div>
-               <video
-                autoPlay
-                ref={videoTag => {
-                    this.video = videoTag;
-                }}
-                className={classes.cameraVideo}
-                >
-                Your browser doesn't support the use of a Webcam
-                </video>
-                <Fab 
-                    color="primary" 
-                    aria-label="capture" 
-                    className={classes.cameraBtn} 
-                    onClick={() => this.onHandleClick()}
-                >
-                    <PhotoCameraIcon />
-                </Fab>
-           </div>
+            <>
+                <Webcam 
+                    ref={videoTag => this.video = videoTag}
+                    takeScreenshot={this.handleTakeScreenshot}
+                /> 
+                {screenshotTaken &&
+                <Grow in={screenshotTaken} >
+                    <div className={classes.capturedImg}>
+                    <CapturedImage 
+                        onAccept={onAccept}
+                        onCancel={onCancel}
+                        src={src || ""}
+                    />
+                </div>    
+                </Grow>}
+            </>
         )
     }
 
     
     render() {
-        const { classes } = this.props;
-        const { hasPermission } = this.state;
+        const {classes } = this.props;
+        const { hasPermission, isLoading } = this.state;
         return (
 
+
             <div className={classes.cameraWrapper}>
-                {
-                    hasPermission 
-                    ? this.renderWebcam()
-                    : this.renderError()
-                }
+                {isLoading
+                ? <CircularProgress />  
+                :   hasPermission 
+                    ? this.renderWebcam()    
+                    : this.renderError()}
             </div>
         );
     }

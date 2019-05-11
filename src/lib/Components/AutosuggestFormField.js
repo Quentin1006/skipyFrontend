@@ -8,9 +8,8 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
 
-function renderInputComponent(inputProps) {
+function defaultInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
-
   return (
     <TextField
       fullWidth
@@ -19,8 +18,8 @@ function renderInputComponent(inputProps) {
           ref(node);
           inputRef(node);
         },
-        classes: {
-          input: classes.input
+        classes: { 
+          input: classes.suggestInput
         }
       }}
       {...other}
@@ -29,7 +28,11 @@ function renderInputComponent(inputProps) {
 }
 const styles = theme => ({
   container: {
-    position: "relative"
+    width:"100%",
+    position: "relative",
+    // display: "flex",
+    // alignItems:"center",
+    // width:"100%"
   },
   suggestionsContainerOpen: {
     position: "absolute",
@@ -115,9 +118,12 @@ class AutosuggestFormField extends Component {
   render() {
     const { 
       classes, 
-      getSuggestionValue, 
+      getSuggestionValue,
+      inputComponent,
       inputProps, 
     } = this.props;
+
+    const renderInputComponent = inputComponent || defaultInputComponent
 
     const autosuggestProps = {
       renderInputComponent,
@@ -137,9 +143,6 @@ class AutosuggestFormField extends Component {
             classes,
             value: this.state.single,
             onChange: this.handleChange("single"),
-            InputLabelProps: {
-              shrink: true
-            },
             ...inputProps
           }}
           theme={{

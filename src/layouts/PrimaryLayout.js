@@ -9,7 +9,7 @@ import AppLayout from "./AppLayout";
 import AuthLayout from "./AuthLayout";
 
 
-import MenuNavbar from "../components/MenuNavbar";
+import MenuNavbar from "../components/Navbar/MenuNavbar";
 
 
 const PrimaryLayout = ({ isLoggedIn, profile, logout }) => {

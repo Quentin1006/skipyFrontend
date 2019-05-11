@@ -56,7 +56,7 @@ class SocketSearchProvider extends React.Component {
         const { children } = this.props;
         const context = {
             ...this.state,
-            searchUsers: this.searchUsers
+            search: this.searchUsers
         }
         
         return (

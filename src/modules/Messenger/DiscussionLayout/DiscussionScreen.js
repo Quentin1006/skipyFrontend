@@ -3,8 +3,8 @@ import React, { Component, Fragment } from 'react';
 import { format, isSameDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { CircularProgress, Tooltip } from '@material-ui/core';
 
 import Message from "./DiscussionScreen/Message";
 import ImageMessage from "./DiscussionScreen/ImageMessage";
@@ -17,7 +17,7 @@ import {
     SENDING_MESSAGE,
     LEFT,
     RIGHT
-} from "../../../config"
+} from "../../../config";
 
 const setToOppositeSide = (side) => {
     return side === LEFT ? RIGHT : LEFT;
@@ -30,7 +30,7 @@ const setFormatedDate = (timestamp, locale=fr) => {
 }
 
 const messageAdded = (lastCount, newCount) => {
-    return lastCount !== newCount
+    return lastCount !== newCount;
 }
 
 class DiscussionScreen extends Component {

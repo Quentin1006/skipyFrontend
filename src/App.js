@@ -6,7 +6,8 @@ import { BrowserRouter } from "react-router-dom";
 
 import store from "./store";
 
-import PrimaryLayout from "./layouts/PrimaryLayout"
+import PrimaryLayout from "./layouts/PrimaryLayout";
+import { SocketSearchProvider } from "./components/SocketContext/SocketContext";
 
 import './App.css';
 
@@ -16,9 +17,11 @@ class App extends Component {
 		return (
 			<CookiesProvider>
 				<Provider store={store}>
-					<BrowserRouter >
-						<PrimaryLayout/>
-					</BrowserRouter>
+					<SocketSearchProvider>
+						<BrowserRouter >
+							<PrimaryLayout/>
+						</BrowserRouter>
+					</SocketSearchProvider>
 				</Provider>
 			</CookiesProvider>
 		);

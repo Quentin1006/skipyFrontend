@@ -13,9 +13,13 @@ import {
   Menu,
 } from '@material-ui/core';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MessageIcon from '@material-ui/icons/Message';
+
+import {
+  Menu as MenuIcon,
+  Message as MessageIcon,
+  Notifications as NotificationsIcon,
+  AccountCircle
+} from '@material-ui/icons'
 
 import { SearchBar } from '../SearchBar';
 
@@ -38,7 +42,7 @@ const styles = {
 
 class MenuAppBar extends React.Component {
   state = {
-    anchorEl: null,
+    anchorActionEl: null,
   };
 
 
@@ -46,14 +50,18 @@ class MenuAppBar extends React.Component {
     this.setState({ auth: event.target.checked });
   };
 
+  handleNotif = event => {
+    return;
+  }
+
 
   handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({ anchorActionEl: event.currentTarget });
   };
 
 
   handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ anchorActionEl: null });
   };
 
 
@@ -66,8 +74,8 @@ class MenuAppBar extends React.Component {
 
   render() {
     const { classes, isLoggedIn } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
+    const { anchorActionEl } = this.state;
+    const openAction = Boolean(anchorActionEl);
 
     return (
       <div className="container">
@@ -89,6 +97,9 @@ class MenuAppBar extends React.Component {
             {isLoggedIn && (   
               <>
               <SearchBar/>
+
+              
+
               <IconButton 
                 color="inherit" 
                 component={Link}
@@ -96,9 +107,18 @@ class MenuAppBar extends React.Component {
               >
                 <MessageIcon />
               </IconButton>
+
+              <IconButton 
+                color="inherit" 
+                aria-owns={openAction ? 'menu-appbar' : undefined}
+                aria-haspopup="true"
+                onClick={this.handleNotif}
+              >
+                <NotificationsIcon />
+              </IconButton>
               
               <IconButton
-                aria-owns={open ? 'menu-appbar' : undefined}
+                aria-owns={openAction ? 'menu-appbar' : undefined}
                 aria-haspopup="true"
                 onClick={this.handleMenu}
                 color="inherit"
@@ -108,16 +128,17 @@ class MenuAppBar extends React.Component {
 
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={anchorActionEl}
                 anchorOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'center',
                 }}
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'center',
                 }}
-                open={open}
+                getContentAnchorEl={null}
+                open={openAction}
                 onClose={this.handleClose}
               >
                 <Link to="/app/profile">

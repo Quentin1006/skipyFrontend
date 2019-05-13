@@ -37,7 +37,8 @@ class SocketSearchProvider extends React.Component {
     componentDidMount(){
         const sock = io.connect(`${server.url}/search`);
 
-        sock.on("global search response", matches => {
+        sock.on("global search response", (matches, fshipStatus) => {
+            console.log(fshipStatus);
             this.setState({matches})
         })
 

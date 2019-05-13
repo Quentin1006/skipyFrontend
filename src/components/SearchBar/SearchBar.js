@@ -1,15 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { InputBase, IconButton } from '@material-ui/core';
+import { InputBase, IconButton, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
+import {
+    Search as SearchIcon,
+} from '@material-ui/icons';
 
 import AutosuggestFormField from "../../lib/Components/AutosuggestFormField";
+import SearchItem from "./SearchItem";
+import { AddFriend } from "../AddFriend"
 import { withSocketSearchConsumer } from '../SocketContext/SocketContext';
 
 
+
+
 const styles = {
+    menuItemRoot: {
+        paddingBottom: 0,
+        paddingTop: 0,
+        borderBottom: "1px solid #eee",
+        height: "inherit"
+    },
+
     userInteraction: {
         display: "flex",
         justifyContent: "center",
@@ -48,21 +61,37 @@ const getFriendName = friend => {
     const { firstname, lastname } = friend;
     return `${firstname} ${lastname}`;
 }
-  
+
+
+
 
 const SearchBar = ({ search, matches, classes }) => {
+    
+    const suggestionComponent = (suggestion, {query, isHighlighted}) => {
+        const value = getFriendName(suggestion);
+
+        return (
+        <MenuItem selected={isHighlighted} component="div" classes={{root: classes.menuItemRoot}}>
+            <SearchItem suggestion={suggestion} value={value} query={query}>
+                <AddFriend />
+            </SearchItem>
+        </MenuItem>
+        );
+    }
+  
 
     const renderInputComponent = (inputProps) => {
         const { classes: inputClasses, placeholder, ...other } = inputProps;
+
         return (
-          <InputBase 
-            placeholder={placeholder}
-            className={classes.suggestInput}
-            inputProps= {{
-                classes: inputClasses
-            }}
-            {...other}
-          />
+            <InputBase 
+                placeholder={placeholder}
+                className={classes.suggestInput}
+                inputProps= {{
+                    classes: inputClasses
+                }}
+                {...other}
+            />
         )
     }
 
@@ -73,9 +102,10 @@ const SearchBar = ({ search, matches, classes }) => {
                     inputComponent={renderInputComponent}
                     nbOfSuggestions={3}
                     getSuggestions={search}
-                    listOfSuggestions= {matches}
                     getSuggestionValue={getFriendName}
-                    onHandleChange={() => {console.log("handleInputChange")}}
+                    listOfSuggestions= {matches}
+                    suggestionComponent={suggestionComponent}
+                    handleChange={() => {console.log("handleInputChange")}}
                     onSuggestionSelected={() =>{console.log("onSuggestionSelected")}}    
                     inputProps={{
                         placeholder:"Find someone...",
@@ -86,7 +116,7 @@ const SearchBar = ({ search, matches, classes }) => {
             <div className={classes.searchBtn}>
             <IconButton
                 classes={{
-                root: classes.iconButtonRoot
+                    root: classes.iconButtonRoot
                 }}
             >
                 <SearchIcon />

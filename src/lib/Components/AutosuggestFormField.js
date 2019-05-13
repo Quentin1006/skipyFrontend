@@ -66,7 +66,7 @@ class AutosuggestFormField extends Component {
     </Paper>
   )
 
-  renderSuggestion = (suggestion, { query, isHighlighted }) => {
+  defaultSuggestionComponent = (suggestion, { query, isHighlighted }) => {
     const { getSuggestionValue } = this.props;
     const value = getSuggestionValue(suggestion);
     const matches = match(value, query);
@@ -105,7 +105,7 @@ class AutosuggestFormField extends Component {
     this.setState({
       [name]: newValue
     });
-    this.props.onHandleChange(newValue);
+    this.props.handleChange(newValue);
   };
 
   handleOnSuggestionSelected = (event, selectionInfos) => {
@@ -120,9 +120,11 @@ class AutosuggestFormField extends Component {
       classes, 
       getSuggestionValue,
       inputComponent,
+      suggestionComponent,
       inputProps, 
     } = this.props;
 
+    const renderSuggestion = suggestionComponent || this.defaultSuggestionComponent
     const renderInputComponent = inputComponent || defaultInputComponent
 
     const autosuggestProps = {
@@ -132,7 +134,7 @@ class AutosuggestFormField extends Component {
       onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
       renderSuggestionsContainer: this.renderSuggestionsContainer,
       getSuggestionValue,
-      renderSuggestion: this.renderSuggestion,
+      renderSuggestion: renderSuggestion,
       onSuggestionSelected: this.handleOnSuggestionSelected,
     };
 
@@ -159,11 +161,14 @@ class AutosuggestFormField extends Component {
 AutosuggestFormField.propTypes = {
   getSuggestionValue: PropTypes.func.isRequired,
   getSuggestions: PropTypes.func.isRequired,
+  handleChange: PropTypes.func,
+  suggestionComponent: PropTypes.func,
+  inputComponent: PropTypes.func,
+
   inputProps: PropTypes.shape({
     label: PropTypes.string,
     placeholder: PropTypes.string
   }),
-  onHandleChange: PropTypes.func
 };
 
 AutosuggestFormField.defaultType = {

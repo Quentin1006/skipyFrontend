@@ -30,7 +30,7 @@ const styles = theme => ({
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "#3f51b5",
-        padding: "60px 120px",
+        padding: "60px 60px",
         color: "white",
     
     },

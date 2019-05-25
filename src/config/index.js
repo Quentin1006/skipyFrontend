@@ -11,6 +11,16 @@ export const SEND_MESSAGE_STATUS = [
 ]
 
 
+export const FRIENDSHIP_STATUS = {
+    PENDING: "PENDING",
+    CONFIRMED: "CONFIRMED",
+    DECLINED: "DECLINED",
+    INEXISTANT: "INEXISTANT",
+    YOU: "YOU"
+
+}
+
+
 export const LEFT = "left";
 export const RIGHT = "right";
 

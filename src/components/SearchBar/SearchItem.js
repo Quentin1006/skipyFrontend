@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React, { useMemo }  from "react";
 import PropTypes from "prop-types"
 
 import { Avatar } from "@material-ui/core";
@@ -11,7 +11,8 @@ const styles = {
         width: "100%",
         display: "flex",
         alignItems: "center",
-        padding: "10px"
+        padding: "10px",
+        color: "inherit"
     },
     avatar: {
         marginRight: "15px",
@@ -25,12 +26,12 @@ const styles = {
     fieldValue: {
         flex: "1 1 auto"
     }
-
 }
 
 const SearchItem = React.memo(({value, query, suggestion, children, classes}) => {
 
-    const parts = highlightMatch(value, query);
+    const parts = useMemo(() => highlightMatch(value, query), [value, query]);
+    
     return (
         <div className={classes.container}>
             <div className={classes.avatar}>
@@ -69,6 +70,7 @@ SearchItem.propTypes = {
     suggestion: PropTypes.object.isRequired,
     value: PropTypes.string.isRequired,
     query: PropTypes.string.isRequired,
+    children: PropTypes.object,
     classes: PropTypes.object
 }
 

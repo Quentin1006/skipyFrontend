@@ -21,3 +21,8 @@ a {
 a:hover {
   opacity:0.8
 }
+
+
+svg {
+  pointer-events: none;
+}

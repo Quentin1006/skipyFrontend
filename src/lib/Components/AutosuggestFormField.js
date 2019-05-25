@@ -121,6 +121,7 @@ class AutosuggestFormField extends Component {
       getSuggestionValue,
       inputComponent,
       suggestionComponent,
+      focusInputOnSuggestionClick,
       inputProps, 
     } = this.props;
 
@@ -129,6 +130,7 @@ class AutosuggestFormField extends Component {
 
     const autosuggestProps = {
       renderInputComponent,
+      focusInputOnSuggestionClick,
       suggestions: this.props.listOfSuggestions,
       onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
       onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
@@ -164,7 +166,7 @@ AutosuggestFormField.propTypes = {
   handleChange: PropTypes.func,
   suggestionComponent: PropTypes.func,
   inputComponent: PropTypes.func,
-
+  focusInputOnSuggestionClick: PropTypes.func,
   inputProps: PropTypes.shape({
     label: PropTypes.string,
     placeholder: PropTypes.string
@@ -172,7 +174,8 @@ AutosuggestFormField.propTypes = {
 };
 
 AutosuggestFormField.defaultType = {
-  nbOfSuggestions: 3
+  nbOfSuggestions: 3,
+  focusInputOnSuggestionClick: false
 };
 
 export default withStyles(styles)(AutosuggestFormField);

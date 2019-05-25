@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { InputBase, IconButton, MenuItem } from '@material-ui/core';
+import { InputBase, IconButton, ListItem, ListItemSecondaryAction } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import {
     Search as SearchIcon,
@@ -9,10 +9,8 @@ import {
 
 import AutosuggestFormField from "../../lib/Components/AutosuggestFormField";
 import SearchItem from "./SearchItem";
-import { AddFriend } from "../AddFriend"
-import { withSocketSearchConsumer } from '../SocketContext/SocketContext';
-
-
+import { FriendshipInteractionBtn } from "../FriendshipBtn"
+import { withSocketConsumer } from '../SocketContext/SocketContext';
 
 
 const styles = {
@@ -20,7 +18,8 @@ const styles = {
         paddingBottom: 0,
         paddingTop: 0,
         borderBottom: "1px solid #eee",
-        height: "inherit"
+        height: "inherit",
+        color: "grey"
     },
 
     userInteraction: {
@@ -63,37 +62,31 @@ const getFriendName = friend => {
 }
 
 
-
-
 const SearchBar = ({ search, matches, classes }) => {
-    
+
     const suggestionComponent = (suggestion, {query, isHighlighted}) => {
         const value = getFriendName(suggestion);
-
         return (
-        <MenuItem selected={isHighlighted} component="div" classes={{root: classes.menuItemRoot}}>
-            <SearchItem suggestion={suggestion} value={value} query={query}>
-                <AddFriend />
-            </SearchItem>
-        </MenuItem>
+            <ListItem button selected={isHighlighted} component="div" classes={{root: classes.menuItemRoot}}>
+                <SearchItem suggestion={suggestion} value={value} query={query}/>
+                <ListItemSecondaryAction>
+                    <FriendshipInteractionBtn person={suggestion}/>
+                </ListItemSecondaryAction>
+            </ListItem>
         );
     }
   
 
-    const renderInputComponent = (inputProps) => {
-        const { classes: inputClasses, placeholder, ...other } = inputProps;
-
-        return (
-            <InputBase 
-                placeholder={placeholder}
-                className={classes.suggestInput}
-                inputProps= {{
-                    classes: inputClasses
-                }}
-                {...other}
-            />
-        )
-    }
+    const renderInputComponent = ({ classes: inputClasses, placeholder, ...other }) => (
+        <InputBase 
+            placeholder={placeholder}
+            className={classes.suggestInput}
+            inputProps= {{
+                classes: inputClasses,
+                ...other
+            }}      
+        />
+    )
 
     return (
         <div className={classes.searchBar}>
@@ -134,7 +127,7 @@ SearchBar.propTypes = {
 };
 
 export default 
-    withSocketSearchConsumer()(
+    withSocketConsumer(["search", "notifications"])(
         withStyles(styles)(
             SearchBar
         )

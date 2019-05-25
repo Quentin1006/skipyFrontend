@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 import ThumbnailImage from "../../../../lib/Components/ThumbnailImage"
-import Label from '../../../../lib/Components/Label';
+import Label from '../../../../lib/Components/Label/Label';
 
 
 const styles = theme => ({

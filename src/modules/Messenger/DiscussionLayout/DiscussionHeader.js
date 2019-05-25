@@ -48,7 +48,7 @@ class DiscussionHeader extends Component {
                             getSuggestions={fetchMatchingFriends}
                             listOfSuggestions= {suggestions}
                             getSuggestionValue={getFriendName}
-                            onHandleChange={this.handleInputChange}
+                            handleChange={this.handleInputChange}
                             onSuggestionSelected={setNewRecipient}
                                     
                             inputProps={{

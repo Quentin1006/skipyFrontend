@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import store from "./store";
 
 import PrimaryLayout from "./layouts/PrimaryLayout";
-import { SocketSearchProvider } from "./components/SocketContext/SocketContext";
+import { SocketProvider } from "./components/SocketContext/SocketContext";
 
 import './App.css';
 
@@ -17,11 +17,11 @@ class App extends Component {
 		return (
 			<CookiesProvider>
 				<Provider store={store}>
-					<SocketSearchProvider>
+					<SocketProvider>
 						<BrowserRouter >
 							<PrimaryLayout/>
 						</BrowserRouter>
-					</SocketSearchProvider>
+					</SocketProvider>
 				</Provider>
 			</CookiesProvider>
 		);

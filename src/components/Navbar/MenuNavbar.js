@@ -10,7 +10,6 @@ import {
   Typography,
   IconButton,
   MenuItem,
-  Menu,
 } from '@material-ui/core';
 
 
@@ -22,6 +21,8 @@ import {
 } from '@material-ui/icons'
 
 import { SearchBar } from '../SearchBar';
+import MenuAction from "./MenuAction"
+import MenuNotifications from './MenuNotifications';
 
 
 const styles = {
@@ -40,18 +41,16 @@ const styles = {
 };
 
 
-class MenuAppBar extends React.Component {
+class MenuNavbar extends React.Component {
   state = {
     anchorActionEl: null,
+    anchorNotifEl: null
   };
 
 
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
 
   handleNotif = event => {
-    return;
+    this.setState({ anchorNotifEl: event.currentTarget });
   }
 
 
@@ -61,7 +60,7 @@ class MenuAppBar extends React.Component {
 
 
   handleClose = () => {
-    this.setState({ anchorActionEl: null });
+    this.setState({ anchorActionEl: null, anchorNotifEl:null });
   };
 
 
@@ -74,8 +73,9 @@ class MenuAppBar extends React.Component {
 
   render() {
     const { classes, isLoggedIn } = this.props;
-    const { anchorActionEl } = this.state;
+    const { anchorActionEl, anchorNotifEl } = this.state;
     const openAction = Boolean(anchorActionEl);
+    const openNotif = Boolean(anchorNotifEl);
 
     return (
       <div className="container">
@@ -97,9 +97,7 @@ class MenuAppBar extends React.Component {
             {isLoggedIn && (   
               <>
               <SearchBar/>
-
               
-
               <IconButton 
                 color="inherit" 
                 component={Link}
@@ -125,21 +123,17 @@ class MenuAppBar extends React.Component {
               >
                 <AccountCircle />
               </IconButton>
+              <MenuNotifications
+                  anchorEl={anchorNotifEl}
+                  open={openNotif}
+                  onClose={this.handleClose}
+              >
+              </MenuNotifications>
 
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorActionEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-                getContentAnchorEl={null}
-                open={openAction}
-                onClose={this.handleClose}
+              <MenuAction
+                  anchorEl={anchorActionEl}
+                  open={openAction}
+                  onClose={this.handleClose}
               >
                 <Link to="/app/profile">
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
@@ -148,7 +142,7 @@ class MenuAppBar extends React.Component {
                   <MenuItem onClick={this.handleClose}>My account</MenuItem>
                 </Link>
                 <MenuItem onClick={this.handleLogout}>Log out</MenuItem>
-              </Menu>
+              </MenuAction>
               </>
             )}
           </Toolbar>
@@ -158,11 +152,11 @@ class MenuAppBar extends React.Component {
   }
 }
 
-MenuAppBar.propTypes = {
+MenuNavbar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 export default 
   withStyles(styles)(
-    MenuAppBar
+    MenuNavbar
   )
